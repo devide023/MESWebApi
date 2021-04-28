@@ -26,7 +26,7 @@ namespace MESWebApi.DB
             connstr = ConfigurationManager.ConnectionStrings[conn] != null ? ConfigurationManager.ConnectionStrings[conn].ToString() : "";
         }
 
-        public IDbConnection GetConn
+        public IDbConnection Conn
         {
             get
             {

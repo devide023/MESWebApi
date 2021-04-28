@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using System.Threading.Tasks;
 using MESWebApi.Models;
+using MESWebApi.Services;
 using System.Web.Http.Results;
 using System.Net.Http;
 
@@ -14,9 +15,11 @@ namespace MESWebApi.Controllers
     {
         // GET: Login
         [HttpPost]
-        public IHttpActionResult checklogin(sys_user obj)
+        public async Task<IHttpActionResult> checklogin(sys_user obj)
         {
-            return Json(new { name= obj.name,pwd= obj.pwd});
+            UserService us = new UserService();
+            var token = await us.CheckUserLogin(obj.name, obj.pwd);
+            return Json(new { token=token});
         }
         [HttpGet]
         public IHttpActionResult get_user()

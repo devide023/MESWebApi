@@ -137,6 +137,7 @@
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\sys_user.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Util\CheckLoginAttribute.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -234,7 +235,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="InterFaces\" />
-    <Folder Include="Services\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>

@@ -42,9 +42,9 @@ namespace MESWebApi.Util
             var strTicket = Tool.DESDecrypt(encryptTicket);
 
             //从Ticket里面获取用户名和密码
-            var index = strTicket.IndexOf("&");
+            var index = strTicket.IndexOf("##");
             string strUser = strTicket.Substring(0, index);
-            string strPwd = strTicket.Substring(index + 1);
+            string strPwd = strTicket.Substring(index + 2);
 
             if (strUser == "admin" && strPwd == "123456")
             {

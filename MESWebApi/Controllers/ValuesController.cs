@@ -23,12 +23,12 @@ namespace MESWebApi.Controllers
            this.log = LogManager.GetLogger(this.GetType());
         }
         // GET api/values
-        public async Task<JsonResult<dynamic>> Get()
+        public async Task<IHttpActionResult> Get()
         {
             using (var db = new OraDBHelper())
             {
-               var d = db.GetConn.QueryAsync("SELECT btj,sblx,xh,bzbb FROM base_btbz where rownum<10");
-                return Json<dynamic>(new {list=await d});
+               var d = db.Conn.QueryAsync("SELECT btj,sblx,xh,bzbb FROM base_btbz where rownum<10");
+                return Json(new {list=await d});
             }
         }
 
