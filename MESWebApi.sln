@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MESWebApi", "MESWebApi\MESWebApi.csproj", "{DEF860B5-0514-41F3-900A-963B0EC69AE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MESWebApi.Tests", "MESWebApi.Tests\MESWebApi.Tests.csproj", "{11BEA935-AFCC-4FE3-B640-118FDC08EA49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEF860B5-0514-41F3-900A-963B0EC69AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF860B5-0514-41F3-900A-963B0EC69AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF860B5-0514-41F3-900A-963B0EC69AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF860B5-0514-41F3-900A-963B0EC69AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BEA935-AFCC-4FE3-B640-118FDC08EA49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11BEA935-AFCC-4FE3-B640-118FDC08EA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11BEA935-AFCC-4FE3-B640-118FDC08EA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11BEA935-AFCC-4FE3-B640-118FDC08EA49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {334B08E1-DE8C-4804-959D-908690767AD6}
+	EndGlobalSection
+EndGlobal
