@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using MESWebApi.Util;
 namespace MESWebApi.Controllers
 {
     public class HomeController : Controller
     {
         public ContentResult Index()
         {
-            string token = MESWebApi.Util.Tool.DESEncrypt("abcd##123456");
+            string token = new JWTHelper().CreateToken();
 
-            string token1 = "";
-
-            return Content(token+"<br/>"+token1);
+            return Content(token);
         }
 
         public ContentResult Pwd(string pwd= "")
         {
-            string mm = MESWebApi.Util.Tool.DESDecrypt(pwd);
-            return Content(mm);
+           var ret = new JWTHelper().CheckToken(pwd);
+            return Content(ret.ToString());
         }
         public ContentResult Pwd1(string pwd = "")
         {

@@ -15,18 +15,18 @@ namespace MESWebApi.Controllers
     {
         // GET: Login
         [HttpPost]
-        public async Task<IHttpActionResult> checklogin(sys_user obj)
+        public IHttpActionResult checklogin(sys_user obj)
         {
             UserService us = new UserService();
-            var token = await us.CheckUserLogin(obj.name, obj.pwd);
-            return Json(new { token=token});
+            var token = us.CheckUserLogin(obj.username, obj.password);
+            return Json(new { code = 1, msg = "ok", token = token });
         }
         [HttpGet]
         public IHttpActionResult get_user()
         {
             List<sys_user> list = new List<sys_user>();
-            list.Add(new sys_user() { name = "admin", pwd = "123456" });
-            list.Add(new sys_user() { name = "test", pwd = "456789" });
+            list.Add(new sys_user() { username = "admin", password = "123456" });
+            list.Add(new sys_user() { username = "test", password = "456789" });
             return Json(list);
         }
     }

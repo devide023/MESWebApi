@@ -6,6 +6,8 @@ using MESWebApi.DB;
 using Dapper;
 using System.Threading.Tasks;
 using MESWebApi.Util;
+using MESWebApi.Models;
+
 namespace MESWebApi.Services
 {
     public class UserService
@@ -15,21 +17,20 @@ namespace MESWebApi.Services
 
         }
 
-        public dynamic CheckUserLogin(string username,string userpwd)
+        public string CheckUserLogin(string username, string userpwd)
         {
-            using (var db = new OraDBHelper())
-            {
-                string token = string.Empty;
-                var ret = db.Conn.Query("select 'admin' as username,'123456' as userpwd from dual ");
-                if (ret.Count() > 0)
-                { 
-                    
-                }
-                var obj = ret.FirstOrDefault();
-                token = Tool.DESEncrypt($"{obj.username}##{ obj.userpwd}");
-                return new {token=token,isok = true};
-            }
-            
+            string token = string.Empty;
+            token = Tool.DESEncrypt($"{username}##{ userpwd}");
+            return token;
+        }
+
+        public sys_user UserInfo(string token)
+        {
+            return new sys_user() {
+            username="admin",
+            password="ddd",
+            token = "abcdefghijk"
+            };
         }
 
     }

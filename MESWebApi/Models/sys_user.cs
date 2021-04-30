@@ -7,7 +7,8 @@ namespace MESWebApi.Models
 {
     public class sys_user
     {
-        public string name { get; set; }
-        public string pwd { get; set; }
+        public string username { get; set; }
+        public string password{ get; set; }
+        public string token { get; set; }
     }
 }

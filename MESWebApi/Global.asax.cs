@@ -20,11 +20,6 @@ namespace MESWebApi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
-        public override void Init()
-        {
-            this.PostAuthenticateRequest += (sender, e) => HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
-            base.Init();
-        }
-
+        
     }
 }
