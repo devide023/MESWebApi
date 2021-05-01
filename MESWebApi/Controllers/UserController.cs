@@ -6,18 +6,24 @@ using System.Net.Http;
 using System.Web.Http;
 using MESWebApi.Services;
 using MESWebApi.Models;
+using MESWebApi.Util;
 namespace MESWebApi.Controllers
 {
     [RoutePrefix("api/user")]
+    [CheckLogin]
     public class UserController : ApiController
     {
         [Route("info")]
         [HttpGet]
         public IHttpActionResult Info(string token)
         {
-            UserService us = new UserService();
-            sys_user user = us.UserInfo(token);
-            return Json(new { code = 1, msg = "ok", result = user });
+                UserService us = new UserService();
+                MenuService ms = new MenuService();
+                sys_user user = us.UserInfo(token);
+                return Json(new { code = 1,
+                    menulist = ms.Get_User_Menus(1),
+                    msg = "ok",
+                    user = user });
         }
         /// <summary>
         /// 获取用户菜单
@@ -34,31 +40,6 @@ namespace MESWebApi.Controllers
             result=new sys_menu()
             });
         }
-        // GET api/<controller>
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<controller>
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
-        }
+       
     }
 }

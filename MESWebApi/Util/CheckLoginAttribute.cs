@@ -17,7 +17,8 @@ namespace MESWebApi.Util
             {
                 //解密用户ticket,并校验用户名密码是否匹配
                 var encryptTicket = authorization.Parameter;
-                if (ValidateTicket(encryptTicket))
+                var isok = new JWTHelper().CheckToken(encryptTicket);
+                if (isok)
                 {
                     base.IsAuthorized(actionContext);
                 }
@@ -25,6 +26,14 @@ namespace MESWebApi.Util
                 {
                     HandleUnauthorizedRequest(actionContext);
                 }
+                //if (ValidateTicket(encryptTicket))
+                //{
+                //    base.IsAuthorized(actionContext);
+                //}
+                //else
+                //{
+                //    HandleUnauthorizedRequest(actionContext);
+                //}
             }
             //如果取不到身份验证信息，并且不允许匿名访问，则返回未验证401
             else

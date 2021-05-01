@@ -1,0 +1,55 @@
+﻿[
+  {
+    "id": 1,
+    "pid": 0,
+    "menutype": "01",
+    "title": "系统管理",
+    "code": "systemmgr",
+    "icon": "dashboard",
+    "controller": "",
+    "action": "",
+    "path": "/systemmgr",
+    "viewpath": "",
+    "children": [
+      {
+        "id": 2,
+        "pid": 1,
+        "menutype": "01",
+        "title": "用户管理",
+        "code": "usermgr",
+        "icon": "user",
+        "controller": "",
+        "action": "",
+        "path": "user",
+        "viewpath": "table/index",
+        "children": []
+      },
+      {
+        "id": 3,
+        "pid": 1,
+        "menutype": "01",
+        "title": "角色管理",
+        "code": "rolemgr",
+        "icon": "table",
+        "controller": "",
+        "action": "",
+        "path": "role",
+        "viewpath": "form/index",
+        "children": []
+      },
+      {
+        "id": 4,
+        "pid": 1,
+        "menutype": "01",
+        "title": "菜单管理",
+        "code": "menumgr",
+        "icon": "tree",
+        "controller": "",
+        "action": "",
+        "path": "menu",
+        "viewpath": "tree/index",
+        "children": []
+      }
+    ]
+  }
+]

@@ -22,12 +22,12 @@ namespace MESWebApi.Util
             DateTime utcNow = DateTime.UtcNow;
             var claims = new List<Claim>() { 
                 new Claim("ID", "1"), 
-                new Claim("Name", "fan") 
+                new Claim("Name", "zsmes") 
             };
             JwtSecurityToken jwtToken = new JwtSecurityToken(
-                issuer: "fan",
-                audience: "audi~~!",
-                claims: claims,
+                issuer: "zsmes",//签发者
+				audience: "zsmeswebuser",//接收的一方
+				claims: claims,
                 notBefore: utcNow,
                 expires: utcNow.AddHours(2),
                 signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
@@ -62,6 +62,8 @@ namespace MESWebApi.Util
 				ValidateAudience = true,
 				ValidateIssuer = true,
 				ValidateIssuerSigningKey = true,
+				ValidIssuer = "zsmes",
+				ValidAudience = "zsmeswebuser",
 				IssuerSigningKey = securityKey,
 			};
 			//不校验，直接解析token

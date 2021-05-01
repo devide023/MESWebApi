@@ -11,9 +11,10 @@ using System.Net.Http;
 
 namespace MESWebApi.Controllers
 {
+    [RoutePrefix("api/login")]
     public class LoginController : ApiController
     {
-        // GET: Login
+        [Route("checklogin")]
         [HttpPost]
         public IHttpActionResult checklogin(sys_user obj)
         {
@@ -21,13 +22,13 @@ namespace MESWebApi.Controllers
             var token = us.CheckUserLogin(obj.username, obj.password);
             return Json(new { code = 1, msg = "ok", token = token });
         }
-        [HttpGet]
-        public IHttpActionResult get_user()
+        [Route("logout")]
+        [HttpPost]
+        public IHttpActionResult Logout()
         {
-            List<sys_user> list = new List<sys_user>();
-            list.Add(new sys_user() { username = "admin", password = "123456" });
-            list.Add(new sys_user() { username = "test", password = "456789" });
-            return Json(list);
+            var authorization = HttpContext.Current.Request.Headers["Authorization"];
+
+            return Json(new { code = 1, msg = "ok",auth = authorization });
         }
     }
 }

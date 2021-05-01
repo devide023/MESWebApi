@@ -20,16 +20,17 @@ namespace MESWebApi.Services
         public string CheckUserLogin(string username, string userpwd)
         {
             string token = string.Empty;
-            token = Tool.DESEncrypt($"{username}##{ userpwd}");
+            token = new JWTHelper().CreateToken();
             return token;
         }
 
         public sys_user UserInfo(string token)
         {
+            string imgurl = "http://"+HttpContext.Current.Request.Url.Authority + "/Images/headimg/default.jpg";
             return new sys_user() {
             username="admin",
             password="ddd",
-            token = "abcdefghijk"
+            headimg = imgurl
             };
         }
 

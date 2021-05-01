@@ -159,6 +159,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\sys_menu.cs" />
     <Compile Include="Models\sys_user.cs" />
+    <Compile Include="Services\MenuService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Util\CheckLoginAttribute.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -212,6 +213,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\headimg\default.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -234,6 +236,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="log4net.config" />
+    <Content Include="menus.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
