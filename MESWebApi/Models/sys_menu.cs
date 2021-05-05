@@ -18,6 +18,7 @@ namespace MESWebApi.Models
         public string path { get; set; }
         public string viewpath { get; set; }
         public int seq { get; set; }
+        public int adduser { get; set; }
         public List<sys_menu> children { get; set; }
         public List<string> funs { get; set; }
 
