@@ -74,14 +74,14 @@ namespace MESWebApi.Tests.Controllers
            
                 int cnt = service.Add_Menu(new sys_menu() {
                     pid = 0,
-                    title = "生产线管理",
+                    title = "报表管理",
                     icon = "table",
                     action = "",
                     controller = "",
-                    code = "scxmgr",
+                    code = "reportmgr",
                     menutype = "01",
-                    path = "/scxmgr",
-                    viewpath = "scx/index",
+                    path = "/reportmgr",
+                    viewpath = "report/index",
                     seq = 6,
                     adduser = 1
                 });
@@ -95,6 +95,10 @@ namespace MESWebApi.Tests.Controllers
         {
             MenuService s = new MenuService();
             var list = s.User_Menus(0);
+            foreach (var item in list)
+            {
+                System.Console.WriteLine($"id:{item.id},name:{item.title}");
+            }
         }
     }
 }
