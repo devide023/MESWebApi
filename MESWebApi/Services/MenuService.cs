@@ -38,7 +38,7 @@ namespace MESWebApi.Services
             }
         }
 
-        public int Add_Menu(sys_menu menu)
+        public sys_menu Add_Menu(sys_menu menu)
         {
             StringBuilder sql = new StringBuilder();
             sql.Append("insert into sys_menu(");
@@ -80,7 +80,8 @@ namespace MESWebApi.Services
                 param.Add(":id", null, OracleMappingType.Int32,ParameterDirection.Output);
                 var ret = db.Conn.Execute(sql.ToString(), param);
                 var menuid = param.Get<int>(":id");
-                return menuid;
+                menu.id = menuid;
+                return menu;
             }
         }
 
@@ -105,8 +106,34 @@ namespace MESWebApi.Services
 
             using (var db = new OraDBHelper())
             {
-               return db.Conn.Query<sys_menu>(sql.ToString());
+                List<sys_menu> menulist = new List<sys_menu>();
+               var list = db.Conn.Query<sys_menu>(sql.ToString());
+                foreach (var item in list.Where(t=>t.pid == 0))
+                {
+                    menulist.Add(item);
+                    bool haschild = list.Where(t => t.pid == item.id).Count()>0?true:false;
+                    if (haschild)
+                    {
+                        item.children = Create_Child(list,item);
+                    }
+                }
+                return menulist;
             }
+        }
+
+        private List<sys_menu> Create_Child(IEnumerable<sys_menu> list,sys_menu item)
+        {
+            List<sys_menu> children = new List<sys_menu>();
+            foreach (var menu in list.Where(t => t.pid == item.id))
+            {
+                children.Add(menu);
+                bool haschild = list.Where(t => t.pid == menu.id).Count() > 0 ? true : false;
+                if (haschild)
+                {
+                    menu.children = Create_Child(list, menu);
+                }
+            }
+            return children;
         }
 
         public IEnumerable<sys_menu> Get_User_Menus(int userid)

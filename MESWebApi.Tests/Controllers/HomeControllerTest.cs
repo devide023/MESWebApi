@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using MESWebApi.Models;
 using MESWebApi.Services;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 namespace MESWebApi.Tests.Controllers
 {
     [TestClass]
@@ -72,7 +73,7 @@ namespace MESWebApi.Tests.Controllers
             //    adduser = 1
             //});
            
-                int cnt = service.Add_Menu(new sys_menu() {
+                sys_menu cnt = service.Add_Menu(new sys_menu() {
                     pid = 0,
                     title = "报表管理",
                     icon = "table",
@@ -85,7 +86,7 @@ namespace MESWebApi.Tests.Controllers
                     seq = 6,
                     adduser = 1
                 });
-                System.Console.WriteLine(cnt);
+                System.Console.WriteLine(cnt.id);
             
         }
 
@@ -95,10 +96,10 @@ namespace MESWebApi.Tests.Controllers
         {
             MenuService s = new MenuService();
             var list = s.User_Menus(0);
-            foreach (var item in list)
-            {
-                System.Console.WriteLine($"id:{item.id},name:{item.title}");
-            }
+            string json = JsonConvert.SerializeObject(list);
+            
+                System.Console.WriteLine(json);
+            
         }
     }
 }
