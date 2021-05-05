@@ -114,23 +114,23 @@ namespace MESWebApi.Services
                     bool haschild = list.Where(t => t.pid == item.id).Count()>0?true:false;
                     if (haschild)
                     {
-                        item.children = Create_Child(list,item);
+                        item.children = Create_Child(list,item.id);
                     }
                 }
                 return menulist;
             }
         }
 
-        private List<sys_menu> Create_Child(IEnumerable<sys_menu> list,sys_menu item)
+        private List<sys_menu> Create_Child(IEnumerable<sys_menu> list,int id)
         {
             List<sys_menu> children = new List<sys_menu>();
-            foreach (var menu in list.Where(t => t.pid == item.id))
+            foreach (var menu in list.Where(t => t.pid == id))
             {
                 children.Add(menu);
                 bool haschild = list.Where(t => t.pid == menu.id).Count() > 0 ? true : false;
                 if (haschild)
                 {
-                    menu.children = Create_Child(list, menu);
+                    menu.children = Create_Child(list, menu.id);
                 }
             }
             return children;
