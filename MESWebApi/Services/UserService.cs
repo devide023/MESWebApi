@@ -147,17 +147,18 @@ namespace MESWebApi.Services
                 sql.Append("userid,");
                 sql.Append("roleid)");
                 sql.Append("values");
-                sql.Append("(seq_userrole_id.nextval");
+                sql.Append("(seq_userrole_id.nextval,");
                 sql.Append("  :userid,");
                 sql.Append("  :roleid");
-                sql.Append(");\r\n");
-                using (var db = new OraDBHelper())
+                sql.Append(")\r\n");
+                using (var conn = new OraDBHelper().Conn)
                 {
-                    using (var tran = db.Conn.BeginTransaction())
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
                     {
-                        db.Conn.Execute("delete from sys_user_role where userid=:userid", new { userid = userid }, tran);
-                        tran.Connection.Execute(sql.ToString(), ur);
-                        tran.Commit();
+                        conn.Execute("delete from sys_user_role where userid=:userid", new { userid = userid },transaction);
+                        ret = conn.Execute(sql.ToString(), ur.ToArray(),transaction);
+                        transaction.Commit();
                     }
                 }
                 return ret;

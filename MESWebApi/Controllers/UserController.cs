@@ -21,7 +21,7 @@ namespace MESWebApi.Controllers
                 MenuService ms = new MenuService();
                 sys_user user = us.UserInfo(token);
                 return Json(new { code = 1,
-                    menulist = ms.Get_User_Menus(1),
+                    menulist = ms.User_Menus(user.id),
                     msg = "ok",
                     user = user });
         }

@@ -25,34 +25,42 @@ namespace MESWebApi.Services
 
         public IEnumerable<sys_menu> User_Menus(int userid)
         {
-            StringBuilder sql = new StringBuilder();
-            sql.Append("select id,");
-            sql.Append("title,");
-            sql.Append("pid,");
-            sql.Append("icon,");
-            sql.Append("code,");
-            sql.Append("path,");
-            sql.Append("menutype,");
-            sql.Append("viewpath,");
-            sql.Append("addtime,");
-            sql.Append("adduser,");
-            sql.Append("seq \r\n");
-            sql.Append("from SYS_MENU");
-
-            using (var db = new OraDBHelper())
+            try
             {
-                List<sys_menu> menulist = new List<sys_menu>();
-               var list = db.Conn.Query<sys_menu>(sql.ToString());
-                foreach (var item in list.Where(t=>t.pid == 0))
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select tc.id, \r\n");
+                sql.Append("tc.title, \r\n");
+                sql.Append("tc.pid, \r\n");
+                sql.Append("tc.code, \r\n");
+                sql.Append("tc.path, \r\n");
+                sql.Append("tc.viewpath, \r\n");
+                sql.Append("tc.icon, \r\n");
+                sql.Append("tc.seq \r\n");
+                sql.Append("from sys_user_role ta, sys_role_menu tb, sys_menu tc \r\n");
+                sql.Append("where ta.userid = :userid \r\n");
+                sql.Append("and ta.roleid = tb.roleid \r\n");
+                sql.Append("and tb.menuid = tc.id \r\n");
+
+                using (var db = new OraDBHelper())
                 {
-                    menulist.Add(item);
-                    bool haschild = list.Where(t => t.pid == item.id).Count()>0?true:false;
-                    if (haschild)
+                    List<sys_menu> menulist = new List<sys_menu>();
+                    var list = db.Conn.Query<sys_menu>(sql.ToString(), new { userid = userid });
+                    foreach (var item in list.Where(t => t.pid == 0))
                     {
-                        item.children = Create_Child(list,item.id);
+                        menulist.Add(item);
+                        bool haschild = list.Where(t => t.pid == item.id).Count() > 0 ? true : false;
+                        if (haschild)
+                        {
+                            item.children = Create_Child(list, item.id);
+                        }
                     }
+                    return menulist;
                 }
-                return menulist;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
             }
         }
 
@@ -70,14 +78,6 @@ namespace MESWebApi.Services
             }
             return children;
         }
-
-        public IEnumerable<sys_menu> Get_User_Menus(int userid)
-        {
-            string path = HttpContext.Current.Server.MapPath("~/menus.json");
-            string json = File.ReadAllText(path, Encoding.UTF8);
-            return JsonConvert.DeserializeObject<IEnumerable<sys_menu>>(json);
-        }
-
         public sys_menu Add(sys_menu menu)
         {
             try

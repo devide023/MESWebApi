@@ -146,5 +146,40 @@ namespace MESWebApi.Services
                 throw;
             }
         }
+
+
+        public int Save_RoleMenus(int roleid, List<int> menuids)
+        {
+            try
+            {
+                int ret = 0;
+                List<dynamic> vals = new List<dynamic>();
+                foreach (var item in menuids)
+                {
+                    vals.Add(new { roleid = roleid, menuid = item });
+                }
+                StringBuilder sql = new StringBuilder();
+                sql.Append("insert into sys_role_menu(id,roleid,menuid) \r\n");
+                sql.Append("values \r\n");
+                sql.Append(" (SEQ_ROLEMENU_ID.nextval,:roleid,:menuid) \r\n");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        conn.Execute("delete from sys_role_menu where roleid =:roleid",new { roleid=roleid},trans);
+                        ret = conn.Execute(sql.ToString(),vals.ToArray(),trans);
+                        trans.Commit();
+                        return ret;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
     }
 }

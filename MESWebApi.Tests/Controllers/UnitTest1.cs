@@ -3,7 +3,7 @@ using System;
 using MESWebApi.Services;
 using MESWebApi.Models;
 using System.Collections.Generic;
-
+using Newtonsoft.Json;
 namespace MESWebApi.Tests.Controllers
 {
     [TestClass]
@@ -32,5 +32,39 @@ namespace MESWebApi.Tests.Controllers
             string token = us.CheckUserLogin("001", "123456");
             System.Console.WriteLine(token);
         }
-    }
+
+        [TestMethod]
+        public void add_user_role()
+        {
+            UserService us = new UserService();
+            List<int> roleids = new List<int>();
+            roleids.Add(1);
+            roleids.Add(2);
+            roleids.Add(3);
+            roleids.Add(4);
+            us.SaveUserRoles(1, roleids);
+        }
+
+        [TestMethod]
+        public void add_user_menus()
+        {
+            RoleService rs = new RoleService();
+            List<int> menuids = new List<int>();
+            menuids.Add(5);
+            menuids.Add(6);
+            menuids.Add(7);
+            menuids.Add(8);
+            rs.Save_RoleMenus(1, menuids);
+        }
+
+        [TestMethod]
+        public void user_menus()
+        {
+            MenuService ms = new MenuService();
+            var list = ms.User_Menus(1);
+            string json = JsonConvert.SerializeObject(list);
+            System.Console.WriteLine(json);
+        }
+
+        }
 }
