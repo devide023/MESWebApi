@@ -10,79 +10,17 @@ using MESWebApi.DB;
 using Dapper;
 using Dapper.Oracle;
 using System.Data;
-
+using MESWebApi.InterFaces;
+using Webdiyer.WebControls.Mvc;
+using log4net;
 namespace MESWebApi.Services
 {
-    public class MenuService
+    public class MenuService:IDBOper<sys_menu>
     {
+        private ILog log;
         public MenuService()
         {
-
-        }
-
-        public int Get_Menuid()
-        {
-            StringBuilder sql = new StringBuilder();
-            sql.Append("declare \r\n");
-            sql.Append("id number;\r\n");
-            sql.Append("begin\r\n");
-            sql.Append("id := 11;\r\n");
-            sql.Append("dbms_output.put_line(id);\r\n");
-            sql.Append("end;\r\n");
-            using (var db = new OraDBHelper())
-            {
-               var ret = db.Conn.Query(sql.ToString()).FirstOrDefault();
-               int cnt = db.Conn.ExecuteScalar<int>(sql.ToString());
-
-                return cnt;
-            }
-        }
-
-        public sys_menu Add_Menu(sys_menu menu)
-        {
-            StringBuilder sql = new StringBuilder();
-            sql.Append("insert into sys_menu(");
-            sql.Append("title,");
-            sql.Append("pid,");
-            sql.Append("icon,");
-            sql.Append("code,");
-            sql.Append("path,");
-            sql.Append("menutype,");
-            sql.Append("viewpath,");
-            sql.Append("addtime,");
-            sql.Append("adduser,");
-            sql.Append("seq");
-            sql.Append(")");
-            sql.Append("values");
-            sql.Append("(");
-            sql.Append(":title,");
-            sql.Append(":pid,");
-            sql.Append(":icon,");
-            sql.Append(":code,");
-            sql.Append(":path,");
-            sql.Append(":menutype,");
-            sql.Append(":viewpath,");
-            sql.Append("sysdate,");
-            sql.Append(":adduser,");
-            sql.Append(":seq");
-            sql.Append(") returning id into :id");
-            using (var db = new OraDBHelper()) {
-                OracleDynamicParameters param = new OracleDynamicParameters();
-                param.Add(":title", menu.title, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                param.Add(":pid", menu.pid, OracleMappingType.Int32, ParameterDirection.Input);
-                param.Add(":icon", menu.icon, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                param.Add(":code", menu.code, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                param.Add(":path", menu.path, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                param.Add(":menutype", menu.menutype, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                param.Add(":viewpath", menu.viewpath, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                param.Add(":adduser", menu.adduser, OracleMappingType.Int32, ParameterDirection.Input);
-                param.Add(":seq", menu.seq, OracleMappingType.Int32,ParameterDirection.Input);
-                param.Add(":id", null, OracleMappingType.Int32,ParameterDirection.Output);
-                var ret = db.Conn.Execute(sql.ToString(), param);
-                var menuid = param.Get<int>(":id");
-                menu.id = menuid;
-                return menu;
-            }
+            log = LogManager.GetLogger(this.GetType());
         }
 
         public IEnumerable<sys_menu> User_Menus(int userid)
@@ -91,10 +29,7 @@ namespace MESWebApi.Services
             sql.Append("select id,");
             sql.Append("title,");
             sql.Append("pid,");
-            sql.Append("controller,");
-            sql.Append("action,");
             sql.Append("icon,");
-            sql.Append("url,");
             sql.Append("code,");
             sql.Append("path,");
             sql.Append("menutype,");
@@ -141,6 +76,176 @@ namespace MESWebApi.Services
             string path = HttpContext.Current.Server.MapPath("~/menus.json");
             string json = File.ReadAllText(path, Encoding.UTF8);
             return JsonConvert.DeserializeObject<IEnumerable<sys_menu>>(json);
+        }
+
+        public sys_menu Add(sys_menu menu)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("insert into sys_menu(id,");
+                sql.Append("title,");
+                sql.Append("pid,");
+                sql.Append("icon,");
+                sql.Append("code,");
+                sql.Append("path,");
+                sql.Append("menutype,");
+                sql.Append("viewpath,");
+                sql.Append("addtime,");
+                sql.Append("adduser,");
+                sql.Append("seq");
+                sql.Append(")");
+                sql.Append("values");
+                sql.Append("(SEQ_MENUID.NEXTVAL,");
+                sql.Append(":title,");
+                sql.Append(":pid,");
+                sql.Append(":icon,");
+                sql.Append(":code,");
+                sql.Append(":path,");
+                sql.Append(":menutype,");
+                sql.Append(":viewpath,");
+                sql.Append("sysdate,");
+                sql.Append(":adduser,");
+                sql.Append(":seq");
+                sql.Append(") returning id into :id");
+                using (var db = new OraDBHelper())
+                {
+                    OracleDynamicParameters param = new OracleDynamicParameters();
+                    param.Add(":title", menu.title, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                    param.Add(":pid", menu.pid, OracleMappingType.Int32, ParameterDirection.Input);
+                    param.Add(":icon", menu.icon, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                    param.Add(":code", menu.code, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                    param.Add(":path", menu.path, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                    param.Add(":menutype", menu.menutype, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                    param.Add(":viewpath", menu.viewpath, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                    param.Add(":adduser", menu.adduser, OracleMappingType.Int32, ParameterDirection.Input);
+                    param.Add(":seq", menu.seq, OracleMappingType.Int32, ParameterDirection.Input);
+                    param.Add(":id", null, OracleMappingType.Int32, ParameterDirection.Output);
+                    var ret = db.Conn.Execute(sql.ToString(), param);
+                    var menuid = param.Get<int>(":id");
+                    menu.id = menuid;
+                    return menu;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public int Modify(sys_menu entity)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update sys_menu set title=:title where id=:id ");
+                using (var db = new OraDBHelper())
+                {
+                   return db.Conn.Execute(sql.ToString(), new {title=entity.title,id=entity.id });
+                }
+
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("delete from sys_menu where id =:id ");
+                using (var db = new OraDBHelper())
+                {
+                    int cnt = db.Conn.Execute(sql.ToString(), new { id = id });
+                    return cnt > 0 ? true : false;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public sys_menu Find(int id)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select id,pid,title,code,path,viewpath from sys_menu where id = :id ");
+                using (var db = new OraDBHelper())
+                {
+                    var query = db.Conn.Query<sys_menu>(sql.ToString(), new { id = id });
+                    return query.FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<sys_menu> Find(sys_page parm, out int resultcount)
+        {
+            try
+            {
+                OracleDynamicParameters para = new OracleDynamicParameters();
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select * from sys_menu where 1=1 ");
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and title like :title ");
+                    para.Add(":title", parm.keyword, OracleMappingType.Varchar2, ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    para.Add(":index", parm.pageindex, OracleMappingType.Int32, ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    para.Add(":pagesize", parm.pagesize, OracleMappingType.Int32, ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    para.Add(":resultcount", parm.resultcount, OracleMappingType.Int32, ParameterDirection.Output);
+                }
+                using (var db = new OraDBHelper())
+                {
+                   var resutl =  db.Conn.Query<sys_menu>(sql.ToString(), para);
+                    var q = resutl.OrderByDescending(t=>t.id).ToPagedList(parm.pageindex,parm.pagesize);
+                    resultcount = q.TotalItemCount;
+                    return q;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public int Delete(List<int> ids)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("delete from sys_menu where id in :ids ");
+                using (var db = new OraDBHelper())
+                {
+                   return  db.Conn.Execute(sql.ToString(), new { ids = ids });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace MESWebApi.Controllers
         public IHttpActionResult checklogin(sys_user obj)
         {
             UserService us = new UserService();
-            var token = us.CheckUserLogin(obj.username, obj.password);
+            var token = us.CheckUserLogin(obj.code, obj.pwd);
             return Json(new { code = 1, msg = "ok", token = token });
         }
         [Route("logout")]
