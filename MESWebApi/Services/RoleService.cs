@@ -52,9 +52,18 @@ namespace MESWebApi.Services
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete from sys_role where id=:id");
-                using (var db = new OraDBHelper())
+                using (var conn = new OraDBHelper().Conn)
                 {
-                    return db.Conn.Execute(sql.ToString(), new { id = id }) > 0 ? true : false;
+                    conn.Open();
+                    var p = new { id = id };
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        int r1 = conn.Execute(sql.ToString(), p, transaction: trans);
+                        int r2 = conn.Execute("delete from sys_user_role where roleid = :id", p, transaction: trans);
+                        int r3 = conn.Execute("delete from sys_role_menu where roleid = :id", p, transaction: trans);
+                        trans.Commit();
+                        return r1 > 0 ? true : false;
+                    }
                 }
             }
             catch (Exception e)

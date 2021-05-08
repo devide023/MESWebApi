@@ -53,6 +53,10 @@ namespace MESWebApi.Services
                         {
                             item.children = Create_Child(list, item.id);
                         }
+                        else
+                        {
+                            item.children = new List<sys_menu>();
+                        }
                     }
                     return menulist;
                 }
@@ -74,6 +78,10 @@ namespace MESWebApi.Services
                 if (haschild)
                 {
                     menu.children = Create_Child(list, menu.id);
+                }
+                else
+                {
+                    menu.children = new List<sys_menu>();
                 }
             }
             return children;
@@ -240,6 +248,39 @@ namespace MESWebApi.Services
                 {
                    return  db.Conn.Execute(sql.ToString(), new { ids = ids });
                 }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public int Save_MenuRole(int menuid, List<int> roleids)
+        {
+            try
+            {
+                int ret = 0;
+                List<dynamic> mr = new List<dynamic>();
+                foreach (var item in roleids)
+                {
+                    mr.Add(new { menuid = menuid, roleid = item });
+                }
+                StringBuilder sql = new StringBuilder();
+                sql.Append("insert into sys_role_menu(id,roleid,menuid) \r\n");
+                sql.Append("values \r\n");
+                //sql.Append
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        conn.Execute("delete from sys_role_menu where menuid=:menuid", new { menuid = menuid }, trans);
+                        conn.Execute(sql.ToString(), mr.ToArray(), trans);
+                        trans.Commit();
+                    }
+                }
+                return ret;
             }
             catch (Exception e)
             {

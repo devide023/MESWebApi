@@ -24,7 +24,12 @@ namespace MESWebApi.Tests.Controllers
                 
             });
         }
-
+        [TestMethod]
+        public void freshtoken()
+        {
+            UserService us = new UserService();
+            us.FreshToken(1);
+        }
         [TestMethod]
         public void login()
         {
@@ -32,16 +37,22 @@ namespace MESWebApi.Tests.Controllers
             string token = us.CheckUserLogin("001", "123456");
             System.Console.WriteLine(token);
         }
-
+        [TestMethod]
+        public void search_user()
+        {
+            int cnt = 0;
+            UserService us = new UserService();
+            var list = us.Search(new Models.QueryParm.UserQueryParm() { }, out cnt);
+            
+        }
         [TestMethod]
         public void add_user_role()
         {
             UserService us = new UserService();
             List<int> roleids = new List<int>();
             roleids.Add(1);
-            roleids.Add(2);
-            roleids.Add(3);
-            roleids.Add(4);
+            roleids.Add(5);
+            roleids.Add(6);
             us.SaveUserRoles(1, roleids);
         }
 
@@ -50,10 +61,10 @@ namespace MESWebApi.Tests.Controllers
         {
             RoleService rs = new RoleService();
             List<int> menuids = new List<int>();
-            menuids.Add(5);
-            menuids.Add(6);
-            menuids.Add(7);
-            menuids.Add(8);
+            menuids.Add(1);
+            menuids.Add(2);
+            menuids.Add(3);
+            menuids.Add(4);
             rs.Save_RoleMenus(1, menuids);
         }
 

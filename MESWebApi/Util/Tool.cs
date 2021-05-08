@@ -65,7 +65,7 @@ namespace MESWebApi.Util
             //MD5类是抽象类
             MD5 md5 = MD5.Create();
             //需要将字符串转成字节数组
-            byte[] buffer = Encoding.Default.GetBytes("123");
+            byte[] buffer = Encoding.Default.GetBytes(txt);
             //加密后是一个字节类型的数组，这里要注意编码UTF8/Unicode等的选择
             byte[] md5buffer = md5.ComputeHash(buffer);
             string str = null;

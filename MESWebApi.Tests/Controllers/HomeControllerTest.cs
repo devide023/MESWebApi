@@ -80,7 +80,7 @@ namespace MESWebApi.Tests.Controllers
             RoleService rs = new RoleService();
             rs.Add(new sys_role
             {
-                title = "生产管理员",
+                title = "销售管理员",
                 status = 1,
                 adduser = 1,
                 code = "03",

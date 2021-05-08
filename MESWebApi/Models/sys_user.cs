@@ -16,5 +16,6 @@ namespace MESWebApi.Models
         public string token { get; set; }
         public int adduser { get; set; }
         public DateTime? addtime { get; set; }
+        public List<sys_role> roles { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace MESWebApi.InterFaces
         bool Delete(int id);
         int Delete(List<int> ids);
         T Find(int id);
-        IEnumerable<T> Find(sys_page parm,out int resultcount);
+        
     }
 }
