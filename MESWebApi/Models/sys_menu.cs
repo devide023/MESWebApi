@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,10 +21,11 @@ namespace MESWebApi.Models
         public int adduser { get; set; }
         public DateTime? addtime { get; set; }
         public bool hasChildren { get; set; }
-        public List<sys_menu> children { get; set; }
-        public List<string> funs { get; set; }
-
-        public List<sys_role> roles { get; set; }
+        public List<sys_menu> children { get; set; } = new List<sys_menu>();
+        [JsonIgnore]
+        public string permission { get; set; }
+        public sys_permission menu_permission { get; set; }
+        public List<sys_role> roles { get; set; } = new List<sys_role>();
 
     }
 }

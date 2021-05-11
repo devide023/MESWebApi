@@ -33,10 +33,8 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void MenuTree()
         {
-            MenuService ms = new MenuService();
-            var list = ms.MenuTree();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(list);
-            System.Console.WriteLine(json);
+            string json= "{\"funs\":[\"add\",\"edit\",\"del\",\"query\"],\"editfields\":[\"name\"],\"readfields\":[\"code\"],\"hidefields\":[\"pwd\"],\"showfield\":[\"code\",\"name\"]}";
+            sys_permission obj = JsonConvert.DeserializeObject<sys_permission>(json);
         }
         [TestMethod]
         public void checklogin()

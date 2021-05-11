@@ -72,6 +72,7 @@ namespace MESWebApi.Services
             try
             {
                 StringBuilder sql = new StringBuilder();
+                sql.Append("select t1.*, t2.permission from (");
                 sql.Append("select tc.id, \r\n");
                 sql.Append("tc.title, \r\n");
                 sql.Append("tc.pid, \r\n");
@@ -83,7 +84,8 @@ namespace MESWebApi.Services
                 sql.Append("from sys_user_role ta, sys_role_menu tb, sys_menu tc \r\n");
                 sql.Append("where ta.userid = :userid \r\n");
                 sql.Append("and ta.roleid = tb.roleid \r\n");
-                sql.Append("and tb.menuid = tc.id \r\n");
+                sql.Append("and tb.menuid = tc.id) t1,sys_menu_data t2 \r\n");
+                sql.Append(" where t1.id = t2.menuid(+) ");
 
                 using (var db = new OraDBHelper())
                 {
@@ -91,6 +93,10 @@ namespace MESWebApi.Services
                     var list = db.Conn.Query<sys_menu>(sql.ToString(), new { userid = userid });
                     foreach (var item in list.Where(t => t.pid == 0))
                     {
+                        if (!string.IsNullOrEmpty(item.permission))
+                        {
+                            item.menu_permission = JsonConvert.DeserializeObject<sys_permission>(item.permission);
+                        }
                         menulist.Add(item);
                         bool haschild = list.Where(t => t.pid == item.id).Count() > 0 ? true : false;
                         if (haschild)
@@ -154,6 +160,10 @@ namespace MESWebApi.Services
             List<sys_menu> children = new List<sys_menu>();
             foreach (var menu in list.Where(t => t.pid == id))
             {
+                if (!string.IsNullOrEmpty(menu.permission))
+                {
+                    menu.menu_permission = JsonConvert.DeserializeObject<sys_permission>(menu.permission);
+                }
                 children.Add(menu);
                 bool haschild = list.Where(t => t.pid == menu.id).Count() > 0 ? true : false;
                 if (haschild)

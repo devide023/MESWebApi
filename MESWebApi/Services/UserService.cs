@@ -9,7 +9,6 @@ using MESWebApi.Util;
 using MESWebApi.Models;
 using MESWebApi.InterFaces;
 using log4net;
-using Dapper;
 using Dapper.Oracle;
 using System.Text;
 using System.Data;
@@ -275,6 +274,28 @@ namespace MESWebApi.Services
                 using (var conn = new OraDBHelper().Conn)
                 {
                    return conn.Execute(sql.ToString(), new {userid=userid,pwd=pwd1 });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<sys_menu_permission> UserPermission(int userid)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" select tc.menuid,tc.permission ");
+                sql.Append(" from sys_user_role ta, sys_role_menu tb, sys_menu_data tc ");
+                sql.Append(" where ta.roleid = tb.roleid ");
+                sql.Append("   and tb.menuid = tc.menuid ");
+                sql.Append("   and ta.userid = :userid ");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                   return conn.Query<sys_menu_permission>(sql.ToString(), new { userid = userid });
                 }
             }
             catch (Exception e)
