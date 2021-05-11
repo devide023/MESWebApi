@@ -104,7 +104,23 @@ namespace MESWebApi.Services
 
         public int Modify(sys_user entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update sys_user set name=:name where id=:id");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    return conn.Execute(sql.ToString(), new {
+                    id=entity.id,
+                    name=entity.name
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
         }
 
         public sys_user UserInfo(string token)

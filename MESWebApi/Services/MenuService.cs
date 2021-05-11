@@ -13,9 +13,10 @@ using System.Data;
 using MESWebApi.InterFaces;
 using Webdiyer.WebControls.Mvc;
 using log4net;
+using MESWebApi.Models.QueryParm;
 namespace MESWebApi.Services
 {
-    public class MenuService:IDBOper<sys_menu>
+    public class MenuService:IDBOper<sys_menu>,IComposeQuery<sys_menu,MenuQueryParm>
     {
         private ILog log;
         public MenuService()
@@ -23,6 +24,49 @@ namespace MESWebApi.Services
             log = LogManager.GetLogger(this.GetType());
         }
 
+        public IEnumerable<sys_menu> MenuTree(MenuQueryParm parm,out int resultcount) {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("SELECT id,");
+                sql.Append("pid,");
+                sql.Append("title,");
+                sql.Append("menutype,");
+                sql.Append("code,");
+                sql.Append("icon,");
+                sql.Append("path,");
+                sql.Append("viewpath,");
+                sql.Append("seq,");
+                sql.Append("adduser,");
+                sql.Append("addtime,");
+                sql.Append("status FROM sys_menu where status =1 ");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    var list = conn.Query<sys_menu>(sql.ToString());
+                    IEnumerable<sys_menu> menulist = list.Where(t => t.pid == 0);
+                    foreach (var item in menulist)
+                    {
+                        item.children = Create_Child(list, item.id);
+                        if (item.children.Count() > 0)
+                        {
+                            item.hasChildren = true;
+                        }
+                        else
+                        {
+                            item.hasChildren = false;
+                        }
+                    }
+                    var q = menulist.OrderBy(t=>t.id).ToPagedList(parm.pageindex,parm.pagesize);
+                    resultcount = q.TotalItemCount;
+                    return q;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public IEnumerable<sys_menu> User_Menus(int userid)
         {
             try
@@ -52,10 +96,12 @@ namespace MESWebApi.Services
                         if (haschild)
                         {
                             item.children = Create_Child(list, item.id);
+                            item.hasChildren = true;
                         }
                         else
                         {
                             item.children = new List<sys_menu>();
+                            item.hasChildren = false;
                         }
                     }
                     return menulist;
@@ -67,7 +113,42 @@ namespace MESWebApi.Services
                 throw;
             }
         }
+        public IEnumerable<sys_menu> SubMenuByPid(MenuQueryParm parm, out int resultcount) {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("SELECT id,");
+                sql.Append("pid,");
+                sql.Append("title,");
+                sql.Append("menutype,");
+                sql.Append("code,");
+                sql.Append("icon,");
+                sql.Append("path,");
+                sql.Append("viewpath,");
+                sql.Append("seq,");
+                sql.Append("adduser,");
+                sql.Append("addtime,");
+                sql.Append("status FROM sys_menu where status =1 and pid=:pid ");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    var q = conn.Query<sys_menu>(sql.ToString(), new { pid = parm.pid })
+                        .OrderBy(t => t.id)
+                        .ToPagedList(parm.pageindex, parm.pagesize);
+                    foreach (var item in q)
+                    {
+                        item.children = new List<sys_menu>();
+                        item.hasChildren = true;
+                    }
+                    resultcount = q.TotalItemCount;
+                    return q;
+                }
+            }
+            catch (Exception e)
+            {
 
+                throw;
+            }
+        }
         private List<sys_menu> Create_Child(IEnumerable<sys_menu> list,int id)
         {
             List<sys_menu> children = new List<sys_menu>();
@@ -78,10 +159,12 @@ namespace MESWebApi.Services
                 if (haschild)
                 {
                     menu.children = Create_Child(list, menu.id);
+                    menu.hasChildren = true;
                 }
                 else
                 {
                     menu.children = new List<sys_menu>();
+                    menu.hasChildren = false;
                 }
             }
             return children;
@@ -167,10 +250,17 @@ namespace MESWebApi.Services
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete from sys_menu where id =:id ");
-                using (var db = new OraDBHelper())
+                using (var conn = new OraDBHelper().Conn)
                 {
-                    int cnt = db.Conn.Execute(sql.ToString(), new { id = id });
-                    return cnt > 0 ? true : false;
+                    conn.Open();
+                    using (var tran = conn.BeginTransaction())
+                    {
+                        int cnt = conn.Execute(sql.ToString(), new { id = id },transaction:tran);
+                        int cnt2 = conn.Execute("delete from sys_role_menu where menuid=:id", new { id = id }, transaction: tran);
+                        tran.Commit();
+                        return cnt > 0 ? true : false;
+                    }
+                    
                 }
             }
             catch (Exception e)
@@ -281,6 +371,70 @@ namespace MESWebApi.Services
                     }
                 }
                 return ret;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<sys_menu> Search(MenuQueryParm parm, out int resultcount)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" select ta.id,");
+                sql.Append("ta.pid,");
+                sql.Append("ta.title,");
+                sql.Append("ta.menutype,");
+                sql.Append("ta.code,");
+                sql.Append("ta.icon,");
+                sql.Append("ta.path,");
+                sql.Append("ta.viewpath,");
+                sql.Append("ta.seq,");
+                sql.Append("ta.adduser,");
+                sql.Append("ta.addtime,");
+                sql.Append("ta.status,");
+                sql.Append("tc.id,");
+                sql.Append("tc.title,");
+                sql.Append("tc.status,");
+                sql.Append("tc.code ");
+                sql.Append(" from   SYS_MENU ta, sys_role_menu tb,sys_role tc ");
+                sql.Append(" where ta.id = tb.menuid ");
+                sql.Append(" and tb.roleid = tc.id ");
+                OracleDynamicParameters p = new OracleDynamicParameters();
+                if (parm.pid != -1)
+                {
+                    sql.Append(" and ta.pid = :pid ");
+                    p.Add(":pid", parm.pid, OracleMappingType.Int32, ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and ta.title like :title ");
+                    p.Add(":title", parm.keyword, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                }
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    var menudic = new Dictionary<int, sys_menu>();
+                    var query = conn.Query<sys_menu, sys_role, sys_menu>(sql.ToString(), (menu, role) =>
+                    {
+                        sys_menu menuEntry;
+                        if (!menudic.TryGetValue(menu.id, out menuEntry))
+                        {
+                            menuEntry = menu;
+                            menuEntry.roles = new List<sys_role>();
+                            menudic.Add(menuEntry.id, menuEntry);
+                        }
+                        menuEntry.roles.Add(role);
+                        return menuEntry;
+                    }, p,splitOn: "id")
+                        .Distinct()
+                        .OrderBy(t=>t.id)
+                        .ToPagedList(parm.pageindex, parm.pagesize);
+                    resultcount = query.TotalItemCount;
+                    return query;
+                }
             }
             catch (Exception e)
             {

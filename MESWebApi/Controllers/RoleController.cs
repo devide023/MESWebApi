@@ -13,7 +13,7 @@ namespace MESWebApi.Controllers
     public class RoleController : ApiController
     {
         [Route("list")]
-        [HttpGet]
+        [HttpPost]
         public IHttpActionResult Get()
         {
             try
@@ -32,6 +32,25 @@ namespace MESWebApi.Controllers
             }
         }
 
+        [Route("alllist")]
+        [HttpGet]
+        public IHttpActionResult All_List()
+        {
+            try
+            {
+                int cnt;
+                RoleService rs = new RoleService();
+                sys_page page = new sys_page();
+                page.pageindex = 1;
+                page.pagesize = int.MaxValue;
+                var list = rs.Find(page, out cnt);
+                return Json(new { code = 1, msg = "ok", list = list });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }    
+        }
         [Route("add")]
         [HttpPost]
         public IHttpActionResult Add(dynamic obj)

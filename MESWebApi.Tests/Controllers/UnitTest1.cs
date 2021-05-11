@@ -2,13 +2,48 @@
 using System;
 using MESWebApi.Services;
 using MESWebApi.Models;
+using MESWebApi.Models.QueryParm;
+using MESWebApi.Util;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq;
+
 namespace MESWebApi.Tests.Controllers
 {
     [TestClass]
     public class UnitTest1
     {
+        [TestMethod]
+        public void getmd5()
+        {
+           var pwd = Tool.Str2MD5("123456");
+           var token = new JWTHelper().CreateToken();
+            System.Console.WriteLine(token);
+        }
+        [TestMethod]
+        public void SearchMenu()
+        {
+            int cnt = 0;
+            MenuQueryParm p = new MenuQueryParm();
+            MenuService ms = new MenuService();
+            var list = ms.Search(p, out cnt);
+            var count = list.Count();
+            System.Console.WriteLine(count);
+        }
+        [TestMethod]
+        public void MenuTree()
+        {
+            MenuService ms = new MenuService();
+            var list = ms.MenuTree();
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+            System.Console.WriteLine(json);
+        }
+        [TestMethod]
+        public void checklogin()
+        {
+            UserService us = new UserService();
+            var token = us.CheckUserLogin("001", "123456");
+        }
         [TestMethod]
         public void TestMethod1()
         {

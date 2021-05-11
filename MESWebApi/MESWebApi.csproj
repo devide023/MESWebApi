@@ -166,6 +166,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
+    <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
     <Compile Include="Models\sys_menu.cs" />
     <Compile Include="Models\sys_page.cs" />

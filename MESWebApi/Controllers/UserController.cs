@@ -66,14 +66,17 @@ namespace MESWebApi.Controllers
         {
             try
             {
+                int adduserid = 0,status=1;
+                int.TryParse(obj.adduser.ToString(), out adduserid);
+                int.TryParse(obj.status.ToString(), out status);
                 string userpwd = Tool.Str2MD5(obj.pwd.ToString());
                 List<int> roleids = obj.roleids.ToObject<List<int>>();
                 UserService us = new UserService();
                 sys_user entity = new sys_user()
                 {
-                    status = 1,
+                    status = status,
                     addtime = DateTime.Now,
-                    adduser = 1,
+                    adduser = adduserid,
                     name = obj.name.ToString(),
                     code = obj.code.ToString(),
                     pwd = userpwd,
@@ -95,7 +98,46 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        [Route("edit")]
+        [HttpPost]
+        public IHttpActionResult Edit_User(dynamic obj) {
+            try
+            {
+                int userid = 0,adduserid=0;
+                int.TryParse(obj.id.ToString(), out userid);
+                int.TryParse(obj.adduser.ToString(), out adduserid);
+                List<int> roleids = obj.roleids.ToObject<List<int>>();
+                UserService us = new UserService();
+                if (userid > 0)
+                {
+                    sys_user entity = new sys_user()
+                    {
+                        id = userid,
+                        adduser = adduserid,
+                        name = obj.name.ToString(),
+                        code = obj.code.ToString()
+                    };
+                    int cnt = us.Modify(entity);
+                    if (cnt > 0)
+                    {
+                        cnt = us.SaveUserRoles(entity.id, roleids);
+                        return Json(new { code = 1, msg = "数据保存成功" });
+                    }
+                    else
+                    {
+                        return Json(new { code = 0, msg = "修改用户信息失败" });
+                    }
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "修改用户信息失败" });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
         public IHttpActionResult ChangePwd(dynamic obj)
         {
             try
