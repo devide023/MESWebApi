@@ -110,5 +110,13 @@ namespace MESWebApi.Tests.Controllers
             System.Console.WriteLine(json);
         }
 
+        [TestMethod]
+        public void Icons()
+        {
+            MenuService ms = new MenuService();
+            var t = ms.MenuMaxCode(0);
+            Console.WriteLine(t);
+        }
+
         }
 }

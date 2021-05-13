@@ -7,5 +7,6 @@ namespace MESWebApi.Models.QueryParm
 {
     public class UserQueryParm:sys_page
     {
+        public List<sys_query> queryexp { get; set; }
     }
 }

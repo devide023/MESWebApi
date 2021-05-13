@@ -111,7 +111,7 @@ namespace MESWebApi.Services
                         }
                     }
                     return menulist;
-                }
+                }                
             }
             catch (Exception e)
             {
@@ -444,6 +444,38 @@ namespace MESWebApi.Services
                         .ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = query.TotalItemCount;
                     return query;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public string MenuMaxCode(int id)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select code from sys_menu where id = :pid; \r\n");
+                sql.Append("select nvl(max(code)+1,1) as maxcode from SYS_MENU where pid = :pid; \r\n");
+                
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    string code = conn.ExecuteScalar<string>("select code from sys_menu where id = :pid", new { pid = id });
+                    code = code == null ? "" : code;
+                    string maxcode = conn.ExecuteScalar<string>("select nvl(max(code),0) as maxcode from SYS_MENU where pid = :pid", new { pid = id }).ToString().PadLeft(2, '0');
+                    string max = "";
+                    if (!string.IsNullOrEmpty(code))
+                    {
+                        max = (Convert.ToInt32(maxcode.Replace(code, "")) + 1).ToString().PadLeft(2, '0');
+                    }
+                    else
+                    {
+                        max = (Convert.ToInt32(maxcode) + 1).ToString().PadLeft(2, '0');
+                    }
+                    return code + max;
                 }
             }
             catch (Exception e)

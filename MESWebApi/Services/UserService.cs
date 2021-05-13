@@ -215,6 +215,23 @@ namespace MESWebApi.Services
                     sql.Append(" and (ta.code like :key or ta.name like :key) \r\n");
                     p.Add(":key", parm.keyword, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 }
+                if (parm.queryexp.Count() != 0)
+                {
+                    sql.Append(" and ");
+                    foreach (var item in parm.queryexp)
+                    {
+                        sql.Append($"{item.left}");
+                        if (item.oper == "like")
+                        {
+                            sql.Append($" {item.colname} {item.oper} '%{item.value}%' {item.logic} ");
+                        }
+                        else
+                        {
+                            sql.Append($" {item.colname} {item.oper} '{item.value}' {item.logic} ");
+                        }
+                        sql.Append($"{item.right}");
+                    }
+                }
                 using (var conn = new OraDBHelper().Conn)
                 {
                     var userdic = new Dictionary<int, sys_user>();

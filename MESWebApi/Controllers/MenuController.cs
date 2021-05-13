@@ -161,5 +161,21 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+
+        [Route("menucode")]
+        [HttpGet]
+        public IHttpActionResult MenuCode(int id)
+        {
+            try
+            {
+                MenuService ms = new MenuService();
+                string code = ms.MenuMaxCode(id);
+                return Json(new { code = 1, msg = "ok", menucode = code });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
     }
 }
