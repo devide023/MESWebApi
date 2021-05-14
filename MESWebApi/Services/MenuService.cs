@@ -38,9 +38,9 @@ namespace MESWebApi.Services
                 sql.Append("path,");
                 sql.Append("viewpath,");
                 sql.Append("seq,");
-                sql.Append("adduser,");
+                sql.Append("adduser,(select name from sys_user where id = sys_menu.adduser) as addusername,");
                 sql.Append("addtime,");
-                sql.Append("status FROM sys_menu where status =1 ");
+                sql.Append("status FROM sys_menu where status =1 order by pid,id asc");
                 using (var conn = new OraDBHelper().Conn)
                 {
                     var list = conn.Query<sys_menu>(sql.ToString());
@@ -48,14 +48,7 @@ namespace MESWebApi.Services
                     foreach (var item in menulist)
                     {
                         item.children = Create_Child(list, item.id);
-                        if (item.children.Count() > 0)
-                        {
-                            item.hasChildren = true;
-                        }
-                        else
-                        {
-                            item.hasChildren = false;
-                        }
+                        item.hasChildren = false;
                     }
                     var q = menulist.OrderBy(t => t.id).ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
@@ -171,13 +164,12 @@ namespace MESWebApi.Services
                 if (haschild)
                 {
                     menu.children = Create_Child(list, menu.id);
-                    menu.hasChildren = true;
                 }
                 else
                 {
                     menu.children = new List<sys_menu>();
-                    menu.hasChildren = false;
                 }
+                menu.hasChildren = false;
             }
             return children;
         }

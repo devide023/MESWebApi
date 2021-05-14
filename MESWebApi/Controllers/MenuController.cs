@@ -98,6 +98,71 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 添加功能，字段
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <returns></returns>
+        [Route("add_funs_field")]
+        [HttpPost]
+        public IHttpActionResult AddFuns_Filed(dynamic menu) {
+            try
+            {
+                MenuService ms = new MenuService();
+                var funs = menu.funs.ToObject<List<string>>();
+                var fiels = menu.fields.ToObject<List<string>>();
+                int pid = 0,adduserid=0;
+                List<int> oklist = new List<int>();
+                int.TryParse(menu.pid!=null?menu.pid.ToString():"0", out pid);
+                int.TryParse(menu.adduser!=null?menu.adduser.ToString():"0", out adduserid);
+                foreach (var item in funs)
+                {
+                    var entity = new sys_menu()
+                    {
+                        code = ms.MenuMaxCode(pid),
+                        menutype = "03",
+                        title = item,
+                        pid = pid,
+                        addtime = DateTime.Now,
+                        seq = 10,
+                        status = 1,
+                        icon=" ",
+                        adduser = adduserid
+                    };
+                    var r = ms.Add(entity);
+                    oklist.Add(r.id);
+                }
+                foreach (var item in fiels)
+                {
+                    var entity = new sys_menu()
+                    {
+                        code = ms.MenuMaxCode(pid),
+                        menutype = "04",
+                        title = item,
+                        pid = pid,
+                        addtime = DateTime.Now,
+                        seq = 10,
+                        status = 1,
+                        icon=" ",
+                        adduser = adduserid
+                    };
+                    var r = ms.Add(entity);
+                    oklist.Add(r.id);
+                }
+                if (oklist.Count() == funs.Count + fiels.Count)
+                {
+                    return Json(new { code = 1, msg = "数据保存成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据保存失败" });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
         [Route("edit")]
         [HttpPost]
         public IHttpActionResult Edit(dynamic obj)
