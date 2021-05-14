@@ -177,5 +177,20 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        [Route("permission_tree")]
+        [HttpGet]
+        public IHttpActionResult PermissionTree()
+        {
+            try
+            {
+                MenuService ms = new MenuService();
+                var list = ms.PermissionTree();
+                return Json(new { code = 1, msg = "ok", list = list });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
     }
 }

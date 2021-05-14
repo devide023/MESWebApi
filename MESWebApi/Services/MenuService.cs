@@ -16,7 +16,7 @@ using log4net;
 using MESWebApi.Models.QueryParm;
 namespace MESWebApi.Services
 {
-    public class MenuService:IDBOper<sys_menu>,IComposeQuery<sys_menu,MenuQueryParm>
+    public class MenuService : IDBOper<sys_menu>, IComposeQuery<sys_menu, MenuQueryParm>
     {
         private ILog log;
         public MenuService()
@@ -24,7 +24,8 @@ namespace MESWebApi.Services
             log = LogManager.GetLogger(this.GetType());
         }
 
-        public IEnumerable<sys_menu> MenuTree(MenuQueryParm parm,out int resultcount) {
+        public IEnumerable<sys_menu> MenuTree(MenuQueryParm parm, out int resultcount)
+        {
             try
             {
                 StringBuilder sql = new StringBuilder();
@@ -56,7 +57,7 @@ namespace MESWebApi.Services
                             item.hasChildren = false;
                         }
                     }
-                    var q = menulist.OrderBy(t=>t.id).ToPagedList(parm.pageindex,parm.pagesize);
+                    var q = menulist.OrderBy(t => t.id).ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
                     return q;
                 }
@@ -111,7 +112,7 @@ namespace MESWebApi.Services
                         }
                     }
                     return menulist;
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -119,7 +120,8 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-        public IEnumerable<sys_menu> SubMenuByPid(MenuQueryParm parm, out int resultcount) {
+        public IEnumerable<sys_menu> SubMenuByPid(MenuQueryParm parm, out int resultcount)
+        {
             try
             {
                 StringBuilder sql = new StringBuilder();
@@ -155,7 +157,7 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-        private List<sys_menu> Create_Child(IEnumerable<sys_menu> list,int id)
+        private List<sys_menu> Create_Child(IEnumerable<sys_menu> list, int id)
         {
             List<sys_menu> children = new List<sys_menu>();
             foreach (var menu in list.Where(t => t.pid == id))
@@ -179,6 +181,122 @@ namespace MESWebApi.Services
             }
             return children;
         }
+
+        public IEnumerable<dynamic> PermissionTree()
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("SELECT id,");
+                sql.Append("pid,");
+                sql.Append("title,menutype");
+                sql.Append(" FROM sys_menu where status =1 order by pid,seq asc");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    List<sys_menu> tree = new List<sys_menu>();
+                    var list = conn.Query<sys_menu>(sql.ToString());
+                    var list1 = list.Where(t => new string[] { "01", "02" }.Contains(t.menutype));
+                    foreach (var item in list1.Where(t => t.pid == 0))
+                    {
+                        item.children = SubPermissionTree(list, list1, item.id);
+                        tree.Add(item);
+                    }
+                    return tree;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        private List<sys_menu> SubPermissionTree(IEnumerable<sys_menu> alllist,IEnumerable<sys_menu> list, int id)
+        {
+            try
+            {
+                List<sys_menu> children = new List<sys_menu>();
+                foreach (var item in list.Where(t => t.pid == id))
+                {
+                    if (item.menutype == "02")
+                    {
+                        item.children = SubFun_Field(alllist, item.id);
+                    }
+                    else
+                    { 
+                        item.children = SubPermissionTree(alllist,list, item.id);
+                    }
+                    children.Add(item);
+                }
+                return children;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        private List<sys_menu> SubFun_Field(IEnumerable<sys_menu> list, int id)
+        {
+            List<sys_menu> children = new List<sys_menu>();
+            int fun_nodeid = list.Max(t => t.id) * 10;
+            int edit_nodeid = fun_nodeid + 1;
+            int hide_nodeid = fun_nodeid + 2;
+            var funs = list.Where(t => t.pid == id && t.menutype == "03").Select(t => new sys_menu { id = t.id, pid = fun_nodeid,title = t.title }).ToList<sys_menu>();
+            var fields = list.Where(t => t.pid == id && t.menutype == "04").Select(t => new sys_menu {id = t.id, pid = edit_nodeid,title = t.title }).ToList<sys_menu>();
+            List<sys_menu> hidefields = new List<sys_menu>();
+            foreach (var item in fields)
+            {
+                hidefields.Add(new sys_menu()
+                {
+                    id = item.id,
+                    pid = hide_nodeid,
+                    title = item.title
+                });
+            }
+
+            if (funs.Count > 0)
+            {
+                children.Add(new sys_menu()
+                {
+                    id = fun_nodeid,
+                    pid = id,
+                    title = "页面功能",
+                    children = funs,
+                    menu_permission = new sys_permission() { 
+                    funs = funs.Select(t=>t.title).ToList()
+                    }
+                });
+            }
+            if (fields.Count > 0)
+            {
+                children.Add(new sys_menu()
+                {
+                    id = edit_nodeid,
+                    pid = id,
+                    title = "编辑字段",
+                    children = fields,
+                    menu_permission = new sys_permission()
+                    {
+                        editfields = fields.Select(t => t.title).ToList()
+                    }
+                });
+                children.Add(new sys_menu()
+                {
+                    id = hide_nodeid,
+                    pid = id,
+                    title = "隐藏字段",
+                    children = hidefields,
+                    menu_permission = new sys_permission()
+                    {
+                        hidefields = hidefields.Select(t => t.title).ToList()
+                    }
+                });
+            }
+            return children;
+        }
+
         public sys_menu Add(sys_menu menu)
         {
             try
@@ -243,7 +361,7 @@ namespace MESWebApi.Services
                 sql.Append("update sys_menu set title=:title where id=:id ");
                 using (var db = new OraDBHelper())
                 {
-                   return db.Conn.Execute(sql.ToString(), new {title=entity.title,id=entity.id });
+                    return db.Conn.Execute(sql.ToString(), new { title = entity.title, id = entity.id });
                 }
 
             }
@@ -265,12 +383,12 @@ namespace MESWebApi.Services
                     conn.Open();
                     using (var tran = conn.BeginTransaction())
                     {
-                        int cnt = conn.Execute(sql.ToString(), new { id = id },transaction:tran);
+                        int cnt = conn.Execute(sql.ToString(), new { id = id }, transaction: tran);
                         int cnt2 = conn.Execute("delete from sys_role_menu where menuid=:id", new { id = id }, transaction: tran);
                         tran.Commit();
                         return cnt > 0 ? true : false;
                     }
-                    
+
                 }
             }
             catch (Exception e)
@@ -325,8 +443,8 @@ namespace MESWebApi.Services
                 }
                 using (var db = new OraDBHelper())
                 {
-                   var resutl =  db.Conn.Query<sys_menu>(sql.ToString(), para);
-                    var q = resutl.OrderByDescending(t=>t.id).ToPagedList(parm.pageindex,parm.pagesize);
+                    var resutl = db.Conn.Query<sys_menu>(sql.ToString(), para);
+                    var q = resutl.OrderByDescending(t => t.id).ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
                     return q;
                 }
@@ -346,7 +464,7 @@ namespace MESWebApi.Services
                 sql.Append("delete from sys_menu where id in :ids ");
                 using (var db = new OraDBHelper())
                 {
-                   return  db.Conn.Execute(sql.ToString(), new { ids = ids });
+                    return db.Conn.Execute(sql.ToString(), new { ids = ids });
                 }
             }
             catch (Exception e)
@@ -438,9 +556,9 @@ namespace MESWebApi.Services
                         }
                         menuEntry.roles.Add(role);
                         return menuEntry;
-                    }, p,splitOn: "id")
+                    }, p, splitOn: "id")
                         .Distinct()
-                        .OrderBy(t=>t.id)
+                        .OrderBy(t => t.id)
                         .ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = query.TotalItemCount;
                     return query;
@@ -460,7 +578,7 @@ namespace MESWebApi.Services
                 StringBuilder sql = new StringBuilder();
                 sql.Append("select code from sys_menu where id = :pid; \r\n");
                 sql.Append("select nvl(max(code)+1,1) as maxcode from SYS_MENU where pid = :pid; \r\n");
-                
+
                 using (var conn = new OraDBHelper().Conn)
                 {
                     string code = conn.ExecuteScalar<string>("select code from sys_menu where id = :pid", new { pid = id });

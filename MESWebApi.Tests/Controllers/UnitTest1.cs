@@ -114,8 +114,8 @@ namespace MESWebApi.Tests.Controllers
         public void Icons()
         {
             MenuService ms = new MenuService();
-            var t = ms.MenuMaxCode(0);
-            Console.WriteLine(t);
+            var t = ms.PermissionTree();
+            Console.WriteLine(JsonConvert.SerializeObject(t));
         }
 
         }
