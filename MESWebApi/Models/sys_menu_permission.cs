@@ -7,7 +7,8 @@ namespace MESWebApi.Models
 {
     public class sys_menu_permission
     {
+        public int roleid { get; set; }
         public int menuid { get; set; }
-        public string permission { get; set; }
+        public sys_permission permission { get; set; }
     }
 }

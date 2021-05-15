@@ -8,9 +8,7 @@ namespace MESWebApi.Models
     public class sys_permission
     {
         public List<string> funs { get; set; } = new List<string>();
-        public List<string> readfields { get; set; } = new List<string>();
         public List<string> editfields { get; set; } = new List<string>();
-        public List<string> showfields { get; set; } = new List<string>();
         public List<string> hidefields { get; set; } = new List<string>();
     }
 }

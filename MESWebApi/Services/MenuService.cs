@@ -28,8 +28,26 @@ namespace MESWebApi.Services
         {
             try
             {
+                OracleDynamicParameters op = new OracleDynamicParameters();
+                StringBuilder exp = new StringBuilder();
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    exp.Append(" and (title like :key or code like :key) ");
+                    op.Add(":key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.status))
+                {
+                    exp.Append(" and status = :status ");
+                    op.Add(":status", parm.status, OracleMappingType.Int32, ParameterDirection.Input);
+                }
+                if (parm.pid > 0)
+                {
+                    exp.Append(" and pid = :pid ");
+                    op.Add(":pid", parm.pid, OracleMappingType.Int32, ParameterDirection.Input);
+                }
                 StringBuilder sql = new StringBuilder();
-                sql.Append("SELECT id,");
+                sql.Append("with tm (id,pid,title,menutype,code,icon,path,viewpath,seq,adduser,addusername,addtime,status) as");
+                sql.Append("(SELECT id,");
                 sql.Append("pid,");
                 sql.Append("title,");
                 sql.Append("menutype,");
@@ -40,10 +58,35 @@ namespace MESWebApi.Services
                 sql.Append("seq,");
                 sql.Append("adduser,(select name from sys_user where id = sys_menu.adduser) as addusername,");
                 sql.Append("addtime,");
-                sql.Append("status FROM sys_menu where status =1 order by pid,id asc");
+                sql.Append("status FROM sys_menu where ");
+                if (exp.Length == 0)
+                {
+                    sql.Append(" pid = 0 ");
+                }
+                else
+                {
+                    sql.Append(" 1=1 ");
+                    sql.Append(exp);
+                }
+                sql.Append(" union all ");
+                sql.Append("select t1.id,t1.pid,t1.title,t1.menutype,t1.code,t1.icon,t1.path,t1.viewpath,t1.seq,t1.adduser,");
+                sql.Append("(select name from sys_user where id = t1.adduser) as addusername,");
+                sql.Append("t1.addtime,t1.status from sys_menu t1,tm where ");
+                if (exp.Length == 0)
+                {
+                    sql.Append(" t1.pid = tm.id ");
+                }
+                else
+                {
+                    sql.Append(" t1.id = tm.pid ");
+                }
+                sql.Append(")");
+                sql.Append("select * from tm ");
+                sql.Append(" order by pid asc");
+
                 using (var conn = new OraDBHelper().Conn)
                 {
-                    var list = conn.Query<sys_menu>(sql.ToString());
+                    var list = conn.Query<sys_menu>(sql.ToString(), op);
                     IEnumerable<sys_menu> menulist = list.Where(t => t.pid == 0);
                     foreach (var item in menulist)
                     {
@@ -203,7 +246,7 @@ namespace MESWebApi.Services
             }
         }
 
-        private List<sys_menu> SubPermissionTree(IEnumerable<sys_menu> alllist,IEnumerable<sys_menu> list, int id)
+        private List<sys_menu> SubPermissionTree(IEnumerable<sys_menu> alllist, IEnumerable<sys_menu> list, int id)
         {
             try
             {
@@ -215,8 +258,8 @@ namespace MESWebApi.Services
                         item.children = SubFun_Field(alllist, item.id);
                     }
                     else
-                    { 
-                        item.children = SubPermissionTree(alllist,list, item.id);
+                    {
+                        item.children = SubPermissionTree(alllist, list, item.id);
                     }
                     children.Add(item);
                 }
@@ -235,8 +278,8 @@ namespace MESWebApi.Services
             int fun_nodeid = list.Max(t => t.id) * 10;
             int edit_nodeid = fun_nodeid + 1;
             int hide_nodeid = fun_nodeid + 2;
-            var funs = list.Where(t => t.pid == id && t.menutype == "03").Select(t => new sys_menu { id = t.id, pid = fun_nodeid,title = t.title }).ToList<sys_menu>();
-            var fields = list.Where(t => t.pid == id && t.menutype == "04").Select(t => new sys_menu {id = t.id, pid = edit_nodeid,title = t.title }).ToList<sys_menu>();
+            var funs = list.Where(t => t.pid == id && t.menutype == "03").Select(t => new sys_menu { id = t.id, pid = fun_nodeid, title = t.title }).ToList<sys_menu>();
+            var fields = list.Where(t => t.pid == id && t.menutype == "04").Select(t => new sys_menu { id = t.id, pid = edit_nodeid, title = t.title }).ToList<sys_menu>();
             List<sys_menu> hidefields = new List<sys_menu>();
             foreach (var item in fields)
             {
@@ -256,9 +299,7 @@ namespace MESWebApi.Services
                     pid = id,
                     title = "页面功能",
                     children = funs,
-                    menu_permission = new sys_permission() { 
-                    funs = funs.Select(t=>t.title).ToList()
-                    }
+                    menutype="03"
                 });
             }
             if (fields.Count > 0)
@@ -269,21 +310,15 @@ namespace MESWebApi.Services
                     pid = id,
                     title = "编辑字段",
                     children = fields,
-                    menu_permission = new sys_permission()
-                    {
-                        editfields = fields.Select(t => t.title).ToList()
-                    }
-                });
+                    menutype = "04"
+                }); 
                 children.Add(new sys_menu()
                 {
                     id = hide_nodeid,
                     pid = id,
                     title = "隐藏字段",
-                    children = hidefields,
-                    menu_permission = new sys_permission()
-                    {
-                        hidefields = hidefields.Select(t => t.title).ToList()
-                    }
+                    menutype="04",
+                    children = hidefields
                 });
             }
             return children;

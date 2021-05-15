@@ -7,6 +7,10 @@ namespace MESWebApi.Models
 {
     public class sys_page
     {
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public string status { get; set; }
         public string keyword { get; set; }
         /// <summary>
         /// 页码

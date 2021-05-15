@@ -113,8 +113,11 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void Icons()
         {
+            int cnt = 0;
             MenuService ms = new MenuService();
-            var t = ms.PermissionTree();
+            var t = ms.MenuTree(new MenuQueryParm() { 
+                keyword="角色"
+            },out cnt);
             Console.WriteLine(JsonConvert.SerializeObject(t));
         }
 

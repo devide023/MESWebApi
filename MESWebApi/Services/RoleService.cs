@@ -11,6 +11,7 @@ using MESWebApi.DB;
 using Dapper;
 using Dapper.Oracle;
 using System.Data;
+using Newtonsoft.Json;
 namespace MESWebApi.Services
 {
     public class RoleService : IDBOper<sys_role>
@@ -25,12 +26,13 @@ namespace MESWebApi.Services
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append("insert into sys_role (id,status,title,code,adduser,addtime) values (SEQ_ROLEID.nextval,:status,:title,:code,:adduser,sysdate) returning id into :id ");
+                sql.Append("insert into sys_role (id,status,title,code,adduser,addtime,addusername) values (SEQ_ROLEID.nextval,:status,:title,:code,:adduser,sysdate,:addusername) returning id into :id ");
                 OracleDynamicParameters p = new OracleDynamicParameters();
                 p.Add(":status", entity.status, OracleMappingType.Int32, ParameterDirection.Input);
                 p.Add(":title", entity.title, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":code", entity.code, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":adduser", entity.adduser, OracleMappingType.Int32, ParameterDirection.Input);
+                p.Add(":addusername", entity.addusername, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":id", null, OracleMappingType.Int32, ParameterDirection.ReturnValue);
                 using (var db = new OraDBHelper())
                 {
@@ -116,7 +118,7 @@ namespace MESWebApi.Services
             {
                 OracleDynamicParameters p = new OracleDynamicParameters();
                 StringBuilder sql = new StringBuilder();
-                sql.Append(" select id,code,status,title,adduser,addtime from sys_role where 1=1 ");
+                sql.Append(" select id,code,status,title,adduser,addtime,addusername from sys_role where 1=1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
                     sql.Append(" and (title like :keyword or code like :keyword) ");
@@ -143,10 +145,10 @@ namespace MESWebApi.Services
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append("update sys_role set title=:title,status=:status,updatetime=sysdate where id = :id");
+                sql.Append("update sys_role set title=:title,status=:status,updatetime=sysdate,updateuser=:updateuser,updateusername=:upusername where id = :id");
                 using (var db = new OraDBHelper())
                 {
-                   return db.Conn.Execute(sql.ToString(), new {id=entity.id,title=entity.title,status=entity.status});
+                   return db.Conn.Execute(sql.ToString(), new {id=entity.id,title=entity.title,status=entity.status, updateuser=entity.updateuser, upusername=entity.updateusername });
                 }
             }
             catch (Exception e)
@@ -181,6 +183,46 @@ namespace MESWebApi.Services
                         trans.Commit();
                         return ret;
                     }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public int Save_RolePermis(List<sys_menu_permission> list)
+        {
+            try
+            {
+                var roleids = list.Select(t => t.roleid).ToList();
+                StringBuilder sql = new StringBuilder();
+                sql.Append("insert into sys_role_permis(id,roleid,meunuid,permis) ");
+                sql.Append(" values ");
+                sql.Append(" (seq_rolepromis_id.nextval,:roleid,:menuid,:permis)");
+                List<dynamic> p = new List<dynamic>();
+                foreach (var item in list)
+                {
+                    var json = JsonConvert.SerializeObject(item.permission);
+                    p.Add(new
+                    {
+                        roleid=item.roleid,
+                        menuid=item.menuid,
+                        permis=json
+                    });
+                }
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    conn.Open();
+                    using (var tran = conn.BeginTransaction())
+                    {
+                        conn.Execute("delete from sys_role_permis where roleid in :roleid", new { roleid = roleids }, transaction: tran);
+                        int cnt = conn.Execute(sql.ToString(), p,transaction:tran);
+                        tran.Commit();
+                        return cnt;
+                    }
+                    
                 }
             }
             catch (Exception e)

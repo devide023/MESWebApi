@@ -18,9 +18,16 @@ namespace MESWebApi.Models
         public string path { get; set; }
         public string viewpath { get; set; }
         public int seq { get; set; }
+        [JsonIgnore]
         public int adduser { get; set; }
+        [JsonIgnore]
+        public int updateuser { get; set; }
         public string addusername { get; set; }
+        [JsonIgnore]
+        public string updateusername { get; set; }
         public DateTime? addtime { get; set; }
+        [JsonIgnore]
+        public DateTime? updatetime { get; set; }
         public bool hasChildren { get; set; }
         public List<sys_menu> children { get; set; } = new List<sys_menu>();
         [JsonIgnore]
