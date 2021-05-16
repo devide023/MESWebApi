@@ -67,22 +67,22 @@ namespace MESWebApi.Controllers
                     sys_menu_permission mp = new sys_menu_permission();
                     sys_permission p = new sys_permission();
                     //功能列表
-                    var funfloder = list.Where(t => t.title == "页面功能").FirstOrDefault();
+                    var funfloder = list.Where(t => t.pid == item.id && t.title == "页面功能").FirstOrDefault();
                     if (funfloder != null)
                     {
-                        p.funs = list.Where(t => t.pid == funfloder.id).Select(t => t.title).ToList();
+                        p.funs = list.Where(t => t.pid == funfloder.id).Select(t => t.code).ToList();
                     }
                     //编辑字段
-                    var editfloder = list.Where(t => t.title == "编辑字段").FirstOrDefault();
+                    var editfloder = list.Where(t => t.pid == item.id && t.title == "编辑字段").FirstOrDefault();
                     if (editfloder != null)
                     {
-                        p.editfields = list.Where(t => t.pid == editfloder.id).Select(t => t.title).ToList();
+                        p.editfields = list.Where(t => t.pid == editfloder.id).Select(t => t.code).ToList();
                     }
                     //隐藏字段
-                    var hidefloder = list.Where(t => t.title == "隐藏字段").FirstOrDefault();
+                    var hidefloder = list.Where(t => t.pid == item.id && t.title == "隐藏字段").FirstOrDefault();
                     if (hidefloder != null)
                     {
-                        p.hidefields = list.Where(t => t.pid == hidefloder.id).Select(t => t.title).ToList();
+                        p.hidefields = list.Where(t => t.pid == hidefloder.id).Select(t => t.code).ToList();
                     }
                     mp.menuid = item.id;
                     mp.permission = p;

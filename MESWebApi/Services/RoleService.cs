@@ -26,14 +26,13 @@ namespace MESWebApi.Services
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append("insert into sys_role (id,status,title,code,adduser,addtime,addusername) values (SEQ_ROLEID.nextval,:status,:title,:code,:adduser,sysdate,:addusername) returning id into :id ");
+                sql.Append("insert into sys_role (id,status,title,code,adduser,addtime,addusername) values (SEQ_ROLEID.nextval,:status,:title,:code,:adduser,sysdate,(select name from sys_user where id = :adduser)) returning id into :id ");
                 OracleDynamicParameters p = new OracleDynamicParameters();
                 p.Add(":status", entity.status, OracleMappingType.Int32, ParameterDirection.Input);
                 p.Add(":title", entity.title, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                p.Add(":code", entity.code, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                p.Add(":code", MaxCode(), OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":adduser", entity.adduser, OracleMappingType.Int32, ParameterDirection.Input);
-                p.Add(":addusername", entity.addusername, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                p.Add(":id", null, OracleMappingType.Int32, ParameterDirection.ReturnValue);
+                p.Add(":addusername", entity.addusername, OracleMappingType.NVarchar2, ParameterDirection.Input);                p.Add(":id", null, OracleMappingType.Int32, ParameterDirection.ReturnValue);
                 using (var db = new OraDBHelper())
                 {
                     int cnt = db.Conn.Execute(sql.ToString(), p);
@@ -198,7 +197,7 @@ namespace MESWebApi.Services
             {
                 var roleids = list.Select(t => t.roleid).ToList();
                 StringBuilder sql = new StringBuilder();
-                sql.Append("insert into sys_role_permis(id,roleid,meunuid,permis) ");
+                sql.Append("insert into sys_role_permis(id,roleid,menuid,permis) ");
                 sql.Append(" values ");
                 sql.Append(" (seq_rolepromis_id.nextval,:roleid,:menuid,:permis)");
                 List<dynamic> p = new List<dynamic>();
@@ -223,6 +222,24 @@ namespace MESWebApi.Services
                         return cnt;
                     }
                     
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public string MaxCode()
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select LPad(max(code) + 1, 2, '0') as maxcode from Sys_Role");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    return conn.ExecuteScalar<string>(sql.ToString());
                 }
             }
             catch (Exception e)

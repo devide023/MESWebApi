@@ -224,7 +224,7 @@ namespace MESWebApi.Services
                 StringBuilder sql = new StringBuilder();
                 sql.Append("SELECT id,");
                 sql.Append("pid,");
-                sql.Append("title,menutype");
+                sql.Append("code,title,menutype");
                 sql.Append(" FROM sys_menu where status =1 order by pid,seq asc");
                 using (var conn = new OraDBHelper().Conn)
                 {
@@ -278,8 +278,8 @@ namespace MESWebApi.Services
             int fun_nodeid = list.Max(t => t.id) * 10;
             int edit_nodeid = fun_nodeid + 1;
             int hide_nodeid = fun_nodeid + 2;
-            var funs = list.Where(t => t.pid == id && t.menutype == "03").Select(t => new sys_menu { id = t.id, pid = fun_nodeid, title = t.title }).ToList<sys_menu>();
-            var fields = list.Where(t => t.pid == id && t.menutype == "04").Select(t => new sys_menu { id = t.id, pid = edit_nodeid, title = t.title }).ToList<sys_menu>();
+            var funs = list.Where(t => t.pid == id && t.menutype == "03").Select(t => new sys_menu { id = t.id, pid = fun_nodeid,code = t.code, title = t.title }).ToList<sys_menu>();
+            var fields = list.Where(t => t.pid == id && t.menutype == "04").Select(t => new sys_menu { id = t.id, pid = edit_nodeid,code = t.code, title = t.title }).ToList<sys_menu>();
             List<sys_menu> hidefields = new List<sys_menu>();
             foreach (var item in fields)
             {
@@ -287,7 +287,8 @@ namespace MESWebApi.Services
                 {
                     id = item.id,
                     pid = hide_nodeid,
-                    title = item.title
+                    title = item.title,
+                    code = item.code
                 });
             }
 

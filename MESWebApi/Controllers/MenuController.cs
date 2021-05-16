@@ -109,8 +109,8 @@ namespace MESWebApi.Controllers
             try
             {
                 MenuService ms = new MenuService();
-                var funs = menu.funs.ToObject<List<string>>();
-                var fiels = menu.fields.ToObject<List<string>>();
+                var funs = menu.funs.ToObject<List<dynamic>>();
+                var fiels = menu.fields.ToObject<List<dynamic>>();
                 int pid = 0,adduserid=0;
                 List<int> oklist = new List<int>();
                 int.TryParse(menu.pid!=null?menu.pid.ToString():"0", out pid);
@@ -119,9 +119,9 @@ namespace MESWebApi.Controllers
                 {
                     var entity = new sys_menu()
                     {
-                        code = ms.MenuMaxCode(pid),
+                        code = item.code,
                         menutype = "03",
-                        title = item,
+                        title = item.name,
                         pid = pid,
                         addtime = DateTime.Now,
                         seq = 10,
@@ -136,9 +136,9 @@ namespace MESWebApi.Controllers
                 {
                     var entity = new sys_menu()
                     {
-                        code = ms.MenuMaxCode(pid),
+                        code = item.code,
                         menutype = "04",
-                        title = item,
+                        title = item.name,
                         pid = pid,
                         addtime = DateTime.Now,
                         seq = 10,
