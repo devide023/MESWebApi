@@ -22,7 +22,15 @@ namespace MESWebApi.Controllers
             {
                 UserService us = new UserService();
                 var token = us.CheckUserLogin(obj.code, obj.pwd);
-                return Json(new { code = 1, msg = "ok", token = token });
+                if (!string.IsNullOrEmpty(token))
+                {
+                    return Json(new { code = 1, msg = "ok", token = token });
+
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "用户名或密码错误", token = token });
+                }
             }
             catch (Exception e)
             {

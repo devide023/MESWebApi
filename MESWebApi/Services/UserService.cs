@@ -329,6 +329,42 @@ namespace MESWebApi.Services
             }
         }
 
+        public int EnableUser(List<int> ids)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update sys_user set status = 1 where id in :ids and status = 0 ");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                   return conn.Execute(sql.ToString(), new { ids = ids });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public int DisableUser(List<int> ids)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update sys_user set status = 0 where id in :ids and status = 1 ");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    return conn.Execute(sql.ToString(), new { ids = ids });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
         public IEnumerable<sys_menu_permission> UserPermission(int userid)
         {
             try

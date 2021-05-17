@@ -202,5 +202,52 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+
+        [Route("enable")]
+        [HttpPost]
+        public IHttpActionResult UserEnable(dynamic obj)
+        {
+            try
+            {
+                List<int> ids = obj.ids != null ? obj.ids.ToObject<List<int>>() : new List<int>();
+                UserService us = new UserService();
+                int ret = us.EnableUser(ids);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据操作成功" });
+                }
+                else {
+                    return Json(new { code = 0, msg = "数据操作失败" });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
+
+        [Route("disable")]
+        [HttpPost]
+        public IHttpActionResult UserDisable(dynamic obj)
+        {
+            try
+            {
+                List<int> ids = obj.ids != null ? obj.ids.ToObject<List<int>>() : new List<int>();
+                UserService us = new UserService();
+                int ret = us.DisableUser(ids);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据操作成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据操作失败" });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
     }
 }
