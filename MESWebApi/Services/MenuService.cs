@@ -90,7 +90,7 @@ namespace MESWebApi.Services
                     IEnumerable<sys_menu> menulist = list.Where(t => t.pid == 0);
                     foreach (var item in menulist)
                     {
-                        item.children = Create_Child(list, item.id);
+                        item.children = Create_Child(new List<sys_role_menu>(),list, item.id);
                         item.hasChildren = false;
                     }
                     var q = menulist.OrderBy(t => t.id).ToPagedList(parm.pageindex, parm.pagesize);
@@ -104,13 +104,41 @@ namespace MESWebApi.Services
                 throw;
             }
         }
+        public sys_permission Get_UniMenu_Permission(IEnumerable<sys_role_menu> permislist, int menuid)
+        {
+            try
+            {
+                var menupermis_list = permislist.Where(t => t.menuid == menuid);
+                sys_permission unitpermis = new sys_permission();
+                //过滤菜单下的所有权限合并到unitpermis对象
+                foreach (var permisitem in menupermis_list)
+                {
+                    sys_permission permission = new sys_permission();
+                    if (permisitem.permis != null)
+                    {
+                        permission = JsonConvert.DeserializeObject<sys_permission>(permisitem.permis);
+                        unitpermis.funs.AddRange(permission.funs);
+                        unitpermis.editfields.AddRange(permission.editfields);
+                        unitpermis.hidefields.AddRange(permission.hidefields);
+                    }
+                }
+                unitpermis.funs = unitpermis.funs.Distinct().ToList();
+                unitpermis.editfields = unitpermis.editfields.Distinct().ToList();
+                unitpermis.hidefields = unitpermis.hidefields.Distinct().ToList();
+                return unitpermis;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public IEnumerable<sys_menu> User_Menus(int userid)
         {
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append("select t1.*, t2.permission from (");
-                sql.Append("select tc.id, \r\n");
+                sql.Append("select distinct tc.id, \r\n");
                 sql.Append("tc.title, \r\n");
                 sql.Append("tc.pid, \r\n");
                 sql.Append("tc.code, \r\n");
@@ -121,24 +149,27 @@ namespace MESWebApi.Services
                 sql.Append("from sys_user_role ta, sys_role_menu tb, sys_menu tc \r\n");
                 sql.Append("where ta.userid = :userid \r\n");
                 sql.Append("and ta.roleid = tb.roleid \r\n");
-                sql.Append("and tb.menuid = tc.id) t1,sys_menu_data t2 \r\n");
-                sql.Append(" where t1.id = t2.menuid(+) ");
+                sql.Append("and tb.menuid = tc.id \r\n");
+
+
+                StringBuilder permis_sql = new StringBuilder();
+                permis_sql.Append("SELECT ta.roleid,ta.menuid,ta.permis FROM sys_role_menu ta,sys_user_role tb ");
+                permis_sql.Append(" where ta.roleid = tb.roleid");
+                permis_sql.Append(" and tb.userid = :userid ");
 
                 using (var db = new OraDBHelper())
                 {
                     List<sys_menu> menulist = new List<sys_menu>();
                     var list = db.Conn.Query<sys_menu>(sql.ToString(), new { userid = userid });
+                    var permislist = db.Conn.Query<sys_role_menu>(permis_sql.ToString(), new { userid = userid });
                     foreach (var item in list.Where(t => t.pid == 0))
                     {
-                        if (!string.IsNullOrEmpty(item.permission))
-                        {
-                            item.menu_permission = JsonConvert.DeserializeObject<sys_permission>(item.permission);
-                        }
+                        item.menu_permission = Get_UniMenu_Permission(permislist, item.id);
                         menulist.Add(item);
                         bool haschild = list.Where(t => t.pid == item.id).Count() > 0 ? true : false;
                         if (haschild)
                         {
-                            item.children = Create_Child(list, item.id);
+                            item.children = Create_Child(permislist, list, item.id);
                             item.hasChildren = true;
                         }
                         else
@@ -193,20 +224,17 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-        private List<sys_menu> Create_Child(IEnumerable<sys_menu> list, int id)
+        private List<sys_menu> Create_Child(IEnumerable<sys_role_menu> permislist, IEnumerable<sys_menu> list, int id)
         {
             List<sys_menu> children = new List<sys_menu>();
             foreach (var menu in list.Where(t => t.pid == id))
             {
-                if (!string.IsNullOrEmpty(menu.permission))
-                {
-                    menu.menu_permission = JsonConvert.DeserializeObject<sys_permission>(menu.permission);
-                }
+                menu.menu_permission = Get_UniMenu_Permission(permislist,menu.id);
                 children.Add(menu);
                 bool haschild = list.Where(t => t.pid == menu.id).Count() > 0 ? true : false;
                 if (haschild)
                 {
-                    menu.children = Create_Child(list, menu.id);
+                    menu.children = Create_Child(permislist, list, menu.id);
                 }
                 else
                 {

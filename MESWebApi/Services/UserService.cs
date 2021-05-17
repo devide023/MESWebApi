@@ -98,7 +98,36 @@ namespace MESWebApi.Services
 
         public sys_user Find(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select ta.id, ta.code, ta.name, ta.pwd, ta.token, ta.adduser, ta.addtime, ta.status, ta.headimg,tc.id,tc.code,tc.title,tc.status \r\n");
+                sql.Append(" from sys_user ta, sys_user_role tb, sys_role tc where ta.id = tb.userid and tb.roleid = tc.id and ta.id=:userid \r\n");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    var userdic = new Dictionary<int, sys_user>();
+                    var q = conn.Query<sys_user, sys_role, sys_user>(sql.ToString(), (user, role) =>
+                    {
+                        sys_user userEntry;
+                        if (!userdic.TryGetValue(user.id, out userEntry))
+                        {
+                            userEntry = user;
+                            userEntry.roles = new List<sys_role>();
+                            userdic.Add(userEntry.id, userEntry);
+                        }
+
+                        userEntry.roles.Add(role);
+                        return userEntry;
+                    }, new { userid = id });
+
+                    return q.FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
         }
 
         public int Modify(sys_user entity)

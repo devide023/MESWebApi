@@ -60,8 +60,8 @@ namespace MESWebApi.Controllers
                 List<int> menuids = new List<int>();
                 List<sys_menu_permission> permis = new List<sys_menu_permission>();
                 List<sys_menu> list = objs.menu_nodes.ToObject<List<sys_menu>>();
-                menuids = list.Where(t => new string[] { "01", "02" }.Contains(t.menutype)).Select(t => t.id).ToList();
-                var pages = list.Where(t => t.menutype == "02");
+                var pages = list.Where(t => new string[] { "01", "02" }.Contains(t.menutype));
+                menuids = pages.Select(t => t.id).ToList();
                 foreach (var item in pages)
                 {
                     sys_menu_permission mp = new sys_menu_permission();
@@ -104,8 +104,7 @@ namespace MESWebApi.Controllers
                 if (entity.id > 0)
                 {
                     permis.ForEach(t => t.roleid = entity.id);
-                    int ret = rs.Save_RoleMenus(entity.id, menuids);
-                    int cnt = rs.Save_RolePermis(permis);
+                    int ret = rs.Save_RoleMenus(permis);
                     return Json(new { code = 1, msg = "角色添加成功" });
                 }
                 else

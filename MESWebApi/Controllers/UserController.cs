@@ -67,10 +67,10 @@ namespace MESWebApi.Controllers
             try
             {
                 int adduserid = 0,status=1;
-                int.TryParse(obj.adduser.ToString(), out adduserid);
-                int.TryParse(obj.status.ToString(), out status);
+                int.TryParse(obj.adduser!=null?obj.adduser.ToString():"0", out adduserid);
+                int.TryParse(obj.status!=null?obj.status.ToString():"1", out status);
                 string userpwd = Tool.Str2MD5(obj.pwd.ToString());
-                List<int> roleids = obj.roleids.ToObject<List<int>>();
+                List<int> roleids = obj.roleids!=null?obj.roleids.ToObject<List<int>>():new List<int>();
                 UserService us = new UserService();
                 sys_user entity = new sys_user()
                 {
@@ -104,9 +104,9 @@ namespace MESWebApi.Controllers
             try
             {
                 int userid = 0,adduserid=0;
-                int.TryParse(obj.id.ToString(), out userid);
-                int.TryParse(obj.adduser.ToString(), out adduserid);
-                List<int> roleids = obj.roleids.ToObject<List<int>>();
+                int.TryParse(obj.id!=null?obj.id.ToString():"0", out userid);
+                int.TryParse(obj.adduser!=null?obj.adduser.ToString():"0", out adduserid);
+                List<int> roleids = obj.roleids!=null?obj.roleids.ToObject<List<int>>():new List<int>();
                 UserService us = new UserService();
                 if (userid > 0)
                 {
@@ -162,6 +162,45 @@ namespace MESWebApi.Controllers
             }
             
         }
+        [Route("find")]
+        [HttpGet]
+        public IHttpActionResult UserEntity(int id)
+        {
+            try
+            {
+                UserService us = new UserService();
+                sys_user entity = us.Find(id);
+                return Json(new { code = 1, msg = "ok",user = entity });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
 
+        [Route("resetpwd")]
+        [HttpPost]
+        public IHttpActionResult ResetPwd(dynamic obj)
+        {
+            try
+            {
+                UserService us = new UserService();
+                int userid = 0;
+                int.TryParse(obj.id != null ? obj.id.ToString() : "0", out userid);
+                int ret = us.ChangePwd(userid, obj.pwd.ToString());
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "重置密码成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "重置密码失败" });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
     }
 }

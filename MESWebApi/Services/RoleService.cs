@@ -190,7 +190,43 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-
+        public int Save_RoleMenus(List<sys_menu_permission> list) {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("insert into sys_role_menu(id,roleid,menuid,permis) \r\n");
+                sql.Append("values \r\n");
+                sql.Append(" (SEQ_ROLEMENU_ID.nextval,:roleid,:menuid,:permis) \r\n");
+                List<int> roleid = list.Select(t => t.roleid).ToList();
+                List<dynamic> p = new List<dynamic>();
+                foreach (var item in list)
+                {
+                    var json = JsonConvert.SerializeObject(item.permission);
+                    p.Add(new
+                    {
+                        roleid = item.roleid,
+                        menuid = item.menuid,
+                        permis = json
+                    });
+                }
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        conn.Execute("delete from sys_role_menu where roleid in :roleid", new { roleid = roleid }, trans);
+                        int ret = conn.Execute(sql.ToString(), p, trans);
+                        trans.Commit();
+                        return ret;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public int Save_RolePermis(List<sys_menu_permission> list)
         {
             try
