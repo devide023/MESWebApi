@@ -121,5 +121,20 @@ namespace MESWebApi.Tests.Controllers
             Console.WriteLine(JsonConvert.SerializeObject(t));
         }
 
+        [TestMethod]
+        public void RoleInfo()
+        {
+            RoleService rs = new RoleService();
+            var list = rs.Get_Role_Menus(45);
+            Console.WriteLine(JsonConvert.SerializeObject(list));
         }
+
+        [TestMethod]
+        public void PermisTree()
+        {
+            MenuService ms = new MenuService();
+            var list = ms.PermissionTree();
+            Console.WriteLine(JsonConvert.SerializeObject(list));
+        }
+    }
 }

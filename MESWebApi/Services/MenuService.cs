@@ -258,10 +258,59 @@ namespace MESWebApi.Services
                 {
                     List<sys_menu> tree = new List<sys_menu>();
                     var list = conn.Query<sys_menu>(sql.ToString());
-                    var list1 = list.Where(t => new string[] { "01", "02" }.Contains(t.menutype));
-                    foreach (var item in list1.Where(t => t.pid == 0))
+                    var pages = list.Where(t => t.menutype == "02");
+                    int maxid = int.MaxValue;
+                    List<sys_menu> alllist = new List<sys_menu>();
+                    foreach (var item in list.Where(t => t.menutype == "01"))
                     {
-                        item.children = SubPermissionTree(list, list1, item.id);
+                        alllist.Add(item);
+                    } 
+                    foreach (var item in pages)
+                    {
+                        alllist.Add(item);
+                        sys_menu node = new sys_menu();
+                        node.id = maxid - item.id;
+                        node.pid = item.id;
+                        node.title = "页面功能";
+                        alllist.Add(node);
+                        var flist = list.Where(t => t.menutype == "03" && t.pid == item.id).ToList();
+                        foreach (var fitem in flist)
+                        {
+                            fitem.pid = node.id;
+                            alllist.Add(fitem);
+                        }
+                        sys_menu node1 = new sys_menu();
+                        node1.id = maxid - item.id - 1;
+                        node1.pid = item.id;
+                        node1.title = "编辑字段";
+                        alllist.Add(node1);
+                        var elist = list.Where(t => t.menutype == "04" && t.pid == item.id).ToList();
+                        string hjson = JsonConvert.SerializeObject(elist);
+                        foreach (var eitem in elist)
+                        {
+                            eitem.pid = node1.id;
+                            alllist.Add(eitem);
+                        }
+                        sys_menu node2 = new sys_menu();
+                        node2.id = maxid - item.id - 2;
+                        node2.pid = item.id;
+                        node2.title = "隐藏字段";
+                        alllist.Add(node2);
+                        var hlist = JsonConvert.DeserializeObject<List<sys_menu>>(hjson);
+                        foreach (var hitem in hlist)
+                        {
+                            hitem.id = hitem.id * 100;
+                            hitem.pid = node2.id;
+                            alllist.Add(hitem);
+                        }
+                    }
+                    foreach (var item in alllist)
+                    {
+                        System.Console.WriteLine($"{item.id}--{item.pid}--{item.title}");
+                    }
+                    foreach (var item in alllist.Where(t => t.pid == 0))
+                    {
+                        item.children = SubPermissionTree(alllist, item.id);
                         tree.Add(item);
                     }
                     return tree;
@@ -274,21 +323,14 @@ namespace MESWebApi.Services
             }
         }
 
-        private List<sys_menu> SubPermissionTree(IEnumerable<sys_menu> alllist, IEnumerable<sys_menu> list, int id)
+        private List<sys_menu> SubPermissionTree(IEnumerable<sys_menu> list, int id)
         {
             try
             {
                 List<sys_menu> children = new List<sys_menu>();
                 foreach (var item in list.Where(t => t.pid == id))
                 {
-                    if (item.menutype == "02")
-                    {
-                        item.children = SubFun_Field(alllist, item.id);
-                    }
-                    else
-                    {
-                        item.children = SubPermissionTree(alllist, list, item.id);
-                    }
+                    item.children = SubPermissionTree(list, item.id);
                     children.Add(item);
                 }
                 return children;
@@ -303,9 +345,9 @@ namespace MESWebApi.Services
         private List<sys_menu> SubFun_Field(IEnumerable<sys_menu> list, int id)
         {
             List<sys_menu> children = new List<sys_menu>();
-            int fun_nodeid = list.Max(t => t.id) * 10;
-            int edit_nodeid = fun_nodeid + 1;
-            int hide_nodeid = fun_nodeid + 2;
+            int fun_nodeid = int.MaxValue - id;
+            int edit_nodeid = fun_nodeid - 1;
+            int hide_nodeid = fun_nodeid - 2;
             var funs = list.Where(t => t.pid == id && t.menutype == "03").Select(t => new sys_menu { id = t.id, pid = fun_nodeid,code = t.code, title = t.title }).ToList<sys_menu>();
             var fields = list.Where(t => t.pid == id && t.menutype == "04").Select(t => new sys_menu { id = t.id, pid = edit_nodeid,code = t.code, title = t.title }).ToList<sys_menu>();
             List<sys_menu> hidefields = new List<sys_menu>();

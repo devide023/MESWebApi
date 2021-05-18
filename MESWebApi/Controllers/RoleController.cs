@@ -124,22 +124,50 @@ namespace MESWebApi.Controllers
         {
             try
             {
-                int roleid = 0, adduserid = 0, status;
-                int.TryParse(obj.id, out roleid);
-                int.TryParse(obj.adduser, out adduserid);
-                int.TryParse(obj.status, out status);
+                int roleid = 0;
+                List<int> menuids = new List<int>();
+                List<sys_menu_permission> permis = new List<sys_menu_permission>();
+                List<sys_menu> list = obj.menu_nodes.ToObject<List<sys_menu>>();
+                var pages = list.Where(t => new string[] { "01", "02" }.Contains(t.menutype));
+                menuids = pages.Select(t => t.id).ToList();
+                foreach (var item in pages)
+                {
+                    sys_menu_permission mp = new sys_menu_permission();
+                    sys_permission p = new sys_permission();
+                    //功能列表
+                    var funfloder = list.Where(t => t.pid == item.id && t.title == "页面功能").FirstOrDefault();
+                    if (funfloder != null)
+                    {
+                        p.funs = list.Where(t => t.pid == funfloder.id).Select(t => t.code).ToList();
+                    }
+                    //编辑字段
+                    var editfloder = list.Where(t => t.pid == item.id && t.title == "编辑字段").FirstOrDefault();
+                    if (editfloder != null)
+                    {
+                        p.editfields = list.Where(t => t.pid == editfloder.id).Select(t => t.code).ToList();
+                    }
+                    //隐藏字段
+                    var hidefloder = list.Where(t => t.pid == item.id && t.title == "隐藏字段").FirstOrDefault();
+                    if (hidefloder != null)
+                    {
+                        p.hidefields = list.Where(t => t.pid == hidefloder.id).Select(t => t.code).ToList();
+                    }
+                    mp.menuid = item.id;
+                    mp.permission = p;
+                    permis.Add(mp);
+                }
+                int.TryParse(obj.id!=null?obj.id.ToString():"0", out roleid);
                 RoleService rs = new RoleService();
                 sys_role entity = new sys_role()
                 {
                     id = roleid,
                     title = obj.title.ToString(),
-                    code = obj.code.ToString(),
-                    adduser = adduserid,
-                    status = status
                 };
                 int cnt = rs.Modify(entity);
                 if (cnt > 0)
                 {
+                    permis.ForEach(t => t.roleid = roleid);
+                    int ret = rs.Save_RoleMenus(permis);
                     return Json(new { code = 1, msg = "角色修改成功" });
                 }
                 else
@@ -169,6 +197,38 @@ namespace MESWebApi.Controllers
                 {
                     return Json(new { code = 0, msg = "角色删除失败" });
                 }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
+
+        [Route("find")]
+        [HttpPost]
+        public IHttpActionResult Find(int id)
+        {
+            try
+            {
+                RoleService rs = new RoleService();
+                sys_role entity = rs.Find(id);
+                return Json(new { code = 1, msg = "ok",role=entity });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
+
+        [Route("menulist")]
+        [HttpGet]
+        public IHttpActionResult RoleMenus(int id)
+        {
+            try
+            {
+                RoleService rs = new RoleService();
+                var menus = rs.Get_Role_Menus(id);
+                return Json(new { code = 1, msg = "ok", menus = menus });
             }
             catch (Exception e)
             {
