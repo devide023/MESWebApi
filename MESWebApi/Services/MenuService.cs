@@ -269,7 +269,7 @@ namespace MESWebApi.Services
                     {
                         alllist.Add(item);
                         sys_menu node = new sys_menu();
-                        node.id = maxid - item.id;
+                        node.id = maxid - item.id*123;
                         node.pid = item.id;
                         node.title = "页面功能";
                         alllist.Add(node);
@@ -280,7 +280,7 @@ namespace MESWebApi.Services
                             alllist.Add(fitem);
                         }
                         sys_menu node1 = new sys_menu();
-                        node1.id = maxid - item.id - 1;
+                        node1.id = maxid - item.id *234;
                         node1.pid = item.id;
                         node1.title = "编辑字段";
                         alllist.Add(node1);
@@ -292,24 +292,25 @@ namespace MESWebApi.Services
                             alllist.Add(eitem);
                         }
                         sys_menu node2 = new sys_menu();
-                        node2.id = maxid - item.id - 2;
+                        node2.id = maxid - item.id * 345;
                         node2.pid = item.id;
                         node2.title = "隐藏字段";
                         alllist.Add(node2);
                         var hlist = JsonConvert.DeserializeObject<List<sys_menu>>(hjson);
                         foreach (var hitem in hlist)
                         {
-                            hitem.id = hitem.id * 100;
+                            hitem.id = hitem.id * 10;
                             hitem.pid = node2.id;
                             alllist.Add(hitem);
                         }
                     }
-                    foreach (var item in alllist)
-                    {
-                        System.Console.WriteLine($"{item.id}--{item.pid}--{item.title}");
-                    }
+                    //foreach (var item in alllist)
+                    //{
+                    //    System.Console.WriteLine($"{item.id}----{item.pid}----{item.title}");
+                    //}
                     foreach (var item in alllist.Where(t => t.pid == 0))
                     {
+                        //System.Console.WriteLine($"{item.id}----{item.pid}----{item.title}");
                         item.children = SubPermissionTree(alllist, item.id);
                         tree.Add(item);
                     }
@@ -330,6 +331,7 @@ namespace MESWebApi.Services
                 List<sys_menu> children = new List<sys_menu>();
                 foreach (var item in list.Where(t => t.pid == id))
                 {
+                    //System.Console.WriteLine($"{item.id}----{item.pid}----{item.title}");
                     item.children = SubPermissionTree(list, item.id);
                     children.Add(item);
                 }

@@ -367,9 +367,9 @@ namespace MESWebApi.Services
                             code = item.CODE,
                             seq = Convert.ToInt32(item.SEQ)
                         };
-                        int funpageid = maxid - mitem.id;
-                        int eidtpageid = funpageid - 1;
-                        int hidepageid = funpageid - 2;
+                        int funpageid = maxid - mitem.id * 123;
+                        int eidtpageid = maxid - mitem.id * 234;
+                        int hidepageid = maxid - mitem.id * 345;
                         if ( item.PERMIS!=null)
                         {
                             sys_permission jsonobj = JsonConvert.DeserializeObject<sys_permission>(item.PERMIS.ToString());
@@ -446,7 +446,7 @@ namespace MESWebApi.Services
                                     hidef.code = hide_temp.code;
                                     hidef.title = hide_temp.title;
                                     hidef.pid = hidepageid;
-                                    hidef.id = hide_temp.id;
+                                    hidef.id = hide_temp.id*10;
                                     menulist.Add(hidef);
                                 }
                             }
@@ -457,6 +457,10 @@ namespace MESWebApi.Services
                         }
                         menulist.Add(mitem);
                     }
+                    //foreach (var item in menulist)
+                    //{
+                    //    System.Console.WriteLine($"{item.id}---{item.pid}----{item.title}");
+                    //}
                     return menulist;
                 }
             }
