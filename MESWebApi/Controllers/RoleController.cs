@@ -28,7 +28,7 @@ namespace MESWebApi.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { code = 0, msg = e.Message});
+                return Json(new { code = 0, msg = e.Message });
             }
         }
 
@@ -49,7 +49,7 @@ namespace MESWebApi.Controllers
             catch (Exception e)
             {
                 return Json(new { code = 0, msg = e.Message });
-            }    
+            }
         }
         [Route("add")]
         [HttpPost]
@@ -124,7 +124,7 @@ namespace MESWebApi.Controllers
         {
             try
             {
-                int roleid = 0;
+                int roleid = 0, status = 1;
                 List<int> menuids = new List<int>();
                 List<sys_menu_permission> permis = new List<sys_menu_permission>();
                 List<sys_menu> list = obj.menu_nodes.ToObject<List<sys_menu>>();
@@ -156,12 +156,14 @@ namespace MESWebApi.Controllers
                     mp.permission = p;
                     permis.Add(mp);
                 }
-                int.TryParse(obj.id!=null?obj.id.ToString():"0", out roleid);
+                int.TryParse(obj.id != null ? obj.id.ToString() : "0", out roleid);
+                int.TryParse(obj.status != null ? obj.status.ToString() : "1", out status);
                 RoleService rs = new RoleService();
                 sys_role entity = new sys_role()
                 {
                     id = roleid,
                     title = obj.title.ToString(),
+                    status = status
                 };
                 int cnt = rs.Modify(entity);
                 if (cnt > 0)
@@ -212,7 +214,7 @@ namespace MESWebApi.Controllers
             {
                 RoleService rs = new RoleService();
                 sys_role entity = rs.Find(id);
-                return Json(new { code = 1, msg = "ok",role=entity });
+                return Json(new { code = 1, msg = "ok", role = entity });
             }
             catch (Exception e)
             {
@@ -229,6 +231,50 @@ namespace MESWebApi.Controllers
                 RoleService rs = new RoleService();
                 var menus = rs.Get_Role_Menus(id);
                 return Json(new { code = 1, msg = "ok", menus = menus });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
+
+        [Route("disable")]
+        [HttpPost]
+        public IHttpActionResult Disable(dynamic obj)
+        {
+            try
+            {
+                int upuser, status;
+                int.TryParse(obj.upuser != null ? obj.upuser.ToString() : "0", out upuser);
+                int.TryParse(obj.status != null ? obj.status.ToString() : "1", out status);
+                List<int> ids = obj.ids != null ? obj.ids.ToObject<List<int>>() : new List<int>();
+                RoleService rs = new RoleService();
+                int ret = rs.RoleStatus(ids, status, upuser);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据操作成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据操作失败" });
+                }
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
+
+        [Route("userlist")]
+        [HttpGet]
+        public IHttpActionResult RoleUsers(int id)
+        {
+            try
+            {
+                RoleService rs = new RoleService();
+                var list = rs.GetRoleUsers(id);
+                return Json(new { code = 1, msg = "ok",list = list });
             }
             catch (Exception e)
             {

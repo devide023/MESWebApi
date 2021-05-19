@@ -66,10 +66,11 @@ namespace MESWebApi.Controllers
         {
             try
             {
-                int pid = 0,status=1,adduserid=0;
+                int pid = 0,status=1,adduserid=0,seq;
                 int.TryParse(obj.pid.ToString(), out pid);
                 int.TryParse(obj.status!=null? obj.status.ToString():"1", out status);
                 int.TryParse(obj.adduser!=null?obj.adduser.ToString():"0", out adduserid);
+                int.TryParse(obj.seq!=null?obj.seq1.ToString():"0", out seq);
                 MenuService ms = new MenuService();
                 sys_menu entity = new sys_menu() {
                     pid = pid,
@@ -81,6 +82,7 @@ namespace MESWebApi.Controllers
                     menutype=obj.menutype.ToString(),
                     status=status,
                     adduser=adduserid,
+                    seq = seq,
                     addtime = DateTime.Now
                 };
                 entity = ms.Add(entity);
@@ -169,24 +171,24 @@ namespace MESWebApi.Controllers
         {
             try
             {
-                int id = 0, pid = 0, status = 1, adduserid = 0;
-                int.TryParse(obj.id, out id);
-                int.TryParse(obj.pid, out pid);
-                int.TryParse(obj.status, out status);
-                int.TryParse(obj.adduser, out adduserid);
+                int id = 0,  status = 1, upuserid = 0,seq=10;
+                int.TryParse(obj.id!=null?obj.id.ToString():"0", out id);
+                int.TryParse(obj.status!=null?obj.status.ToString():"1", out status);
+                int.TryParse(obj.updateuser!=null?obj.updateuser.ToString():"0", out upuserid);
+                int.TryParse(obj.seq!=null?obj.seq.ToString():"10", out seq);
                 MenuService ms = new MenuService();
                 sys_menu entity = new sys_menu()
                 {
                     id = id,
-                    pid = pid,
-                    code = obj.code.ToString(),
-                    icon = obj.icon.ToString(),
-                    path = obj.path.ToString(),
-                    title = obj.title.ToString(),
-                    viewpath = obj.viewpath.ToString(),
-                    menutype = obj.menutype.ToString(),
+                    code = obj.code!=null?obj.code.ToString():"",
+                    icon = obj.icon!=null?obj.icon.ToString():"",
+                    path = obj.path!=null?obj.path.ToString():"",
+                    title = obj.title!=null?obj.title.ToString():"",
+                    viewpath = obj.viewpath!=null?obj.viewpath.ToString():"",
+                    menutype = obj.menutype!=null?obj.menutype.ToString():"",
                     status = status,
-                    adduser = adduserid
+                    seq = seq,
+                    updateuser = upuserid
                 };
                 int cnt = ms.Modify(entity);
                 if (cnt > 0)

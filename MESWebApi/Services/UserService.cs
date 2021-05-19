@@ -386,5 +386,21 @@ namespace MESWebApi.Services
                 throw;
             }
         }
+
+        public IEnumerable<sys_user> FindUserByName(string key)
+        {
+            try
+            {
+                using (var conn = new OraDBHelper().Conn)
+                {
+                   return conn.Query<sys_user>("select id,name from sys_user where name like :key and status = 1", new { key = "%" + key + "%" });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
     }
 }

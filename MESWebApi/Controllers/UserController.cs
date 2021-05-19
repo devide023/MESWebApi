@@ -249,5 +249,21 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+
+        [Route("keyfind")]
+        [HttpGet]
+        public IHttpActionResult FindUserByName(string key)
+        {
+            try
+            {
+                UserService us = new UserService();
+                var list = us.FindUserByName(key);
+                return Json(new { code = 0, msg = "ok",list = list });
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
     }
 }

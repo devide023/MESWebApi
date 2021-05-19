@@ -412,6 +412,7 @@ namespace MESWebApi.Services
                 sql.Append("viewpath,");
                 sql.Append("addtime,");
                 sql.Append("adduser,");
+                sql.Append("addusername,");
                 sql.Append("seq");
                 sql.Append(")");
                 sql.Append("values");
@@ -425,6 +426,7 @@ namespace MESWebApi.Services
                 sql.Append(":viewpath,");
                 sql.Append("sysdate,");
                 sql.Append(":adduser,");
+                sql.Append("(select name from sys_user where id = :adduser),");
                 sql.Append(":seq");
                 sql.Append(") returning id into :id");
                 using (var db = new OraDBHelper())
@@ -458,10 +460,29 @@ namespace MESWebApi.Services
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append("update sys_menu set title=:title where id=:id ");
+                sql.Append("update sys_menu set status=:status,");
+                sql.Append(" code=:code,");
+                sql.Append(" menutype=:menutype,");
+                sql.Append(" icon=:icon,");
+                sql.Append(" path=:path,");
+                sql.Append(" title=:title,");
+                sql.Append(" seq=:seq,");
+                sql.Append(" updatetime=sysdate,");
+                sql.Append(" updateuser=:updateuser,");
+                sql.Append(" updateusername=(select name from sys_user where id=:updateuser),");
+                sql.Append(" viewpath =:viewpath where id=:id ");
                 using (var db = new OraDBHelper())
                 {
-                    return db.Conn.Execute(sql.ToString(), new { title = entity.title, id = entity.id });
+                    return db.Conn.Execute(sql.ToString(), new { title = entity.title,
+                        status=entity.status,
+                        code=entity.code,
+                        menutype=entity.menutype,
+                        icon = entity.icon,
+                        path = entity.path,
+                        viewpath = entity.viewpath,
+                        seq = entity.seq,
+                        updateuser=entity.updateuser,
+                        id = entity.id });
                 }
 
             }

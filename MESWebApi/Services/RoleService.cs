@@ -471,5 +471,55 @@ namespace MESWebApi.Services
             }
         }
 
+        public int RoleStatus(List<int> ids,int status,int upuerid)
+        {
+            try
+            {
+                int t = status == 0 ? 1 : 0;
+                List<dynamic> p = new List<dynamic>();
+                foreach (var item in ids)
+                {
+                    p.Add(new { status = status, upuser= upuerid, id = item,t=t });
+                }
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update sys_role set status = :status, ");
+                sql.Append(" updatetime=sysdate,");
+                sql.Append(" updateuser=:upuser,");
+                sql.Append(" updateusername=(select name from sys_user where id=:upuser) ");
+                sql.Append(" where id = :id ");
+                sql.Append(" and status = :t ");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    return conn.Execute(sql.ToString(), p.ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<sys_user> GetRoleUsers(int roleid)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select distinct tb.id, tb.code, tb.name");
+                sql.Append(" from sys_user_role ta, sys_user tb");
+                sql.Append(" where  ta.roleid = tb.id");
+                sql.Append(" and    tb.status = 1");
+                sql.Append(" and    ta.roleid = :id");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                   return conn.Query<sys_user>(sql.ToString(), new { id = roleid });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
     }
 }
