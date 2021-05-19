@@ -393,7 +393,7 @@ namespace MESWebApi.Services
             {
                 using (var conn = new OraDBHelper().Conn)
                 {
-                   return conn.Query<sys_user>("select id,name from sys_user where name like :key and status = 1", new { key = "%" + key + "%" });
+                   return conn.Query<sys_user>("select id,status,code,name from sys_user where status = 1 and (name like :key or code like :key)", new { key = "%" + key + "%" });
                 }
             }
             catch (Exception e)

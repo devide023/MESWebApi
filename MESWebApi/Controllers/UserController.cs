@@ -251,14 +251,14 @@ namespace MESWebApi.Controllers
         }
 
         [Route("keyfind")]
-        [HttpGet]
-        public IHttpActionResult FindUserByName(string key)
+        [HttpPost]
+        public IHttpActionResult FindUserByName(dynamic obj)
         {
             try
             {
                 UserService us = new UserService();
-                var list = us.FindUserByName(key);
-                return Json(new { code = 0, msg = "ok",list = list });
+                var list = us.FindUserByName(obj.key!=null?obj.key.ToString():"");
+                return Json(new { code = 1, msg = "ok",list = list });
             }
             catch (Exception e)
             {
