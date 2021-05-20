@@ -82,7 +82,7 @@ namespace MESWebApi.Services
                 }
                 sql.Append(")");
                 sql.Append("select * from tm ");
-                sql.Append(" order by pid asc");
+                sql.Append(" order by pid,seq asc");
 
                 using (var conn = new OraDBHelper().Conn)
                 {
@@ -93,7 +93,7 @@ namespace MESWebApi.Services
                         item.children = Create_Child(new List<sys_role_menu>(),list, item.id);
                         item.hasChildren = false;
                     }
-                    var q = menulist.OrderBy(t => t.id).ToPagedList(parm.pageindex, parm.pagesize);
+                    var q = menulist.OrderBy(t => t.pid).ThenBy(t=>t.seq).ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
                     return q;
                 }
@@ -149,7 +149,7 @@ namespace MESWebApi.Services
                 sql.Append("from sys_user_role ta, sys_role_menu tb, sys_menu tc \r\n");
                 sql.Append("where ta.userid = :userid \r\n");
                 sql.Append("and ta.roleid = tb.roleid \r\n");
-                sql.Append("and tb.menuid = tc.id \r\n");
+                sql.Append("and tb.menuid = tc.id order by tc.pid,tc.seq asc\r\n");
 
 
                 StringBuilder permis_sql = new StringBuilder();
@@ -679,7 +679,8 @@ namespace MESWebApi.Services
                         return menuEntry;
                     }, p, splitOn: "id")
                         .Distinct()
-                        .OrderBy(t => t.id)
+                        .OrderBy(t => t.pid)
+                        .ThenBy(t=>t.seq)
                         .ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = query.TotalItemCount;
                     return query;

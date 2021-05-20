@@ -306,7 +306,43 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-
+        public int Save_RoleUsers(int roleid,List<int> userids)
+        {
+            try
+            {
+                List<dynamic> p = new List<dynamic>();
+                foreach (var item in userids)
+                {
+                    p.Add(new { roleid = roleid, userid = item });
+                }
+                StringBuilder sql = new StringBuilder();
+                sql.Append("insert into sys_user_role \r\n");
+                sql.Append("(id,");
+                sql.Append("userid,");
+                sql.Append("roleid)");
+                sql.Append("values");
+                sql.Append("(seq_userrole_id.nextval,");
+                sql.Append("  :userid,");
+                sql.Append("  :roleid");
+                sql.Append(")\r\n");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
+                        conn.Execute("delete FROM sys_user_role where roleid = :roleid", new { roleid = roleid }, transaction: trans);
+                        int res =conn.Execute(sql.ToString(), p.ToArray());
+                        trans.Commit(); 
+                        return res;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public string MaxCode()
         {
             try
@@ -507,7 +543,7 @@ namespace MESWebApi.Services
                 StringBuilder sql = new StringBuilder();
                 sql.Append("select distinct tb.id, tb.code, tb.name");
                 sql.Append(" from sys_user_role ta, sys_user tb");
-                sql.Append(" where  ta.roleid = tb.id");
+                sql.Append(" where  ta.userid = tb.id");
                 sql.Append(" and    tb.status = 1");
                 sql.Append(" and    ta.roleid = :id");
                 using (var conn = new OraDBHelper().Conn)

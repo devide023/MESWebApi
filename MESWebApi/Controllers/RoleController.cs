@@ -281,5 +281,31 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+
+        [Route("add_roleusers")]
+        [HttpPost]
+        public IHttpActionResult Add_Role_Users(dynamic obj)
+        {
+            try
+            {
+                int roleid = 0;
+                int.TryParse(obj.roleid != null ? obj.roleid.ToString() : "0", out roleid);
+                List<int> userids = obj.userids != null ? obj.userids.ToObject<List<int>>() : new List<int>();
+                RoleService rs = new RoleService();
+                int ret = rs.Save_RoleUsers(roleid, userids);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据操作成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据操作失败" });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 0, msg = e.Message });
+            }
+        }
     }
 }
