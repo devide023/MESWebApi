@@ -129,7 +129,7 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-
+        
         public int Modify(sys_user entity)
         {
             try
@@ -138,8 +138,6 @@ namespace MESWebApi.Services
                 sql.Append("update sys_user set name=:name where id=:id");
                 using (var conn = new OraDBHelper().Conn)
                 {
-                    LogService ls = new LogService();
-                    ls.UpdateLog<sys_user>(entity);
                     return conn.Execute(sql.ToString(), new {
                     id=entity.id,
                     name=entity.name

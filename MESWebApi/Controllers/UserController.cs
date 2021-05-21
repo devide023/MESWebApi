@@ -100,6 +100,7 @@ namespace MESWebApi.Controllers
         }
         [Route("edit")]
         [HttpPost]
+        [LogActionFilter]
         public IHttpActionResult Edit_User(dynamic obj) {
             try
             {

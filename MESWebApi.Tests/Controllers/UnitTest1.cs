@@ -145,7 +145,7 @@ namespace MESWebApi.Tests.Controllers
             UserService us = new UserService();
             var user = us.Modify(new sys_user
             {
-                id=5,
+                id=22,
                 name="测试test",
                 code="009"
             });

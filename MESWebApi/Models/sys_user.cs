@@ -22,6 +22,7 @@ namespace MESWebApi.Models
         [DbField("token","Token")]
         public string token { get; set; }
         public int adduser { get; set; }
+        [DbField("addtime","操作日期")]
         public DateTime? addtime { get; set; }
         
         public List<sys_role> roles { get; set; }

@@ -170,10 +170,10 @@
     <Compile Include="DBAttr\DbFieldAttribute.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
-    <Compile Include="Models\Log\sys_log.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sys_query.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
+    <Compile Include="Models\sys_log.cs" />
     <Compile Include="Models\sys_menu.cs" />
     <Compile Include="Models\sys_menu_permission.cs" />
     <Compile Include="Models\sys_page.cs" />
