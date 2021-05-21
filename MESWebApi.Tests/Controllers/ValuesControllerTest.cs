@@ -36,10 +36,8 @@ namespace MESWebApi.Tests.Controllers
             ValuesController controller = new ValuesController();
 
             // 操作
-            string result = controller.Get(5);
+            
 
-            // 断言
-            Assert.AreEqual("value", result);
         }
 
         [TestMethod]

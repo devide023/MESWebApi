@@ -167,8 +167,10 @@
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="DBAttr\DbFieldAttribute.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
+    <Compile Include="Models\Log\sys_log.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sys_query.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Models\sys_role.cs" />
     <Compile Include="Models\sys_role_menu.cs" />
     <Compile Include="Models\sys_user.cs" />
+    <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\MenuService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\UserService.cs" />
@@ -228,6 +231,7 @@
     <Compile Include="Util\JWTHelper.cs" />
     <Compile Include="Util\LogActionFilter.cs" />
     <Compile Include="Util\Tool.cs" />
+    <Compile Include="Util\StringBuildExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -81,6 +82,25 @@ namespace MESWebApi.Util
             }
             return str;
         }
+
+        /// <summary>
+        /// 动态对象转换为实体对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static T DynamicToEntity<T>(dynamic o)
+        {
+            string json = JsonConvert.SerializeObject(o, Settings);
+            return JsonConvert.DeserializeObject<T>(json, Settings);
+        }
+
+        public static JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            DateFormatString = "yyyy-MM-dd HH:mm:ss",
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
 
         /// <summary>
         /// 获取客户端IP地址（无视代理）

@@ -140,10 +140,15 @@ namespace MESWebApi.Tests.Controllers
         }
 
         [TestMethod]
-        public void Ip()
+        public void Modify()
         {
-            string ip = Util.Tool.GetHostAddress();
-            System.Console.WriteLine(ip);
+            UserService us = new UserService();
+            var user = us.Modify(new sys_user
+            {
+                id=5,
+                name="测试test",
+                code="009"
+            });
         }
     }
 }
