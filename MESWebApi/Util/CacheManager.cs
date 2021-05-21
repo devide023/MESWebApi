@@ -93,7 +93,11 @@ namespace MESWebApi.Util
         {
             get
             {
-                string token = HttpContext.Current.Request.Headers.GetValues("Authorization").FirstOrDefault();
+                string token = string.Empty;
+                if (HttpContext.Current.Request.Headers.GetValues("Authorization")!=null)
+                {
+                    token = HttpContext.Current.Request.Headers.GetValues("Authorization").FirstOrDefault();
+                }
                 token = token.Replace("Bearer ", "");
                 return get(token) as Models.sys_user;
             }

@@ -31,7 +31,7 @@ namespace MESWebApi.Controllers
                 return Json(new {list=await d});
             }
         }
-
+        [AllowAnonymous]
         // GET api/values/5
         public IHttpActionResult Get(int id)
         {
@@ -41,9 +41,8 @@ namespace MESWebApi.Controllers
                 var s = a[0];
                 return Json(new { code = 1, msg = "aa" });
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
                 throw;
             }
         }
