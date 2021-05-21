@@ -179,6 +179,7 @@
     <Compile Include="Services\MenuService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Util\ApiExceptionAttribute.cs" />
     <Compile Include="Util\CheckLoginAttribute.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -219,7 +220,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\CacheManager.cs" />
+    <Compile Include="Util\IPatternLayout.cs" />
     <Compile Include="Util\JWTHelper.cs" />
+    <Compile Include="Util\LogActionFilter.cs" />
     <Compile Include="Util\Tool.cs" />
   </ItemGroup>
   <ItemGroup>

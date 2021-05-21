@@ -14,7 +14,7 @@ using MESWebApi.Util;
 
 namespace MESWebApi.Controllers
 {
-    [CheckLogin]
+    [ApiException]
     public class ValuesController : ApiController
     {
         private ILog log;
@@ -33,9 +33,19 @@ namespace MESWebApi.Controllers
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            try
+            {
+                List<int> a = null;
+                var s = a[0];
+                return Json(new { code = 1, msg = "aa" });
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
         }
 
         // POST api/values

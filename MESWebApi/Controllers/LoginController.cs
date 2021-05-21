@@ -16,6 +16,7 @@ namespace MESWebApi.Controllers
     {
         [Route("checklogin")]
         [HttpPost]
+        [AllowAnonymous]
         public IHttpActionResult checklogin(sys_user obj)
         {
             try

@@ -16,8 +16,8 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void getmd5()
         {
-           var pwd = Tool.Str2MD5("123456");
-           var token = new JWTHelper().CreateToken();
+            var pwd = Tool.Str2MD5("123456");
+            var token = new JWTHelper().CreateToken();
             System.Console.WriteLine(token);
         }
         [TestMethod]
@@ -33,7 +33,7 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void MenuTree()
         {
-            string json= "{\"funs\":[\"add\",\"edit\",\"del\",\"query\"],\"editfields\":[\"name\"],\"readfields\":[\"code\"],\"hidefields\":[\"pwd\"],\"showfield\":[\"code\",\"name\"]}";
+            string json = "{\"funs\":[\"add\",\"edit\",\"del\",\"query\"],\"editfields\":[\"name\"],\"readfields\":[\"code\"],\"hidefields\":[\"pwd\"],\"showfield\":[\"code\",\"name\"]}";
             sys_permission obj = JsonConvert.DeserializeObject<sys_permission>(json);
         }
         [TestMethod]
@@ -48,13 +48,13 @@ namespace MESWebApi.Tests.Controllers
             UserService us = new UserService();
             us.Add(new sys_user()
             {
-                name="admin",
-                code="001",
-                pwd="123456",
-                status=1,
-                adduser=1,
-                addtime=DateTime.Now,
-                
+                name = "admin",
+                code = "001",
+                pwd = "123456",
+                status = 1,
+                adduser = 1,
+                addtime = DateTime.Now,
+
             });
         }
         [TestMethod]
@@ -76,7 +76,7 @@ namespace MESWebApi.Tests.Controllers
             int cnt = 0;
             UserService us = new UserService();
             var list = us.Search(new Models.QueryParm.UserQueryParm() { }, out cnt);
-            
+
         }
         [TestMethod]
         public void add_user_role()
@@ -115,9 +115,10 @@ namespace MESWebApi.Tests.Controllers
         {
             int cnt = 0;
             MenuService ms = new MenuService();
-            var t = ms.MenuTree(new MenuQueryParm() { 
-                keyword="角色"
-            },out cnt);
+            var t = ms.MenuTree(new MenuQueryParm()
+            {
+                keyword = "角色"
+            }, out cnt);
             Console.WriteLine(JsonConvert.SerializeObject(t));
         }
 
@@ -136,6 +137,13 @@ namespace MESWebApi.Tests.Controllers
             var list = ms.PermissionTree();
             var json = JsonConvert.SerializeObject(list);
             System.Console.WriteLine(json);
+        }
+
+        [TestMethod]
+        public void Ip()
+        {
+            string ip = Util.Tool.GetHostAddress();
+            System.Console.WriteLine(ip);
         }
     }
 }

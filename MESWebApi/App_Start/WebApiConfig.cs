@@ -21,6 +21,9 @@ namespace MESWebApi
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            //添加全局Filter
+            config.Filters.Add(new Util.CheckLoginAttribute());
+            config.Filters.Add(new Util.LogActionFilter());
         }
     }
 }

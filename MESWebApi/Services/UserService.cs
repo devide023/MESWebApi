@@ -157,7 +157,7 @@ namespace MESWebApi.Services
             {
                 string imgurl = "http://" + HttpContext.Current.Request.Url.Authority + "/Images/headimg/";
                 StringBuilder sql = new StringBuilder();
-                sql.Append("SELECT id,code,name,status,headimg FROM sys_user where token=:token");
+                sql.Append("SELECT id,code,name,status,headimg FROM sys_user where status = 1 and token=:token");
                 using (var db = new OraDBHelper())
                 {
                     var query = db.Conn.Query<sys_user>(sql.ToString(), new { token = token }).FirstOrDefault();

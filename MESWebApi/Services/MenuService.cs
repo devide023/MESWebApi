@@ -220,7 +220,7 @@ namespace MESWebApi.Services
             }
             catch (Exception e)
             {
-
+                log.Error(e.Message);
                 throw;
             }
         }

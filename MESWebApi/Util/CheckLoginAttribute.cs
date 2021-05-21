@@ -11,29 +11,28 @@ namespace MESWebApi.Util
     {
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            //从http请求的头里面获取身份验证信息，验证是否是请求发起方的ticket
+            //从http请求的头里面获取身份验证信息，验证是否是请求发起方的token
             var authorization = actionContext.Request.Headers.Authorization;
             if ((authorization != null) && (authorization.Parameter != null))
             {
-                //解密用户ticket,并校验用户名密码是否匹配
-                var encryptTicket = authorization.Parameter;
-                var isok = new JWTHelper().CheckToken(encryptTicket);
+                //校验Token合法及是否过期
+                var token = authorization.Parameter;
+                var isok = new JWTHelper().CheckToken(token);
                 if (isok)
                 {
+                    //缓存用户信息
+                    if (CacheManager.Instance().get(token) == null)
+                    {
+                        Services.UserService us = new Services.UserService();
+                        Models.sys_user userentity = us.UserInfo(token);
+                        CacheManager.Instance().add(token, userentity);
+                    }
                     base.IsAuthorized(actionContext);
                 }
                 else
                 {
                     HandleUnauthorizedRequest(actionContext);
                 }
-                //if (ValidateTicket(encryptTicket))
-                //{
-                //    base.IsAuthorized(actionContext);
-                //}
-                //else
-                //{
-                //    HandleUnauthorizedRequest(actionContext);
-                //}
             }
             //如果取不到身份验证信息，并且不允许匿名访问，则返回未验证401
             else
@@ -44,7 +43,7 @@ namespace MESWebApi.Util
                 else HandleUnauthorizedRequest(actionContext);
             }
         }
-        //校验用户名密码（正式环境中应该是数据库校验）
+        //校验用户名密码
         private bool ValidateTicket(string encryptTicket)
         {
             //解密Ticket
