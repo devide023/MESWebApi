@@ -8,9 +8,11 @@ namespace MESWebApi.DBAttr
     public class DbFieldAttribute : Attribute
     {
         private string _colname;
-        public DbFieldAttribute(string fieldname)
+        private string _collabel;
+        public DbFieldAttribute(string fieldname, string label)
         {
             this._colname = fieldname;
+            this._collabel = label;
         }
 
         public string FieldName
@@ -18,6 +20,14 @@ namespace MESWebApi.DBAttr
             get
             {
                 return this._colname;
+            }
+        }
+
+        public string Label
+        {
+            get
+            {
+                return this._collabel;
             }
         }
     }

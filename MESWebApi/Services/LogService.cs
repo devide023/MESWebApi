@@ -24,6 +24,7 @@ namespace MESWebApi.Services
         public void UpdateLog<T>(T entity)
         {
             object id = 0;
+            StringBuilder txt = new StringBuilder();
             StringBuilder sql = new StringBuilder();
             Dictionary<string, object> fields = new Dictionary<string, object>();
             StringBuilder cols = new StringBuilder();
@@ -51,6 +52,26 @@ namespace MESWebApi.Services
             using (var conn = new OraDBHelper().Conn )
             {
                T orginalobj = conn.Query<T>(sql.ToString()).FirstOrDefault();
+                Type orgtype = orginalobj.GetType();
+                PropertyInfo[] orgproinfos = type.GetProperties();
+                foreach (var item in orgproinfos)
+                {
+                    string fn = string.Empty;
+                    object fv = null;
+                    object fvnew = null;
+                    var orgattrs = item.GetCustomAttributes(typeof(DbFieldAttribute));
+                    if (orgattrs.Count() > 0)
+                    {
+                        DbFieldAttribute attr = orgattrs.First() as DbFieldAttribute;
+                        fn = attr.FieldName;
+                        fv = item.GetValue(orginalobj);
+                        fields.TryGetValue(fn, out fvnew);
+                        if (fv != fvnew)
+                        {
+                            txt.Append($"{attr.Label}从{fv}更新为{fvnew} ");
+                        }
+                    }
+                }
             }
 
         }

@@ -8,18 +8,18 @@ namespace MESWebApi.Models
 {
     public class sys_user
     {
-        [DbField("id")]
+        [DbField("id","id")]
         public int id { get; set; }
-        [DbField("status")]
+        [DbField("status","状态")]
         public int status { get; set; }
-        [DbField("code")]
+        [DbField("code","编码")]
         public string code { get; set; }
-        [DbField("name")]
+        [DbField("name","姓名")]
         public string name { get; set; }
-        [DbField("pwd")]
+        [DbField("pwd","密码")]
         public string pwd{ get; set; }
         public string headimg { get; set; }
-        [DbField("token")]
+        [DbField("token","Token")]
         public string token { get; set; }
         public int adduser { get; set; }
         public DateTime? addtime { get; set; }
