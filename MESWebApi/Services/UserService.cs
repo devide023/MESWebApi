@@ -19,10 +19,14 @@ namespace MESWebApi.Services
     public class UserService : IDBOper<sys_user>, IComposeQuery<sys_user, UserQueryParm>
     {
         private ILog log;
+        private LogService logs;
         public UserService()
         {
             log = LogManager.GetLogger(this.GetType());
+            logs = new LogService();
         }
+
+        public LogService Logs { get { return logs; } }
 
         public sys_user Add(sys_user entity)
         {
@@ -128,6 +132,29 @@ namespace MESWebApi.Services
                 log.Error(e.Message);
                 throw;
             }
+        }        
+
+        public bool IsExsitCode(string code)
+        {
+            try
+            {
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    int cnt = conn.ExecuteScalar<int>("select count(id) as cnt from sys_user where code=:code", new { code = code });
+                    if(cnt>0)
+                    {
+                        return true;
+                    }else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
         }
         
         public int Modify(sys_user entity)
@@ -138,10 +165,13 @@ namespace MESWebApi.Services
                 sql.Append("update sys_user set name=:name where id=:id");
                 using (var conn = new OraDBHelper().Conn)
                 {
-                    return conn.Execute(sql.ToString(), new {
-                    id=entity.id,
-                    name=entity.name
-                    });
+                    sys_user user = new sys_user()
+                    {
+                        id = entity.id,
+                        name = entity.name
+                    };
+                    int isok = conn.Execute(sql.ToString(), user);
+                    return isok;
                 }
             }
             catch (Exception e)
@@ -291,25 +321,6 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-
-        public bool IsUserCodeExist(string usercode)
-        {
-            try
-            {
-                StringBuilder sql = new StringBuilder();
-                sql.Append("select count(*) cnt from sys_user where code = :code");
-                using (var conn = new OraDBHelper().Conn)
-                {
-                    return conn.ExecuteScalar<int>(sql.ToString(), new { code = usercode }) > 0 ? true : false;
-                }
-            }
-            catch (Exception e)
-            {
-                log.Error(e.Message);
-                throw;
-            }
-        }
-
         public int ChangePwd(int userid,string pwd)
         {
             try

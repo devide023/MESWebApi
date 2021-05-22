@@ -14,7 +14,6 @@ using Newtonsoft.Json.Linq;
 namespace MESWebApi.Controllers
 {
     [RoutePrefix("api/user")]
-    [CheckLogin]
     public class UserController : ApiController
     {
         [Route("list")]
@@ -82,11 +81,15 @@ namespace MESWebApi.Controllers
                     pwd = userpwd,
                     token = new JWTHelper().CreateToken()
                 };
+                if (us.IsExsitCode(entity.code))
+                {
+                    return Json(new { code = 0, msg = "用户编码已存在" });
+                }
                 entity = us.Add(entity);
                 if (entity.id > 0)
                 {
                     int cnt = us.SaveUserRoles(entity.id, roleids);
-                    return Json(new { code = 1, msg = "ok" });
+                    return Json(new { code = 1, msg = "数据保存成功" });
                 }
                 else
                 {
@@ -100,13 +103,11 @@ namespace MESWebApi.Controllers
         }
         [Route("edit")]
         [HttpPost]
-        [LogActionFilter]
         public IHttpActionResult Edit_User(dynamic obj) {
             try
             {
-                int userid = 0,adduserid=0;
-                int.TryParse(obj.id!=null?obj.id.ToString():"0", out userid);
-                int.TryParse(obj.adduser!=null?obj.adduser.ToString():"0", out adduserid);
+                int userid = 0;
+                int.TryParse((obj.id??"0").ToString(), out userid);
                 List<int> roleids = obj.roleids!=null?obj.roleids.ToObject<List<int>>():new List<int>();
                 UserService us = new UserService();
                 if (userid > 0)
@@ -114,14 +115,15 @@ namespace MESWebApi.Controllers
                     sys_user entity = new sys_user()
                     {
                         id = userid,
-                        adduser = adduserid,
-                        name = obj.name.ToString(),
-                        code = obj.code.ToString()
+                        name = obj.name.ToString()
                     };
+                    sys_user orginal = us.Find(entity.id);
                     int cnt = us.Modify(entity);
                     if (cnt > 0)
                     {
                         cnt = us.SaveUserRoles(entity.id, roleids);
+                        entity = us.Find(entity.id);
+                        us.Logs.UpdateLogJson<sys_user>(entity, orginal);
                         return Json(new { code = 1, msg = "数据保存成功" });
                     }
                     else

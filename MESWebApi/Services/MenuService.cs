@@ -454,7 +454,15 @@ namespace MESWebApi.Services
                 throw;
             }
         }
-
+        public bool Add(List<sys_menu> menus)
+        {
+            List<sys_menu> oklist = new List<sys_menu>();
+            foreach (var item in menus)
+            {
+                oklist.Add(Add(item));
+            }
+            return oklist.Count == menus.Count;
+        }
         public int Modify(sys_menu entity)
         {
             try
@@ -721,6 +729,21 @@ namespace MESWebApi.Services
             catch (Exception e)
             {
                 log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public List<string> FindCodesByPid(int pid)
+        {
+            try
+            {
+                using (var conn = new OraDBHelper().Conn)
+                {
+                   return conn.Query<string>("select code from sys_menu where status = 1 and pid = :pid", new { pid = pid }).ToList();
+                }
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

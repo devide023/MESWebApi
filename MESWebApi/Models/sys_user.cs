@@ -11,7 +11,7 @@ namespace MESWebApi.Models
         [DbField("id","id")]
         public int id { get; set; }
         [DbField("status","状态")]
-        public int status { get; set; }
+        public int? status { get; set; }
         [DbField("code","编码")]
         public string code { get; set; }
         [DbField("name","姓名")]

@@ -111,14 +111,20 @@ namespace MESWebApi.Controllers
             try
             {
                 MenuService ms = new MenuService();
-                var funs = menu.funs.ToObject<List<dynamic>>();
-                var fiels = menu.fields.ToObject<List<dynamic>>();
+                List<dynamic> funs = menu.funs.ToObject<List<dynamic>>();
+                List<dynamic> fiels = menu.fields.ToObject<List<dynamic>>();
+                funs = funs.Where(t => !string.IsNullOrEmpty((t.name??"").ToString()) && !string.IsNullOrEmpty((t.code??"").ToString())).ToList();
+                fiels = fiels.Where(t => !string.IsNullOrEmpty((t.name??"").ToString()) && !string.IsNullOrEmpty((t.code??"").ToString())).ToList();
                 int pid = 0,adduserid=0;
                 List<int> oklist = new List<int>();
                 int.TryParse(menu.pid!=null?menu.pid.ToString():"0", out pid);
                 int.TryParse(menu.adduser!=null?menu.adduser.ToString():"0", out adduserid);
+                var codelist = ms.FindCodesByPid(pid);
+                List<sys_menu> insertlist = new List<sys_menu>();
                 foreach (var item in funs)
                 {
+                    var isexsit = codelist.Where(t => t == item.code.ToString()).Count();
+                    if (isexsit > 0) continue;
                     var entity = new sys_menu()
                     {
                         code = item.code,
@@ -128,14 +134,15 @@ namespace MESWebApi.Controllers
                         addtime = DateTime.Now,
                         seq = 10,
                         status = 1,
-                        icon=" ",
+                        icon="",
                         adduser = adduserid
                     };
-                    var r = ms.Add(entity);
-                    oklist.Add(r.id);
+                    insertlist.Add(entity);
                 }
                 foreach (var item in fiels)
                 {
+                    var isexsit = codelist.Where(t => t == item.code.ToString()).Count();
+                    if (isexsit > 0 ) continue;
                     var entity = new sys_menu()
                     {
                         code = item.code,
@@ -148,10 +155,9 @@ namespace MESWebApi.Controllers
                         icon=" ",
                         adduser = adduserid
                     };
-                    var r = ms.Add(entity);
-                    oklist.Add(r.id);
+                    insertlist.Add(entity);
                 }
-                if (oklist.Count() == funs.Count + fiels.Count)
+                if(ms.Add(insertlist))
                 {
                     return Json(new { code = 1, msg = "数据保存成功" });
                 }

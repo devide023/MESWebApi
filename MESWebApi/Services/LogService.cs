@@ -12,7 +12,7 @@ using MESWebApi.Util;
 using MESWebApi.DBAttr;
 using System.Reflection;
 using MESWebApi.Models;
-
+using System.Web.Http;
 namespace MESWebApi.Services
 {
     public class LogService
@@ -55,17 +55,15 @@ namespace MESWebApi.Services
             slog.insertsql = $"insert into {slog.tablename} ({cols.ToString().Substring(0, cols.Length - 1)}) values ({vals.ToString().Substring(0, vals.Length - 1)})";
             return slog;
         }
-        public void UpdateLog<T>(T entity)
+        public void UpdateLog<T>(T entity,T orginalobj)
         {
             object id = 0;
             StringBuilder txt = new StringBuilder();
             sys_log slog = EntityFields<T>(entity);
             slog.fields.TryGetValue("id", out id);
-            
-            using (var conn = new OraDBHelper().Conn)
-            {
-                T orginalobj = conn.Query<T>(slog.querysql,new { id = id}).FirstOrDefault();
-                var cnames = slog.fields.Select(t => t.Key);
+            Models.sys_user user = CacheManager.Instance().Current_User;
+            txt.Append($"[{user.name}]更新{slog.tablename},");
+            var cnames = slog.fields.Select(t => t.Key);
                 Type orgtype = orginalobj.GetType();
                 PropertyInfo[] orgproinfos = orgtype.GetProperties().Where(t => cnames.Contains(t.Name)).ToArray();
                 foreach (var item in orgproinfos)
@@ -86,37 +84,37 @@ namespace MESWebApi.Services
                             case "Int32":
                                 if (Convert.ToInt32(fv) != Convert.ToInt32(fvnew??0))
                                 {
-                                    txt.Append($"{attr.Label} {fv}->{fvnew}\r\n");
+                                    txt.Append($"[{attr.Label}]:{fv}->{fvnew},");
                                 }
                                 break;
                             case "String":
                                 if (fv.ToString() != (fvnew ?? "").ToString())
                                 {
-                                    txt.Append($"{attr.Label} {fv}->{fvnew}\r\n");
+                                    txt.Append($"[{attr.Label}]:{fv}->{fvnew},");
                                 }
                                 break;
                             case "DateTime":
                                 if (Convert.ToDateTime(fv) != Convert.ToDateTime(fvnew))
                                 {
-                                    txt.Append($"{attr.Label} {fv}->{fvnew}\r\n");
+                                    txt.Append($"[{attr.Label}]:{fv}->{fvnew},");
                                 }
                                 break;
                             case "Double":
                                 if (Convert.ToDouble(fv) != Convert.ToDouble(fvnew??0))
                                 {
-                                    txt.Append($"{attr.Label} {fv}->{fvnew}\r\n");
+                                    txt.Append($"[{attr.Label}]:{fv}->{fvnew},");
                                 }
                                 break;
                             case "Float":
                                 if (Convert.ToSingle(fv) != Convert.ToSingle(fvnew??0))
                                 {
-                                    txt.Append($"{attr.Label} {fv}->{fvnew}\r\n");
+                                    txt.Append($"[{attr.Label}]:{fv}->{fvnew},");
                                 }
                                 break;
                             case "Decimal":
                                 if (Convert.ToDecimal(fv) != Convert.ToDecimal(fvnew??0))
                                 {
-                                    txt.Append($"{attr.Label} {fv}->{fvnew}\r\n");
+                                    txt.Append($"[{attr.Label}]:{fv}->{fvnew},");
                                 }
                                 break;
                             default:
@@ -126,13 +124,34 @@ namespace MESWebApi.Services
                     }
                 }
                 log.Info(txt.ToString());
-            }
+            
 
         }
-
+        public void UpdateLogJson<T>(T entity, T orginalobj)
+        {
+            Models.sys_user user = CacheManager.Instance().Current_User;
+            Type type = entity.GetType();
+            string tablename = type.Name;
+            StringBuilder json = new StringBuilder();
+            json.Append($"用户：{user.name},编号：{user.code},更新表{tablename},");
+            json.Append($"原数据：{JsonConvert.SerializeObject(orginalobj)},");
+            json.Append($"现数据：{JsonConvert.SerializeObject(entity)}");
+            log.Info(json.ToString());
+        }
         public void InsertLog<T>(T entity) {
             sys_log slog = EntityFields<T>(entity);
             log.Info(slog.insertsql);
+        }
+
+        public void InsertLogJson<T>(T entity)
+        {
+            Models.sys_user user = CacheManager.Instance().Current_User;
+            Type type = entity.GetType();
+            string tablename = type.Name;
+            StringBuilder json = new StringBuilder();
+            json.Append($"用户：{user.name},编号：{user.code},插入表{tablename},");
+            json.Append($"{JsonConvert.SerializeObject(entity)}");
+            log.Info(json.ToString());
         }
 
         public void DeleteLog<T>(int id) {
