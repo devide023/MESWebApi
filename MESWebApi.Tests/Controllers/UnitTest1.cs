@@ -7,7 +7,7 @@ using MESWebApi.Util;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
-
+using System.Web;
 namespace MESWebApi.Tests.Controllers
 {
     [TestClass]
@@ -142,13 +142,8 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void Modify()
         {
-            UserService us = new UserService();
-            var user = us.Modify(new sys_user
-            {
-                id=22,
-                name="测试test",
-                code="009"
-            });
+           string path = HttpContext.Current.Request.Path;
+            Console.WriteLine(path);
         }
     }
 }

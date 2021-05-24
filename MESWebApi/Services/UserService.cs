@@ -19,15 +19,17 @@ namespace MESWebApi.Services
     public class UserService : IDBOper<sys_user>, IComposeQuery<sys_user, UserQueryParm>
     {
         private ILog log;
-        private LogService logs;
         public UserService()
         {
             log = LogManager.GetLogger(this.GetType());
-            logs = new LogService();
         }
-
-        public LogService Logs { get { return logs; } }
-
+        public LogService LogS
+        {
+            get
+            {
+                return new LogService();
+            }
+        }
         public sys_user Add(sys_user entity)
         {
             try

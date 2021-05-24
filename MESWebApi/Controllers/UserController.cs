@@ -123,7 +123,7 @@ namespace MESWebApi.Controllers
                     {
                         cnt = us.SaveUserRoles(entity.id, roleids);
                         entity = us.Find(entity.id);
-                        us.Logs.UpdateLogJson<sys_user>(entity, orginal);
+                        us.LogS.UpdateLogJson<sys_user>(entity, orginal);
                         return Json(new { code = 1, msg = "数据保存成功" });
                     }
                     else

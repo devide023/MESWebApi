@@ -13,14 +13,29 @@ using MESWebApi.DBAttr;
 using System.Reflection;
 using MESWebApi.Models;
 using System.Web.Http;
+using System.IO;
 namespace MESWebApi.Services
 {
     public class LogService
     {
-        ILog log;
+        private ILog log;
+        private string current_pageurl = string.Empty;
+        private sys_logcnf logcnf = new sys_logcnf();
+        private bool islog = false;
         public LogService()
         {
             log = LogManager.GetLogger(this.GetType());
+            string logcnf_path = HttpContext.Current.Server.MapPath("~/logconfig.json");
+            string logcnf_txt = File.ReadAllText(logcnf_path);
+            logcnf = JsonConvert.DeserializeObject<sys_logcnf>(logcnf_txt);
+            current_pageurl = HttpContext.Current.Request.Path;
+            islog = logcnf.include.Where(t => current_pageurl.Contains(t)).Count() > 0 ? true : false;
+        }
+        public bool IsLog { 
+            get
+            {
+                return islog;
+            }
         }
         public sys_log EntityFields<T>(T entity)
         {
@@ -57,11 +72,14 @@ namespace MESWebApi.Services
         }
         public void UpdateLog<T>(T entity,T orginalobj)
         {
+            if (!islog) {
+                return;
+            }
             object id = 0;
             StringBuilder txt = new StringBuilder();
             sys_log slog = EntityFields<T>(entity);
             slog.fields.TryGetValue("id", out id);
-            Models.sys_user user = CacheManager.Instance().Current_User;
+            sys_user user = CacheManager.Instance().Current_User;
             txt.Append($"[{user.name}]更新{slog.tablename},");
             var cnames = slog.fields.Select(t => t.Key);
                 Type orgtype = orginalobj.GetType();
@@ -129,34 +147,55 @@ namespace MESWebApi.Services
         }
         public void UpdateLogJson<T>(T entity, T orginalobj)
         {
-            Models.sys_user user = CacheManager.Instance().Current_User;
+            if (!islog)
+            {
+                return;
+            }
+            sys_user user = CacheManager.Instance().Current_User;
             Type type = entity.GetType();
             string tablename = type.Name;
             StringBuilder json = new StringBuilder();
-            json.Append($"用户：{user.name},编号：{user.code},更新表{tablename},");
+            json.Append($"用户：{user.name},编号：{user.code},更新表{tablename}记录,");
             json.Append($"原数据：{JsonConvert.SerializeObject(orginalobj)},");
             json.Append($"现数据：{JsonConvert.SerializeObject(entity)}");
             log.Info(json.ToString());
         }
         public void InsertLog<T>(T entity) {
+            if (!islog)
+            {
+                return;
+            }
             sys_log slog = EntityFields<T>(entity);
             log.Info(slog.insertsql);
         }
 
         public void InsertLogJson<T>(T entity)
         {
-            Models.sys_user user = CacheManager.Instance().Current_User;
+            if (!islog)
+            {
+                return;
+            }
+            sys_user user = CacheManager.Instance().Current_User;
             Type type = entity.GetType();
             string tablename = type.Name;
             StringBuilder json = new StringBuilder();
-            json.Append($"用户：{user.name},编号：{user.code},插入表{tablename},");
+            json.Append($"用户：{user.name},编号：{user.code},插入表{tablename}记录,");
             json.Append($"{JsonConvert.SerializeObject(entity)}");
             log.Info(json.ToString());
         }
 
-        public void DeleteLog<T>(int id) {
-            
-
+        public void DeleteLog<T>(T entity) {
+            if (!islog)
+            {
+                return;
+            }
+            sys_user user = CacheManager.Instance().Current_User;
+            Type type = entity.GetType();
+            string tablename = type.Name;
+            StringBuilder json = new StringBuilder();
+            json.Append($"用户：{user.name},编号：{user.code},删除表{tablename}记录,");
+            json.Append($"{JsonConvert.SerializeObject(entity)}");
+            log.Info(json.ToString());
         }
     }
 }
