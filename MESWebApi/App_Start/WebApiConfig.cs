@@ -23,6 +23,7 @@ namespace MESWebApi
             );
             //添加全局Filter
             config.Filters.Add(new Util.CheckLoginAttribute());
+            config.Filters.Add(new Util.ApiExceptionAttribute());
         }
     }
 }

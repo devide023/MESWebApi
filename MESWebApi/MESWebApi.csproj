@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\JsonContentNegotiator.cs" />
+    <Compile Include="Controllers\BaseInfoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sys_query.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
+    <Compile Include="Models\sys_device.cs" />
     <Compile Include="Models\sys_log.cs" />
     <Compile Include="Models\sys_logcnf.cs" />
     <Compile Include="Models\sys_menu.cs" />
@@ -182,6 +184,7 @@
     <Compile Include="Models\sys_role.cs" />
     <Compile Include="Models\sys_role_menu.cs" />
     <Compile Include="Models\sys_user.cs" />
+    <Compile Include="Services\BaseInfo\DeviceService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\MenuService.cs" />
     <Compile Include="Services\RoleService.cs" />

@@ -70,7 +70,7 @@ namespace MESWebApi.Controllers
                 int.TryParse(obj.pid.ToString(), out pid);
                 int.TryParse(obj.status!=null? obj.status.ToString():"1", out status);
                 int.TryParse(obj.adduser!=null?obj.adduser.ToString():"0", out adduserid);
-                int.TryParse(obj.seq!=null?obj.seq1.ToString():"0", out seq);
+                int.TryParse(obj.seq!=null?obj.seq.ToString():"0", out seq);
                 MenuService ms = new MenuService();
                 sys_menu entity = new sys_menu() {
                     pid = pid,

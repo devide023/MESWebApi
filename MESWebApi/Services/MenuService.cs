@@ -717,7 +717,10 @@ namespace MESWebApi.Services
                     string max = "";
                     if (!string.IsNullOrEmpty(code))
                     {
-                        max = (Convert.ToInt32(maxcode.Replace(code, "")) + 1).ToString().PadLeft(2, '0');
+                        var len = code.Length;
+                        var pos = maxcode.IndexOf(code) + len;
+                        max = maxcode.Substring(pos, maxcode.Length - pos);
+                        max = (Convert.ToInt32(max) + 1).ToString().PadLeft(2, '0');
                     }
                     else
                     {
