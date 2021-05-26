@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MESWebApi.Models
+namespace MESWebApi.Models.QueryParm
 {
-    public class sys_device
+    public class sec_userparm:sys_page
     {
     }
 }

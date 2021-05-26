@@ -4,24 +4,25 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
-namespace MESWebApi.Controllers
+using MESWebApi.Services.BaseInfo;
+namespace MESWebApi.Controllers.BaseInfo
 {
-    [RoutePrefix("api/baseinfo")]
-    public class BaseInfoController : ApiController
+    [RoutePrefix("api/baseinfo/userskill")]
+    public class UserSkillController : ApiController
     {
-        [Route("gcxx")]
+        [Route("list")]
         [HttpPost]
-        public IHttpActionResult FactoryInfo() {
+        public IHttpActionResult UserSkillList()
+        {
             try
             {
+                RYService rys = new RYService();
                 return Json(new { code = 1, msg = "ok" });
             }
             catch (Exception)
             {
                 throw;
-            }
+            }    
         }
-        
     }
 }

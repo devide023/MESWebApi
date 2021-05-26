@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Web;
+using MESWebApi.Services.BaseInfo;
 namespace MESWebApi.Tests.Controllers
 {
     [TestClass]
@@ -145,5 +146,27 @@ namespace MESWebApi.Tests.Controllers
            string path = HttpContext.Current.Request.Path;
             Console.WriteLine(path);
         }
-    }
+
+        [TestMethod]
+        public void Ry()
+        {
+            UserSkillService uss = new UserSkillService();
+            uss.Add(new Models.BaseInfo.zxjc_ryxx_jn()
+            {
+                user_code="001",
+                gcdm="9200",
+                jnbh="001"
+            });
+        }
+
+        [TestMethod]
+        public void device() {
+            DeviceService ds = new DeviceService();
+            ds.Add(new Models.BaseInfo.base_sbxx()
+            {
+                sbbh="001",
+                sbmc="测试"
+            });
+        }
+        }
 }

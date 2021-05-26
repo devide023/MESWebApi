@@ -22,7 +22,8 @@ namespace MESWebApi.Util
             string brow = Util.Tool.GetBrowser();
             string os = Util.Tool.GetOSVersion();
             var method = actionExecutedContext.Request.Method.Method;
-            var ctrl = actionExecutedContext.ActionContext.ControllerContext.Controller.ToString();
+            //var action = actionExecutedContext.Request.GetRouteData().Values["action"].ToString();
+            //var ctrl = actionExecutedContext.Request.GetRouteData().Values["controller"].ToString();
             log.Error(actionExecutedContext.Exception.Message);
             string jsonResult = JsonConvert.SerializeObject(new
             {
@@ -30,8 +31,7 @@ namespace MESWebApi.Util
                 browser = brow,
                 os = os,
                 ip=ip,
-                action = method,
-                controller = ctrl,
+                method = method,
                 msg = actionExecutedContext.Exception.Message
             });
             HttpResponseMessage result = new HttpResponseMessage();

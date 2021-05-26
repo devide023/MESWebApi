@@ -164,17 +164,34 @@
   <ItemGroup>
     <Compile Include="App_Start\JsonContentNegotiator.cs" />
     <Compile Include="Controllers\BaseInfoController.cs" />
+    <Compile Include="Controllers\BaseInfo\UserSkillController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\UpLoadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DBAttr\DbFieldAttribute.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
+    <Compile Include="Models\BaseInfo\barcode_print.cs" />
+    <Compile Include="Models\BaseInfo\base_gcxx.cs" />
+    <Compile Include="Models\BaseInfo\base_wlxx.cs" />
+    <Compile Include="Models\BaseInfo\sec_users.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_djgw.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_djxx.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_gwzd_wljl.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_gylx.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_ryxx_jn.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_t_dzgy.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_t_jstc.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_t_jstcfp.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_t_tstc.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_t_ydjl.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
+    <Compile Include="Models\QueryParm\sec_userparm.cs" />
     <Compile Include="Models\QueryParm\sys_query.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
-    <Compile Include="Models\sys_device.cs" />
+    <Compile Include="Models\BaseInfo\base_sbxx.cs" />
     <Compile Include="Models\sys_log.cs" />
     <Compile Include="Models\sys_logcnf.cs" />
     <Compile Include="Models\sys_menu.cs" />
@@ -184,7 +201,11 @@
     <Compile Include="Models\sys_role.cs" />
     <Compile Include="Models\sys_role_menu.cs" />
     <Compile Include="Models\sys_user.cs" />
+    <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\RYService.cs" />
+    <Compile Include="Services\BaseInfo\StationService.cs" />
+    <Compile Include="Services\BaseInfo\UserSkillService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\MenuService.cs" />
     <Compile Include="Services\RoleService.cs" />
@@ -303,6 +324,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="UpLoad\" />
     <Folder Include="Views\Login\" />
     <Folder Include="Views\Menu\" />
   </ItemGroup>
