@@ -12,12 +12,13 @@ using DapperExtensions;
 using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
 using log4net;
+using System.Text;
 namespace MESWebApi.Services.BaseInfo
 {
     /// <summary>
     /// 人员信息
     /// </summary>
-    public class RYService : IComposeQuery<sec_users,sec_userparm>
+    public class RYService :IDBOper<zxjc_ryxx_jn>
     {
         private ILog log;
         private string constr = "";
@@ -26,65 +27,57 @@ namespace MESWebApi.Services.BaseInfo
             log = LogManager.GetLogger(this.GetType());
             constr = "tjmes";
         }
-        public IEnumerable<sec_users> FindUserByName(string key)
+
+        public zxjc_ryxx_jn Add(zxjc_ryxx_jn entity)
+        {
+            throw new NotImplementedException();
+        }
+        public zxjc_ryxx_jn Add(List<zxjc_ryxx_jn> entitys)
         {
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append("select comp_no,user_code,user_name,user_type,depart_no,gwxx,bz,class_no,tsqx,scx,lx");
-                sql.Append(" from sec_users where (user_code like :key or user_name like :key)");
+                sql.Append("insert into zxjc_ryxx_jn(gcdm, user_code, jnbh, jnxx, scx, gwh, sfhg, lrr, lrsj, jnfl, jnsj) ");
+                sql.Append(" values ");
+                sql.Append("(:gcdm,:user_code,:jnbh,:jnxx,:scx,:gwh,:sfhg,:lrr, sysdate,:jnfl,:jnsj)");
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
-                   return conn.Query<sec_users>(sql.ToString(), new { code = "%"+key+"%" });
+                   int cnt = conn.Execute(sql.ToString(), entitys.ToArray());
+                    if(cnt>0)
+                    {
+                        return new zxjc_ryxx_jn();
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                log.Error(e.Message);
                 throw;
             }
         }
-        public IEnumerable<sec_users> Search(sec_userparm parm, out int resultcount)
-        {
-            try
-            {
-                StringBuilder sql = new StringBuilder();
-                sql.Append("select comp_no,");
-                sql.Append(" user_code,");
-                sql.Append(" user_name,");
-                sql.Append(" user_type,");
-                sql.Append(" depart_no,");
-                sql.Append(" gwxx,");
-                sql.Append(" pass_word,");
-                sql.Append(" bz,");
-                sql.Append(" version,");
-                sql.Append(" version_b,");
-                sql.Append(" mac,");
-                sql.Append(" ip,");
-                sql.Append(" class_no,");
-                sql.Append(" tsqx,");
-                sql.Append(" scx,");
-                sql.Append(" work_no,");
-                sql.Append(" lx from sec_users where (user_code like :code or user_name like :code ) ");
-                OracleDynamicParameters p = new OracleDynamicParameters();
-                if(!string.IsNullOrEmpty(parm.keyword))
-                {
-                    p.Add(":code", "%"+parm.keyword+"%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                }
-                using (var conn = new OraDBHelper(constr).Conn)
-                {
-                   var q = conn.Query<sec_users>(sql.ToString(), p)
-                        .OrderBy(t => t.user_code)
-                        .ToPagedList(parm.pageindex, parm.pagesize);
-                    resultcount = q.TotalItemCount;
-                    return q;
-                }
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
+        public bool Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Delete(List<int> ids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public zxjc_ryxx_jn Find(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Modify(zxjc_ryxx_jn entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

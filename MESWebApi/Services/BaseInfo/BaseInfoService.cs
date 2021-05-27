@@ -41,5 +41,40 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
+
+        public IEnumerable<sec_users> PersonList(string key)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("SELECT comp_no,");
+                sql.Append(" user_code,");
+                sql.Append(" user_name,");
+                sql.Append(" user_type,");
+                sql.Append(" depart_no,");
+                sql.Append(" gwxx,");
+                sql.Append(" pass_word,");
+                sql.Append(" bz,");
+                sql.Append(" class_no,");
+                sql.Append(" tsqx,");
+                sql.Append(" scx,");
+                sql.Append(" lx");
+                sql.Append(" FROM sec_users where 1=1 ");
+                if (!string.IsNullOrEmpty(key))
+                {
+                    sql.Append(" and (user_code like :key or user_name like :key or scx like :key or class_no like :key or class_no like :key )");
+                }
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    return conn.Query<sec_users>(sql.ToString(), new { key = "%" + key + "%" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

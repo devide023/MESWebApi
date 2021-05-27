@@ -10,13 +10,14 @@ using MESWebApi.InterFaces;
 using log4net;
 using MESWebApi.Models.BaseInfo;
 using System.Text;
-
+using MESWebApi.Models.QueryParm;
+using Webdiyer.WebControls.Mvc;
 namespace MESWebApi.Services.BaseInfo
 {
     /// <summary>
     /// 设备基础信息
     /// </summary>
-    public class DeviceService:IDBOper<base_sbxx>
+    public class DeviceService : IDBOper<base_sbxx>,IComposeQuery<base_sbxx,DeviceQueryParm>
     {
         private ILog log;
         private string constr = string.Empty;
@@ -24,6 +25,35 @@ namespace MESWebApi.Services.BaseInfo
         {
             log = LogManager.GetLogger(this.GetType());
             this.constr = "tjmes";
+        }
+
+        public base_sbxx Add(List<base_sbxx> entity)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" insert into base_sbxx(sbbh, sbmc, gcdm, scx, gwh, sblx, txfs, ip, sfky, sflj, bz, lrr, lrsj, com, port)");
+                sql.Append(" values");
+                sql.Append(" (:sbbh, :sbmc, :gcdm, :scx, :gwh, :sblx, :txfs, :ip, :sfky, :sflj, :bz, :lrr, sysdate, :com, :port)");
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    int ret = conn.Execute(sql.ToString(), entity.ToArray());
+                    if (ret > 0)
+                    {
+                        return new base_sbxx();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
         }
 
         public base_sbxx Add(base_sbxx entity)
@@ -51,9 +81,15 @@ namespace MESWebApi.Services.BaseInfo
                 p.Add(":port", entity.port, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
-                    conn.Execute(sql.ToString(), p);
-                    return entity;
-
+                    int ret = conn.Execute(sql.ToString(), p);
+                    if (ret > 0)
+                    {
+                        return new base_sbxx();
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             catch (Exception e)
@@ -111,10 +147,55 @@ namespace MESWebApi.Services.BaseInfo
                 p.Add(":bz", entity.bz, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
                 p.Add(":com", entity.com, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
                 p.Add(":port", entity.port, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                
+
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
-                   return conn.Execute(sql.ToString(), p);
+                    return conn.Execute(sql.ToString(), p);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<base_sbxx> Search(DeviceQueryParm parm, out int resultcount)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select sbbh, sbmc, gcdm, scx, gwh, sblx, txfs, ip, sfky, sflj, bz, lrr, lrsj, com, port from base_sbxx where 1=1 ");
+                OracleDynamicParameters p = new OracleDynamicParameters();
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and (sbbh like :key or sbmc like :key) ");
+                    p.Add(":key", "%"+parm.keyword+"%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (parm.explist.Count > 0)
+                {
+                    sql.Append(" and ");
+                    foreach (var item in parm.explist)
+                    {
+                        sql.Append($"{item.left}");
+                        if (item.oper == "like")
+                        {
+                            sql.Append($" {item.colname} {item.oper} '%{item.value}%' {item.logic} ");
+                        }
+                        else
+                        {
+                            sql.Append($" {item.colname} {item.oper} '{item.value}' {item.logic} ");
+                        }
+                        sql.Append($"{item.right}");
+                    }
+                }
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                   var q = conn.Query<base_sbxx>(sql.ToString(), p)
+                        .OrderBy(t => t.sbbh)
+                        .ToPagedList(parm.pageindex, parm.pagesize);
+                    resultcount = q.TotalItemCount;
+                    return q;
                 }
             }
             catch (Exception e)

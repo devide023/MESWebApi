@@ -144,7 +144,7 @@ namespace MESWebApi.Services
                 sql.Append("tc.code, \r\n");
                 sql.Append("tc.path, \r\n");
                 sql.Append("tc.viewpath, \r\n");
-                sql.Append("tc.icon, \r\n");
+                sql.Append("tc.icon,tc.comname, \r\n");
                 sql.Append("tc.seq \r\n");
                 sql.Append("from sys_user_role ta, sys_role_menu tb, sys_menu tc \r\n");
                 sql.Append("where ta.userid = :userid \r\n");
@@ -412,7 +412,7 @@ namespace MESWebApi.Services
                 sql.Append("viewpath,");
                 sql.Append("addtime,");
                 sql.Append("adduser,");
-                sql.Append("addusername,");
+                sql.Append("addusername,comname");
                 sql.Append("seq");
                 sql.Append(")");
                 sql.Append("values");
@@ -426,7 +426,7 @@ namespace MESWebApi.Services
                 sql.Append(":viewpath,");
                 sql.Append("sysdate,");
                 sql.Append(":adduser,");
-                sql.Append("(select name from sys_user where id = :adduser),");
+                sql.Append("(select name from sys_user where id = :adduser),:comname");
                 sql.Append(":seq");
                 sql.Append(") returning id into :id");
                 using (var db = new OraDBHelper())
@@ -440,6 +440,7 @@ namespace MESWebApi.Services
                     param.Add(":menutype", menu.menutype, OracleMappingType.NVarchar2, ParameterDirection.Input);
                     param.Add(":viewpath", menu.viewpath, OracleMappingType.NVarchar2, ParameterDirection.Input);
                     param.Add(":adduser", menu.adduser, OracleMappingType.Int32, ParameterDirection.Input);
+                    param.Add(":comname", menu.comname, OracleMappingType.NVarchar2, ParameterDirection.Input);
                     param.Add(":seq", menu.seq, OracleMappingType.Int32, ParameterDirection.Input);
                     param.Add(":id", null, OracleMappingType.Int32, ParameterDirection.Output);
                     var ret = db.Conn.Execute(sql.ToString(), param);

@@ -83,6 +83,7 @@ namespace MESWebApi.Controllers
                     status=status,
                     adduser=adduserid,
                     seq = seq,
+                    comname = (obj.comname??"").ToString(),
                     addtime = DateTime.Now
                 };
                 entity = ms.Add(entity);

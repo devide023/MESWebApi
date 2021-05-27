@@ -164,6 +164,7 @@
   <ItemGroup>
     <Compile Include="App_Start\JsonContentNegotiator.cs" />
     <Compile Include="Controllers\BaseInfoController.cs" />
+    <Compile Include="Controllers\BaseInfo\DeviceController.cs" />
     <Compile Include="Controllers\BaseInfo\UserSkillController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
@@ -187,11 +188,13 @@
     <Compile Include="Models\BaseInfo\zxjc_t_jstcfp.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_tstc.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_ydjl.cs" />
+    <Compile Include="Models\QueryParm\DeviceQueryParm.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sec_userparm.cs" />
     <Compile Include="Models\QueryParm\sys_query.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
     <Compile Include="Models\BaseInfo\base_sbxx.cs" />
+    <Compile Include="Models\sys_comquery_express.cs" />
     <Compile Include="Models\sys_log.cs" />
     <Compile Include="Models\sys_logcnf.cs" />
     <Compile Include="Models\sys_menu.cs" />

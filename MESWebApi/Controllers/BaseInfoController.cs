@@ -4,24 +4,42 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
+using MESWebApi.Services.BaseInfo;
 namespace MESWebApi.Controllers
 {
     [RoutePrefix("api/baseinfo")]
     public class BaseInfoController : ApiController
     {
         [Route("gcxx")]
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult FactoryInfo() {
             try
             {
-                return Json(new { code = 1, msg = "ok" });
+                BaseInfoService bis = new BaseInfoService();
+                var list = bis.FactoryList().Where(t=>t.gcdm=="9100");
+                return Json(new { code = 1, msg = "ok",list = list });
             }
             catch (Exception)
             {
                 throw;
             }
         }
-        
+
+        [HttpPost,Route("person")]
+        public IHttpActionResult GetPerson(dynamic obj)
+        {
+            try
+            {
+                BaseInfoService bis = new BaseInfoService();
+                string key = (obj.key ?? "").ToString();
+                var list = bis.PersonList(key);
+                return Json(new { code = 1, msg = "ok", list = list });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

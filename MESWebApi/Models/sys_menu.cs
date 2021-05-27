@@ -17,6 +17,10 @@ namespace MESWebApi.Models
         public int status { get; set; }
         public string path { get; set; }
         public string viewpath { get; set; }
+        /// <summary>
+        /// 组件名称唯一值
+        /// </summary>
+        public string comname { get; set; }
         public int seq { get; set; }
         [JsonIgnore]
         public int adduser { get; set; }
