@@ -5,6 +5,9 @@ using System.Web;
 
 namespace MESWebApi.Models.BaseInfo
 {
+    /// <summary>
+    /// 人员信息
+    /// </summary>
     public class sec_users
     {
         public string comp_no { get; set; }

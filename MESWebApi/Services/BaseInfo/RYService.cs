@@ -12,7 +12,6 @@ using DapperExtensions;
 using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
 using log4net;
-using System.Text;
 namespace MESWebApi.Services.BaseInfo
 {
     /// <summary>

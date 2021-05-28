@@ -175,19 +175,7 @@ namespace MESWebApi.Services.BaseInfo
                 if (parm.explist.Count > 0)
                 {
                     sql.Append(" and ");
-                    foreach (var item in parm.explist)
-                    {
-                        sql.Append($"{item.left}");
-                        if (item.oper == "like")
-                        {
-                            sql.Append($" {item.colname} {item.oper} '%{item.value}%' {item.logic} ");
-                        }
-                        else
-                        {
-                            sql.Append($" {item.colname} {item.oper} '{item.value}' {item.logic} ");
-                        }
-                        sql.Append($"{item.right}");
-                    }
+                    sql.Append(Util.Tool.ComQueryExp(parm.explist));
                 }
                 using (var conn = new OraDBHelper(constr).Conn)
                 {

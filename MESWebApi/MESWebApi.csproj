@@ -182,6 +182,7 @@
     <Compile Include="Models\BaseInfo\zxjc_djgw.cs" />
     <Compile Include="Models\BaseInfo\zxjc_djxx.cs" />
     <Compile Include="Models\BaseInfo\zxjc_gwzd_wljl.cs" />
+    <Compile Include="Models\BaseInfo\zxjc_gxzd.cs" />
     <Compile Include="Models\BaseInfo\zxjc_gylx.cs" />
     <Compile Include="Models\BaseInfo\zxjc_ryxx_jn.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_dzgy.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Models\BaseInfo\zxjc_t_jstcfp.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_tstc.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_ydjl.cs" />
+    <Compile Include="Models\QueryParm\CheckPointQueryParm.cs" />
     <Compile Include="Models\QueryParm\DeviceQueryParm.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sec_userparm.cs" />
@@ -208,6 +210,7 @@
     <Compile Include="Models\sys_user.cs" />
     <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\PointCheckInfoService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckService.cs" />
     <Compile Include="Services\BaseInfo\RYService.cs" />
     <Compile Include="Services\BaseInfo\StationService.cs" />

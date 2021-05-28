@@ -101,6 +101,29 @@ namespace MESWebApi.Util
             DateFormatString = "yyyy-MM-dd HH:mm:ss",
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
+        /// <summary>
+        /// 获取组合表达式
+        /// </summary>
+        /// <param name="explist"></param>
+        /// <returns></returns>
+        public static StringBuilder ComQueryExp(List<Models.sys_comquery_express> explist)
+        {
+            StringBuilder sql = new StringBuilder();
+            foreach (var item in explist)
+            {
+                sql.Append($"{item.left}");
+                if (item.oper == "like")
+                {
+                    sql.Append($" {item.colname} {item.oper} '%{item.value}%' {item.logic} ");
+                }
+                else
+                {
+                    sql.Append($" {item.colname} {item.oper} '{item.value}' {item.logic} ");
+                }
+                sql.Append($"{item.right}");
+            }
+            return sql;
+        }
 
         /// <summary>
         /// 获取客户端IP地址（无视代理）
