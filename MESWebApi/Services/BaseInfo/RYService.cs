@@ -18,7 +18,7 @@ namespace MESWebApi.Services.BaseInfo
     /// <summary>
     /// 人员信息
     /// </summary>
-    public class RYService :IDBOper<zxjc_ryxx_jn>
+    public class RYService :IDBOper<zxjc_ryxx_jn>,IComposeQuery<zxjc_ryxx_jn,SkillQueryParm>
     {
         private ILog log;
         private string constr = "";
@@ -77,7 +77,94 @@ namespace MESWebApi.Services.BaseInfo
 
         public int Modify(zxjc_ryxx_jn entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update zxjc_ryxx_jn");
+                sql.Append(" set gcdm = :gcdm,");
+                sql.Append("        user_code = :user_code,");
+                sql.Append("        jnbh = :jnbh,");
+                sql.Append("        jnxx = :jnxx,");
+                sql.Append("        scx = :scx,");
+                sql.Append("        gwh = :gwh,");
+                sql.Append("        sfhg = :sfhg,");
+                sql.Append("        jnfl = :jnfl,");
+                sql.Append("        jnsj = :jnsj");
+                sql.Append(" where  jnbh = :jnbh ");
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    return conn.Execute(sql.ToString(), entity);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<zxjc_ryxx_jn> Search(SkillQueryParm parm, out int resultcount)
+        {
+            try
+            {
+                OracleDynamicParameters p = new OracleDynamicParameters();
+                StringBuilder sql = new StringBuilder();
+
+                sql.Append(" SELECT ta.gcdm, ta.user_code,(select user_name from sec_users where user_code = ta.user_code) as user_name, ta.jnbh, ta.jnxx, ta.scx, ta.gwh, ta.sfhg, ta.lrr, ta.lrsj, ta.jnfl, ta.jnsj");
+                sql.Append(" FROM zxjc_ryxx_jn ta where 1 = 1 ");
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and (user_code like :key or jnbh like :key) ");
+                    p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (parm.explist.Count > 0)
+                {
+                    sql.Append(" and ");
+                    foreach (var item in parm.explist)
+                    {
+                        sql.Append($"{item.left}");
+                        if (item.oper == "like")
+                        {
+                            sql.Append($" {item.colname} {item.oper} '%{item.value}%' {item.logic} ");
+                        }
+                        else
+                        {
+                            sql.Append($" {item.colname} {item.oper} '{item.value}' {item.logic} ");
+                        }
+                        sql.Append($"{item.right}");
+                    }
+                }
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    var q = conn.Query<zxjc_ryxx_jn>(sql.ToString(), p)
+                          .OrderBy(t => t.user_code)
+                          .ToPagedList(parm.pageindex, parm.pagesize);
+                    resultcount = q.TotalItemCount;
+                    return q;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public string GetSkillNo()
+        {
+            try
+            {
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    int skillid = conn.ExecuteScalar<int>("SELECT seq_skill_id.nextval FROM dual");
+                    return "JN" + skillid.ToString().PadLeft(4, '0');
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
         }
     }
 }

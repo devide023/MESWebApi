@@ -165,6 +165,7 @@
     <Compile Include="App_Start\JsonContentNegotiator.cs" />
     <Compile Include="Controllers\BaseInfoController.cs" />
     <Compile Include="Controllers\BaseInfo\DeviceController.cs" />
+    <Compile Include="Controllers\BaseInfo\PointCheckController.cs" />
     <Compile Include="Controllers\BaseInfo\UserSkillController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Models\QueryParm\DeviceQueryParm.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sec_userparm.cs" />
+    <Compile Include="Models\QueryParm\SkillQueryParm.cs" />
     <Compile Include="Models\QueryParm\sys_query.cs" />
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
     <Compile Include="Models\BaseInfo\base_sbxx.cs" />
@@ -206,6 +208,7 @@
     <Compile Include="Models\sys_user.cs" />
     <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\PointCheckService.cs" />
     <Compile Include="Services\BaseInfo\RYService.cs" />
     <Compile Include="Services\BaseInfo\StationService.cs" />
     <Compile Include="Services\BaseInfo\UserSkillService.cs" />

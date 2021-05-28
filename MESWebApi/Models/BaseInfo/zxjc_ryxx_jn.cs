@@ -12,6 +12,7 @@ namespace MESWebApi.Models.BaseInfo
     {
         public string gcdm { get; set; }
         public string user_code { get; set; }
+        public string user_name { get; set; }
         public string jnbh { get; set; }
         public string jnxx { get; set; }
         public string scx { get; set; }

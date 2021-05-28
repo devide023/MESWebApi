@@ -412,7 +412,7 @@ namespace MESWebApi.Services
                 sql.Append("viewpath,");
                 sql.Append("addtime,");
                 sql.Append("adduser,");
-                sql.Append("addusername,comname");
+                sql.Append("addusername,comname,");
                 sql.Append("seq");
                 sql.Append(")");
                 sql.Append("values");
@@ -426,7 +426,7 @@ namespace MESWebApi.Services
                 sql.Append(":viewpath,");
                 sql.Append("sysdate,");
                 sql.Append(":adduser,");
-                sql.Append("(select name from sys_user where id = :adduser),:comname");
+                sql.Append("(select name from sys_user where id = :adduser),:comname,");
                 sql.Append(":seq");
                 sql.Append(") returning id into :id");
                 using (var db = new OraDBHelper())

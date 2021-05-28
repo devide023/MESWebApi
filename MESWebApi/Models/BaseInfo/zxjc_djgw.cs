@@ -6,7 +6,7 @@ using System.Web;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
-    /// 点检
+    /// 点检岗位
     /// </summary>
     public class zxjc_djgw
     {

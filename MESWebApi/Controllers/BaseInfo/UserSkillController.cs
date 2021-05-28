@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using MESWebApi.Services.BaseInfo;
 using MESWebApi.Models.BaseInfo;
+using MESWebApi.Models.QueryParm;
 namespace MESWebApi.Controllers.BaseInfo
 {
     [RoutePrefix("api/baseinfo/skill")]
@@ -13,12 +14,14 @@ namespace MESWebApi.Controllers.BaseInfo
     {
         [Route("list")]
         [HttpPost]
-        public IHttpActionResult UserSkillList()
+        public IHttpActionResult UserSkillList(SkillQueryParm parm)
         {
             try
             {
+                int resultcount = 0;
                 RYService rys = new RYService();
-                return Json(new { code = 1, msg = "ok" });
+                var list = rys.Search(parm,out resultcount);
+                return Json(new { code = 1, msg = "ok",list = list, resultcount = resultcount });
             }
             catch (Exception)
             {
@@ -39,6 +42,49 @@ namespace MESWebApi.Controllers.BaseInfo
                 else
                 {
                     return Json(new { code = 0, msg = "数据保存失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost, Route("edit")]
+        public IHttpActionResult EditSkill(zxjc_ryxx_jn entity)
+        {
+            try
+            {
+                RYService rys = new RYService();
+                var ret = rys.Modify(entity);
+                if (ret >0)
+                {
+                    return Json(new { code = 1, msg = "数据修改成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据修改失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet, Route("getskillno")]
+        public IHttpActionResult SkillNo()
+        {
+            try
+            {
+                RYService rys = new RYService();
+                var ret = rys.GetSkillNo();
+                if (ret.Length > 0)
+                {
+                    return Json(new { code = 1, msg = "数据修改成功", no = ret }); ;
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据修改失败",no = "" });
                 }
             }
             catch (Exception)
