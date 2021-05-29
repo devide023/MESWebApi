@@ -176,6 +176,7 @@
     <Compile Include="Controllers\UpLoadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DBAttr\DbFieldAttribute.cs" />
+    <Compile Include="DB\OracleBaseFixture.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
     <Compile Include="Models\BaseInfo\barcode_print.cs" />

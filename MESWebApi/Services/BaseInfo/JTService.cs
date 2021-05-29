@@ -13,6 +13,10 @@ using MESWebApi.InterFaces;
 using log4net;
 using Webdiyer.WebControls.Mvc;
 using MESWebApi.Util;
+using DapperExtensions;
+using DapperExtensions.Sql;
+using DapperExtensions.Mapper;
+using System.Reflection;
 
 namespace MESWebApi.Services.BaseInfo
 {
@@ -59,6 +63,17 @@ namespace MESWebApi.Services.BaseInfo
             {
                 log.Error(e.Message);
                 throw;
+            }
+        }
+
+        public void OracleInsert(zxjc_t_jstc entity)
+        {
+            
+            using (var db = new OracleBaseFixture(constr).DB)
+            {
+                int ret =  db.Insert<zxjc_t_jstc>(entity);
+                //IDatabase Db = new Database(conn, sqlGenerator);
+                //Db.Insert<zxjc_t_jstc>(entity);
             }
         }
     }

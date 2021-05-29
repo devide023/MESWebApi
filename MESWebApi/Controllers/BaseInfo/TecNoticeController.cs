@@ -160,7 +160,7 @@ namespace MESWebApi.Controllers.BaseInfo
             try
             {
                 JTYDService jtyds = new JTYDService();
-                int cnt = jtyds.Add(entitys);
+                int ret = jtyds.Add(entitys);
                 if (ret > 0)
                 {
                     return Json(new { code = 1, msg = "数据保存成功" });

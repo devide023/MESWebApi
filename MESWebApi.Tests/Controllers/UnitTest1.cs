@@ -217,17 +217,42 @@ namespace MESWebApi.Tests.Controllers
             pcis.Modify(new Models.BaseInfo.zxjc_djxx()
             {
                 id = "4",
-                djno = "aaaa",
-                jx_no = "aaa",
-                bz = "aa",
+                djno = "ddd",
+                jx_no = "ddd",
+                bz = "ddd",
                 djjg = "aa",
                 djxx = "aaa",
-                gcdm = "111",
-                gwh = "111",
-                lrr = "111",
-                scx = "111",
-                status_no = "111"
+                gcdm = "ddd",
+                gwh = "ddd",
+                lrr = "ddd",
+                scx = "ddd",
+                status_no = "ddd"
             });
+        }
+        [TestMethod]
+        public void JTInsert()
+        {
+            JTService jts = new JTService();
+            jts.OracleInsert(new Models.BaseInfo.zxjc_t_jstc()
+            {
+                jtid = Guid.NewGuid().ToString(),
+                jcbh = "001",
+                jcmc = "关于×××的通知",
+                jcms = "描述",
+                jwdx = "100",
+                fpr = "a",
+                fp_flg = "Y",
+                fp_sj = DateTime.Now,
+                gcdm = "9100",
+                scpc = "pc",
+                scry = "admin",
+                scsj = DateTime.Now,
+                scx = "1",
+                wjfl = "fdp",
+                wjlj = "upload/",
+                yxqx1 = DateTime.Now,
+                yxqx2 = DateTime.Now.AddDays(5)
+            }) ;
         }
         }
 }

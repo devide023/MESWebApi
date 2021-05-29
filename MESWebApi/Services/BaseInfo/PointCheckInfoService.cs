@@ -28,31 +28,31 @@ namespace MESWebApi.Services.BaseInfo
             constr = "tjmes";
         }
 
-        public override int Modify(zxjc_djxx entity)
-        {
-            try
-            {
-                StringBuilder sql = new StringBuilder();
-                sql.Append("update zxjc_djxx set gcdm=:gcdm,");
-                sql.Append(" scx=:scx,");
-                sql.Append(" gwh =:gwh,");
-                sql.Append(" jx_no =:jx_no,");
-                sql.Append(" status_no =:status_no,");
-                sql.Append(" djno =:djno,");
-                sql.Append(" djxx =:djxx,");
-                sql.Append(" djjg =:djjg,");
-                sql.Append(" bz =:bz where id=:id ");
-                using (var conn = new OraDBHelper(constr).Conn)
-                {
-                    return conn.Execute(sql.ToString(), entity);
-                }
-            }
-            catch (Exception e)
-            {
-                log.Error(e.Message);
-                throw;
-            }
-        }
+        //public override int Modify(zxjc_djxx entity)
+        //{
+        //    try
+        //    {
+        //        StringBuilder sql = new StringBuilder();
+        //        sql.Append("update zxjc_djxx set gcdm=:gcdm,");
+        //        sql.Append(" scx=:scx,");
+        //        sql.Append(" gwh =:gwh,");
+        //        sql.Append(" jx_no =:jx_no,");
+        //        sql.Append(" status_no =:status_no,");
+        //        sql.Append(" djno =:djno,");
+        //        sql.Append(" djxx =:djxx,");
+        //        sql.Append(" djjg =:djjg,");
+        //        sql.Append(" bz =:bz where id=:id ");
+        //        using (var conn = new OraDBHelper(constr).Conn)
+        //        {
+        //            return conn.Execute(sql.ToString(), entity);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        log.Error(e.Message);
+        //        throw;
+        //    }
+        //}
 
         public IEnumerable<zxjc_djxx> Search(sys_page parm, out int resultcount)
         {

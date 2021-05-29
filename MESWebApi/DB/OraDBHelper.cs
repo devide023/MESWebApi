@@ -13,9 +13,7 @@ namespace MESWebApi.DB
 {
     public class OraDBHelper : IDisposable
     {
-        public static OracleCommand cmd = null;
-        public static OracleConnection conn = null;
-        public static string connstr = "";
+        private string connstr = "";
         public OraDBHelper()
         {
             connstr = ConfigurationManager.ConnectionStrings["zsmes"] != null ? ConfigurationManager.ConnectionStrings["zsmes"].ToString() : "";
