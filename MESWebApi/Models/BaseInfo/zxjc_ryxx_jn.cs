@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DapperExtensions.Mapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -52,5 +53,14 @@ namespace MESWebApi.Models.BaseInfo
         /// 技能时间
         /// </summary>
         public DateTime? jnsj { get; set; } = DateTime.Now;
+    }
+
+    public class zxjc_ryxx_jn_map : ClassMapper<zxjc_ryxx_jn>
+    {
+        public zxjc_ryxx_jn_map()
+        {
+            Map(t => t.user_name).Ignore();
+            AutoMap();
+        }
     }
 }
