@@ -62,4 +62,95 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
     }
+    /// <summary>
+    /// 特殊技术通知
+    /// </summary>
+    public class TsJTService : DBOperImp<zxjc_t_tstc>, IComposeQuery<zxjc_t_tstc, sys_page>
+    {
+        private ILog log;
+        private string constr = string.Empty;
+        public TsJTService()
+        {
+            log = LogManager.GetLogger(this.GetType());
+            constr = "tjmes";
+        }
+        public IEnumerable<zxjc_t_tstc> Search(sys_page parm, out int resultcount)
+        {
+            try
+            {
+                OracleDynamicParameters p = new OracleDynamicParameters();
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select tcid,tcbh,tcms,gcdm,scx,gwh,jx_no,status_no,yxbz,lrr,lrsj from zxjc_t_tstc where 1=1 ");
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and (tcbh like :key or jx_no like :key or status_no like :key) ");
+                    p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (parm.explist.Count > 0)
+                {
+                    sql.Append(" and ");
+                    sql.Append(Tool.ComQueryExp(parm.explist));
+                }
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    var q = conn.Query<zxjc_t_tstc>(sql.ToString(), p)
+                         .OrderByDescending(t => t.tcid)
+                         .ToPagedList(parm.pageindex, parm.pagesize);
+                    resultcount = q.TotalItemCount;
+                    return q;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+    }
+    /// <summary>
+    /// 技术通知查看记录
+    /// </summary>
+    public class JTYDService : DBOperImp<zxjc_t_ydjl>,IComposeQuery<zxjc_t_ydjl,sys_page>
+    {
+        private ILog log;
+        private string constr = string.Empty;
+        public JTYDService()
+        {
+            log = LogManager.GetLogger(this.GetType());
+            constr = "tjmes";
+        }
+
+        public IEnumerable<zxjc_t_ydjl> Search(sys_page parm, out int resultcount)
+        {
+            try
+            {
+                OracleDynamicParameters p = new OracleDynamicParameters();
+                StringBuilder sql = new StringBuilder();
+                sql.Append("select ydid,jtid,gcdm,scx,gwh,order_no,engine_no,user_name,ydsj,lrr,lrsj from zxjc_t_ydjl where 1=1 ");
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and (order_no like :key or engine_no like :key or user_name like :key) ");
+                    p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (parm.explist.Count > 0)
+                {
+                    sql.Append(" and ");
+                    sql.Append(Tool.ComQueryExp(parm.explist));
+                }
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    var q = conn.Query<zxjc_t_ydjl>(sql.ToString(), p)
+                         .OrderByDescending(t => t.ydid)
+                         .ToPagedList(parm.pageindex, parm.pagesize);
+                    resultcount = q.TotalItemCount;
+                    return q;
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+    }
 }

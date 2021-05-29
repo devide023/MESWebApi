@@ -168,6 +168,7 @@
     <Compile Include="Controllers\BaseInfo\PointCheckController.cs" />
     <Compile Include="Controllers\BaseInfo\StationMatController.cs" />
     <Compile Include="Controllers\BaseInfo\StationServiceController.cs" />
+    <Compile Include="Controllers\BaseInfo\TecNoticeController.cs" />
     <Compile Include="Controllers\BaseInfo\UserSkillController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
