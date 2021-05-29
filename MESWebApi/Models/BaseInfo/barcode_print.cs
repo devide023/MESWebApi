@@ -5,6 +5,9 @@ using System.Web;
 
 namespace MESWebApi.Models.BaseInfo
 {
+    /// <summary>
+    /// 机号
+    /// </summary>
     public class barcode_print
     {
         public string vin { get; set; }

@@ -161,11 +161,72 @@ namespace MESWebApi.Tests.Controllers
 
         [TestMethod]
         public void device() {
-            DeviceService ds = new DeviceService();
-            ds.Add(new Models.BaseInfo.base_sbxx()
+            PointCheckInfoService pcis = new PointCheckInfoService();
+            List<Models.BaseInfo.zxjc_djxx> list = new List<Models.BaseInfo.zxjc_djxx>();
+            list.Add(new Models.BaseInfo.zxjc_djxx()
             {
-                sbbh="001",
-                sbmc="测试"
+                id = "2",
+                djno = "001",
+                jx_no = "ddd",
+                bz = "bz",
+                djjg = "djjg",
+                djxx = "djxx",
+                gcdm = "9100",
+                gwh = "A01",
+                lrr = "admin",
+                lrsj = DateTime.Now,
+                scx = "1",
+                status_no = "1"
+            });
+            list.Add(new Models.BaseInfo.zxjc_djxx()
+            {
+                id = "3",
+                djno = "001",
+                jx_no = "ddd",
+                bz = "bz",
+                djjg = "djjg",
+                djxx = "djxx",
+                gcdm = "9100",
+                gwh = "A01",
+                lrr = "admin",
+                lrsj = DateTime.Now,
+                scx = "1",
+                status_no = "1"
+            });
+            list.Add(new Models.BaseInfo.zxjc_djxx()
+            {
+                id = "4",
+                djno = "001",
+                jx_no = "ddd",
+                bz = "bz",
+                djjg = "djjg",
+                djxx = "djxx",
+                gcdm = "9100",
+                gwh = "A01",
+                lrr = "admin",
+                lrsj = DateTime.Now,
+                scx = "1",
+                status_no = "1"
+            });
+            pcis.Add(list);
+        }
+        [TestMethod]
+        public void update()
+        {
+            PointCheckInfoService pcis = new PointCheckInfoService();
+            pcis.Modify(new Models.BaseInfo.zxjc_djxx()
+            {
+                id = "4",
+                djno = "aaaa",
+                jx_no = "aaa",
+                bz = "aa",
+                djjg = "aa",
+                djxx = "aaa",
+                gcdm = "111",
+                gwh = "111",
+                lrr = "111",
+                scx = "111",
+                status_no = "111"
             });
         }
         }

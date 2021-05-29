@@ -6,7 +6,7 @@ using System.Web;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
-    /// 岗位物料
+    /// 岗位物料记录
     /// </summary>
     public class zxjc_gwzd_wljl
     {
@@ -28,6 +28,6 @@ namespace MESWebApi.Models.BaseInfo
         public string smfl { get; set; }
         public string smly { get; set; }
         public string lrr { get; set; }
-        public string lrsj { get; set; }
+        public DateTime? lrsj { get; set; } = DateTime.Now;
     }
 }

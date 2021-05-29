@@ -15,7 +15,7 @@ namespace MESWebApi.Models.BaseInfo
         public string work_no { get; set; }
         public string zpsx { get; set; }
         public string lrr { get; set; }
-        public string lrsj { get; set; }
+        public DateTime? lrsj { get; set; } = DateTime.Now;
         public string mj { get; set; }
         public string shbz { get; set; }
         public string work_name { get; set; }

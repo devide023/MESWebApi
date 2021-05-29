@@ -10,16 +10,49 @@ namespace MESWebApi.Models.BaseInfo
     /// </summary>
     public class zxjc_t_tstc
     {
+        /// <summary>
+        /// 通知ID
+        /// </summary>
         public string tcid { get; set; }
+        /// <summary>
+        /// 通知编号
+        /// </summary>
         public string tcbh { get; set; }
+        /// <summary>
+        ///  通知内容
+        /// </summary>
         public string tcms { get; set; }
+        /// <summary>
+        /// 工厂
+        /// </summary>
         public string gcdm { get; set; }
+        /// <summary>
+        /// 生产线
+        /// </summary>
         public string scx { get; set; }
+        /// <summary>
+        /// 岗位编码
+        /// </summary>
         public string gwh { get; set; }
+        /// <summary>
+        /// 机型
+        /// </summary>
         public string jx_no { get; set; }
+        /// <summary>
+        /// 状态码
+        /// </summary>
         public string status_no { get; set; }
-        public string yxbz { get; set; }
+        /// <summary>
+        /// 有效标志
+        /// </summary>
+        public string yxbz { get; set; } = "Y";
+        /// <summary>
+        /// 录入人
+        /// </summary>
         public string lrr { get; set; }
-        public string lrsj { get; set; }
+        /// <summary>
+        /// 录入时间
+        /// </summary>
+        public DateTime? lrsj { get; set; } = DateTime.Now;
     }
 }

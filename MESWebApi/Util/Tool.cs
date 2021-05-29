@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Reflection;
+using MESWebApi.Models;
 
 namespace MESWebApi.Util
 {
@@ -123,6 +125,36 @@ namespace MESWebApi.Util
                 sql.Append($"{item.right}");
             }
             return sql;
+        }
+
+        public static sys_entity_sql EntityToSql<T>(T entity)
+        {
+            sys_entity_sql entity_sql = new sys_entity_sql();
+            StringBuilder sqlinsert = new StringBuilder();
+            StringBuilder sqlupdate = new StringBuilder();
+            StringBuilder ifields = new StringBuilder();
+            StringBuilder ufields = new StringBuilder();
+            StringBuilder ifieldsbind = new StringBuilder();
+            Type type = entity.GetType();
+            string TableName = type.Name;
+            PropertyInfo[] pinfos = type.GetProperties();
+            foreach (PropertyInfo item in pinfos)
+            {
+                ifields.Append($"{item.Name},");
+                ifieldsbind.Append($":{item.Name},");
+                ufields.Append($"{item.Name} = :{item.Name},");
+            }
+            sqlinsert.Append($"insert into {TableName} (");
+            sqlinsert.Append(ifields.Remove(ifields.Length - 1, 1));
+            sqlinsert.Append(") values (");
+            sqlinsert.Append(ifieldsbind.Remove(ifieldsbind.Length - 1, 1));
+            sqlinsert.Append(" )");
+            //
+            sqlupdate.Append($"update {TableName} set ");
+            sqlupdate.Append(ufields.Remove(ufields.Length - 1, 1));
+            entity_sql.insertsql = sqlinsert;
+            entity_sql.updatesql = sqlupdate;
+            return entity_sql;
         }
 
         /// <summary>

@@ -166,6 +166,8 @@
     <Compile Include="Controllers\BaseInfoController.cs" />
     <Compile Include="Controllers\BaseInfo\DeviceController.cs" />
     <Compile Include="Controllers\BaseInfo\PointCheckController.cs" />
+    <Compile Include="Controllers\BaseInfo\StationMatController.cs" />
+    <Compile Include="Controllers\BaseInfo\StationServiceController.cs" />
     <Compile Include="Controllers\BaseInfo\UserSkillController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
@@ -199,6 +201,7 @@
     <Compile Include="Models\QueryParm\UserQueryParm.cs" />
     <Compile Include="Models\BaseInfo\base_sbxx.cs" />
     <Compile Include="Models\sys_comquery_express.cs" />
+    <Compile Include="Models\sys_entity_sql.cs" />
     <Compile Include="Models\sys_log.cs" />
     <Compile Include="Models\sys_logcnf.cs" />
     <Compile Include="Models\sys_menu.cs" />
@@ -210,11 +213,13 @@
     <Compile Include="Models\sys_user.cs" />
     <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\JTService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckInfoService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckService.cs" />
     <Compile Include="Services\BaseInfo\RYService.cs" />
     <Compile Include="Services\BaseInfo\StationService.cs" />
     <Compile Include="Services\BaseInfo\UserSkillService.cs" />
+    <Compile Include="Services\DBOperImp.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\MenuService.cs" />
     <Compile Include="Services\RoleService.cs" />

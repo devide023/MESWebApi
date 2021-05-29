@@ -6,7 +6,7 @@ using System.Web;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
-    /// 物料
+    /// 物料信息
     /// </summary>
     public class base_wlxx
     {
