@@ -233,7 +233,7 @@ namespace MESWebApi.Tests.Controllers
         public void JTInsert()
         {
             JTService jts = new JTService();
-            jts.OracleInsert(new Models.BaseInfo.zxjc_t_jstc()
+            jts.Add(new Models.BaseInfo.zxjc_t_jstc()
             {
                 jtid = Guid.NewGuid().ToString(),
                 jcbh = "001",
@@ -254,5 +254,29 @@ namespace MESWebApi.Tests.Controllers
                 yxqx2 = DateTime.Now.AddDays(5)
             }) ;
         }
+        [TestMethod]
+        public void InsertDevice()
+        {
+            DeviceService ds = new DeviceService();
+            ds.Add(new Models.BaseInfo.base_sbxx()
+            {
+                gcdm = "9100",
+                sbbh = "1234",
+                sbmc = "扭力枪",
+                sblx = "dd",
+                port = "5454",
+                ip = "192.168.0.1",
+                sfky = "Y",
+                sflj = "Y",
+                bz = "ddafdadf",
+                gwh = "A001",
+                txfs = "TCP",
+                lrr = "admin",
+                com = "",
+                scx = "1",
+            });
         }
+    }
+        
+        
 }

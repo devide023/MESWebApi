@@ -60,31 +60,12 @@ namespace MESWebApi.Services.BaseInfo
         {
             try
             {
-                StringBuilder sql = new StringBuilder();
-                sql.Append(" insert into base_sbxx(sbbh, sbmc, gcdm, scx, gwh, sblx, txfs, ip, sfky, sflj, bz, lrr, lrsj, com, port)");
-                sql.Append(" values");
-                sql.Append(" (:sbbh, :sbmc, :gcdm, :scx, :gwh, :sblx, :txfs, :ip, :sfky, :sflj, :bz, :lrr, sysdate, :com, :port)");
-                OracleDynamicParameters p = new OracleDynamicParameters();
-                p.Add(":sbbh", entity.sbbh, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":sbmc", entity.sbmc, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":gcdm", entity.gcdm, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":scx", entity.scx, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":gwh", entity.gwh, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":sblx", entity.sblx, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":txfs", entity.txfs, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":ip", entity.ip, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":sfky", entity.sfky, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":sflj", entity.sflj, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":bz", entity.bz, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":lrr", entity.lrr, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":com", entity.com, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                p.Add(":port", entity.port, OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
-                using (var conn = new OraDBHelper(constr).Conn)
+                using (var db = new OracleBaseFixture(constr).DB)
                 {
-                    int ret = conn.Execute(sql.ToString(), p);
-                    if (ret > 0)
+                   var ret = db.Insert(entity);
+                    if (ret != null)
                     {
-                        return new base_sbxx();
+                        return entity;
                     }
                     else
                     {

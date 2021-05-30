@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using DapperExtensions.Mapper;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
@@ -61,5 +61,14 @@ namespace MESWebApi.Models.BaseInfo
         /// 端口号
         /// </summary>
         public string port { get; set; }
+    }
+
+    public class base_sbxx_mapper : ClassMapper<base_sbxx>
+    {
+        public base_sbxx_mapper()
+        {
+            Map(t => t.sbbh).Key(KeyType.Assigned);
+            AutoMap();
+        }
     }
 }

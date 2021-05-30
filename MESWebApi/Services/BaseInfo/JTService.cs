@@ -66,16 +66,6 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
-        public void OracleInsert(zxjc_t_jstc entity)
-        {
-            
-            using (var db = new OracleBaseFixture(constr).DB)
-            {
-                int ret =  db.Insert<zxjc_t_jstc>(entity);
-                //IDatabase Db = new Database(conn, sqlGenerator);
-                //Db.Insert<zxjc_t_jstc>(entity);
-            }
-        }
     }
     /// <summary>
     /// 特殊技术通知

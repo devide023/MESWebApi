@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using DapperExtensions.Mapper;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
@@ -78,5 +78,14 @@ namespace MESWebApi.Models.BaseInfo
         /// 生产线
         /// </summary>
         public string scx { get; set; }
+    }
+
+    public class zxjc_t_jstc_mapper : ClassMapper<zxjc_t_jstc>
+    {
+        public zxjc_t_jstc_mapper()
+        {
+            Map(t => t.jtid).Key(KeyType.Guid);
+            AutoMap();
+        }
     }
 }
