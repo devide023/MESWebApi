@@ -165,6 +165,7 @@
     <Compile Include="App_Start\JsonContentNegotiator.cs" />
     <Compile Include="Controllers\BaseInfoController.cs" />
     <Compile Include="Controllers\BaseInfo\DeviceController.cs" />
+    <Compile Include="Controllers\BaseInfo\FaultController.cs" />
     <Compile Include="Controllers\BaseInfo\PointCheckController.cs" />
     <Compile Include="Controllers\BaseInfo\StationMatController.cs" />
     <Compile Include="Controllers\BaseInfo\StationServiceController.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Models\sys_user.cs" />
     <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\FaultService.cs" />
     <Compile Include="Services\BaseInfo\JTService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckInfoService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckService.cs" />

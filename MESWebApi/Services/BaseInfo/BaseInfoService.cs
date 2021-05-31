@@ -23,7 +23,10 @@ namespace MESWebApi.Services.BaseInfo
             log = LogManager.GetLogger(this.GetType());
             constr = "tjmes";
         }
-
+        /// <summary>
+        /// 工厂
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<base_gcxx> FactoryList()
         {
             try
@@ -41,7 +44,11 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 人员信息
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public IEnumerable<sec_users> PersonList(string key)
         {
             try
@@ -75,6 +82,24 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 生产线
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<dynamic> ScxList()
+        {
+            try
+            {
+                using (var db = new OracleBaseFixture(constr).DB)
+                {
+                    return new List<dynamic>();
+                }
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
     }
 }

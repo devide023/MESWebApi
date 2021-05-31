@@ -24,7 +24,20 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-
+        [HttpPost,Route("scx")]
+        public IHttpActionResult GetScx(dynamic obj)
+        {
+            try
+            {
+                BaseInfoService bis = new BaseInfoService();
+                var list = bis.ScxList();
+                return Json(new { code = 1, msg = "ok", list = list });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost,Route("person")]
         public IHttpActionResult GetPerson(dynamic obj)
         {
