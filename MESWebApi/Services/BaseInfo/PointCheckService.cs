@@ -152,5 +152,24 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 点检编号
+        /// </summary>
+        public string GetDJNo()
+        {
+            try
+            {
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                   var no = conn.ExecuteScalar<int>("select seq_pointcheck_no.nextval from dual");
+                    return "DJ" + no.ToString().PadLeft(4, '0');
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
     }
 }

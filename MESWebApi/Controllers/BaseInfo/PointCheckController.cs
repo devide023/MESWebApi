@@ -72,7 +72,20 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        [HttpGet, Route("djno")]
+        public IHttpActionResult DjNo()
+        {
+            try
+            {
+                PointCheckService pcs = new PointCheckService();
+                var no = pcs.GetDJNo();
+                return Json(new { code = 1, msg = "ok",djno = no });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

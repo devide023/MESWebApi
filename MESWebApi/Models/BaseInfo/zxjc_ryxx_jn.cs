@@ -40,6 +40,10 @@ namespace MESWebApi.Models.BaseInfo
         /// </summary>
         public string gwh { get; set; }
         /// <summary>
+        /// 岗位名称
+        /// </summary>
+        public string gwmc { get; set; }
+        /// <summary>
         /// 是否合格
         /// </summary>
         public string sfhg { get; set; } = "N";
@@ -60,6 +64,7 @@ namespace MESWebApi.Models.BaseInfo
         public zxjc_ryxx_jn_map()
         {
             Map(t => t.user_name).Ignore();
+            Map(t => t.gwmc).Ignore();
             AutoMap();
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using MESWebApi.Models.BaseInfo;
 using MESWebApi.Services.BaseInfo;
 namespace MESWebApi.Controllers
 {
@@ -24,8 +25,8 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-        [HttpPost,Route("scx")]
-        public IHttpActionResult GetScx(dynamic obj)
+        [HttpGet,Route("scx")]
+        public IHttpActionResult GetScx()
         {
             try
             {
@@ -35,6 +36,66 @@ namespace MESWebApi.Controllers
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+        [HttpGet, Route("gwlist")]
+        public IHttpActionResult GetGwList()
+        {
+            try
+            {
+                BaseInfoService bis = new BaseInfoService();
+                var list = bis.GWList();
+                return Json(new { code = 1, msg = "ok", list = list });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost, Route("jxlist")]
+        public IHttpActionResult GetJXList(dynamic obj)
+        {
+            try
+            {
+                string key = (obj.key ?? "").ToString();
+                if (!string.IsNullOrEmpty(key))
+                {
+                    BaseInfoService bis = new BaseInfoService();
+                    var list = bis.GetJxList(key);
+                    return Json(new { code = 1, msg = "ok", list = list });
+                }
+                else {
+                    return Json(new { code = 1, msg = "ok", list = new List<ztbm_new>() });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        [HttpPost, Route("ztlist")]
+        public IHttpActionResult GetZTByJX(dynamic obj)
+        {
+            try
+            {
+                string key = (obj.key ?? "").ToString();
+                if (!string.IsNullOrEmpty(key))
+                {
+                    BaseInfoService bis = new BaseInfoService();
+                    var list = bis.GetZtList(key);
+                    return Json(new { code = 1, msg = "ok", list = list });
+                }
+                else
+                {
+                    return Json(new { code = 1, msg = "ok", list = new List<ztbm_new>() });
+                }
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

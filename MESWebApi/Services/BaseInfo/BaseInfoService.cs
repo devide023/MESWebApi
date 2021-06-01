@@ -8,6 +8,7 @@ using MESWebApi.DB;
 using MESWebApi.InterFaces;
 using MESWebApi.Models.BaseInfo;
 using System.Text;
+using DapperExtensions;
 
 namespace MESWebApi.Services.BaseInfo
 {
@@ -83,16 +84,16 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
         /// <summary>
-        /// 生产线
+        /// 通机生产线
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<dynamic> ScxList()
+        public IEnumerable<tj_base_scxxx> ScxList()
         {
             try
             {
                 using (var db = new OracleBaseFixture(constr).DB)
                 {
-                    return new List<dynamic>();
+                    return db.GetList<tj_base_scxxx>().OrderBy(t=>t.scx);
                 }
             }
             catch (Exception)
@@ -101,5 +102,64 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 岗位站点
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<zxjc_gxzd> GWList()
+        {
+            try
+            {
+                using (var db = new OracleBaseFixture(constr).DB)
+                {
+                  return  db.GetList<zxjc_gxzd>();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        /// <summary>
+        /// 机型列表
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public IEnumerable<ztbm_new> GetJxList(string key)
+        {
+            try
+            {
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.Append("select distinct jx from ZTBM_NEW where lower(jx) like :key and rownum  <20");
+                    return conn.Query<ztbm_new>(sql.ToString(), new { key = "%" + key.ToLower() + "%" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public IEnumerable<ztbm_new> GetZtList(string jx)
+        {
+            try
+            {
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.Append("select distinct ztbm from ZTBM_NEW where lower(jx) like :key and rownum < 100 order by ztbm asc");
+                    return conn.Query<ztbm_new>(sql.ToString(), new { key = "%" + jx.ToLower() + "%" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

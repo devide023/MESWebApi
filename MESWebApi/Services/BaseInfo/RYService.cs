@@ -109,7 +109,7 @@ namespace MESWebApi.Services.BaseInfo
                 OracleDynamicParameters p = new OracleDynamicParameters();
                 StringBuilder sql = new StringBuilder();
 
-                sql.Append(" SELECT ta.gcdm, ta.user_code,(select user_name from sec_users where user_code = ta.user_code) as user_name, ta.jnbh, ta.jnxx, ta.scx, ta.gwh, ta.sfhg, ta.lrr, ta.lrsj, ta.jnfl, ta.jnsj");
+                sql.Append(" SELECT ta.gcdm, ta.user_code,(select user_name from sec_users where user_code = ta.user_code) as user_name, ta.jnbh, ta.jnxx, ta.scx, ta.gwh,(select work_name from ZXJC_GXZD where work_no = ta.gwh) as gwmc, ta.sfhg, ta.lrr, ta.lrsj, ta.jnfl, ta.jnsj");
                 sql.Append(" FROM zxjc_ryxx_jn ta where 1 = 1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
@@ -136,7 +136,7 @@ namespace MESWebApi.Services.BaseInfo
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
                     var q = conn.Query<zxjc_ryxx_jn>(sql.ToString(), p)
-                          .OrderBy(t => t.user_code)
+                          .OrderBy(t => t.jnbh)
                           .ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
                     return q;

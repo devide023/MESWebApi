@@ -182,8 +182,11 @@
     <Compile Include="InterFaces\IDBOper.cs" />
     <Compile Include="Models\BaseInfo\barcode_print.cs" />
     <Compile Include="Models\BaseInfo\base_gcxx.cs" />
+    <Compile Include="Models\BaseInfo\base_gwbj.cs" />
     <Compile Include="Models\BaseInfo\base_wlxx.cs" />
     <Compile Include="Models\BaseInfo\sec_users.cs" />
+    <Compile Include="Models\BaseInfo\tj_base_scxxx.cs" />
+    <Compile Include="Models\BaseInfo\ztbm_new.cs" />
     <Compile Include="Models\BaseInfo\zxjc_djgw.cs" />
     <Compile Include="Models\BaseInfo\zxjc_djxx.cs" />
     <Compile Include="Models\BaseInfo\zxjc_gwzd_wljl.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="Services\BaseInfo\PointCheckInfoService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckService.cs" />
     <Compile Include="Services\BaseInfo\RYService.cs" />
+    <Compile Include="Services\BaseInfo\StationMatService.cs" />
     <Compile Include="Services\BaseInfo\StationService.cs" />
     <Compile Include="Services\BaseInfo\UserSkillService.cs" />
     <Compile Include="Services\DBOperImp.cs" />
