@@ -257,24 +257,8 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void InsertDevice()
         {
-            DeviceService ds = new DeviceService();
-            ds.Add(new Models.BaseInfo.base_sbxx()
-            {
-                gcdm = "9100",
-                sbbh = "1234",
-                sbmc = "扭力枪",
-                sblx = "dd",
-                port = "5454",
-                ip = "192.168.0.1",
-                sfky = "Y",
-                sflj = "Y",
-                bz = "ddafdadf",
-                gwh = "A001",
-                txfs = "TCP",
-                lrr = "admin",
-                com = "",
-                scx = "1",
-            });
+            string path = @"C:\Users\Administrator\Desktop\通机MES方案调研及数据表设计.xlsx";
+            new ExcelHelper().ReadExcel(path);
         }
     }
         
