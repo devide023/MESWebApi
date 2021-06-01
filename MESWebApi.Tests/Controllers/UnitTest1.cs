@@ -257,7 +257,7 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void InsertDevice()
         {
-            string path = @"C:\Users\Administrator\Desktop\通机MES方案调研及数据表设计.xlsx";
+            string path = @"C:\Users\Administrator\Desktop\data.xls";
             new ExcelHelper().ReadExcel(path);
         }
     }

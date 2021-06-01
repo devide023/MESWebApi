@@ -37,12 +37,12 @@ namespace MESWebApi.Util
                     {
                         workbook = new XSSFWorkbook(file);
                     }
-                    ISheet sheet = workbook.GetSheetAt(2);
+                    ISheet sheet = workbook.GetSheetAt(0);
                     int rowno = sheet.LastRowNum;
-                    for (int i = sheet.FirstRowNum; i <= sheet.LastRowNum; i++)
+                    for (int i = sheet.FirstRowNum; i < sheet.LastRowNum; i++)
                     {
                        IRow row = sheet.GetRow(i);
-                        for (int j = row.FirstCellNum; j <= row.LastCellNum; j++)
+                        for (int j = row.FirstCellNum; j < row.LastCellNum; j++)
                         {
                             CellType celltype = row.GetCell(j).CellType;
                             switch (celltype)
