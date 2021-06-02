@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using DapperExtensions.Mapper;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
@@ -23,13 +23,21 @@ namespace MESWebApi.Models.BaseInfo
         /// </summary>
         public string gwh { get; set; }
         /// <summary>
+        /// 岗位名称
+        /// </summary>
+        public string gwmc { get; set; }
+        /// <summary>
         /// 物料编码
         /// </summary>
         public string wlbm { get; set; }
         /// <summary>
+        /// 物料名称
+        /// </summary>
+        public string wlmc { get; set; }
+        /// <summary>
         /// 料箱判断（N:不验证,Y:首台,A:每台）
         /// </summary>
-        public string lxpd { get; set; }
+        public string lxpd { get; set; } = "N";
         /// <summary>
         /// 料箱类型
         /// </summary>
@@ -73,7 +81,7 @@ namespace MESWebApi.Models.BaseInfo
         /// <summary>
         /// 是否打印
         /// </summary>
-        public string sfdy { get; set; }
+        public string sfdy { get; set; } = "Y";
         /// <summary>
         /// 备注
         /// </summary>
@@ -93,6 +101,16 @@ namespace MESWebApi.Models.BaseInfo
         /// <summary>
         /// 工作中心
         /// </summary>
-        public string gzzx { get; set; }
+        public string gzzx { get; set; } = "";
+    }
+
+    public class base_gwbj_mapper : ClassMapper<base_gwbj>
+    {
+        public base_gwbj_mapper()
+        {
+            Map(t => t.gwmc).Ignore();
+            Map(t => t.wlmc).Ignore();
+            AutoMap();
+        }
     }
 }

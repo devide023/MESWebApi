@@ -3,40 +3,103 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using MESWebApi.Services.BaseInfo;
+using MESWebApi.Models.BaseInfo;
+using MESWebApi.Models;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
     /// 岗位站点物料
     /// </summary>
+    /// 
+    [RoutePrefix("api/baseinfo/stationmat")]
     public class StationMatController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        [HttpPost, Route("list")]
+        public IHttpActionResult List(sys_page parm)
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                int resultcount = 0;
+                StationMatService sms = new StationMatService();
+                var list = sms.Search(parm, out resultcount);
+                return Json(new { code = 1, msg = "ok", list = list, resultcount = resultcount });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost,Route("readxls")]
+        public IHttpActionResult ImpExcel(dynamic obj)
+        {
+            try
+            {
+                string path = HttpContext.Current.Server.MapPath("~/UpLoad/");
+                string filename = (obj.filename ?? "").ToString();
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    string fullpath = path + filename;
+                    StationMatService smat = new StationMatService();
+                    var list = smat.FromExcel(fullpath);
+                    return Json(new { code = 1, msg = "ok",list = list });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "error" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [HttpPost, Route("add")]
+        public IHttpActionResult Add(List<base_gwbj> entitys)
         {
-            return "value";
+            try
+            {
+                StationMatService sms = new StationMatService();
+                int cnt = sms.Add(entitys);
+                if (cnt > 0)
+                {
+                    return Json(new { code = 1, msg = "数据保存成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据保存失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        // POST api/<controller>
-        public void Post([FromBody] string value)
+        [HttpPost, Route("edit")]
+        public IHttpActionResult Edit(base_gwbj entity)
         {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            try
+            {
+                StationMatService sms = new StationMatService();
+                int ret = sms.Modify(entity);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据修改成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据修改失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

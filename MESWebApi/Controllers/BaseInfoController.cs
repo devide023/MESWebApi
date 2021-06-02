@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using MESWebApi.Models.BaseInfo;
 using MESWebApi.Services.BaseInfo;
+using MESWebApi.Util;
 namespace MESWebApi.Controllers
 {
     [RoutePrefix("api/baseinfo")]
@@ -114,6 +115,20 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-
+        [HttpPost, Route("wllist")]
+        public IHttpActionResult GetWLList(dynamic obj)
+        {
+            try
+            {
+                BaseInfoService bis = new BaseInfoService();
+                string key = (obj.key ?? "").ToString();
+                var list = bis.GetWlList(key);
+                return Json(new { code = 1, msg = "ok", list = list });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

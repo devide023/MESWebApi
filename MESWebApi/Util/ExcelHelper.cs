@@ -11,7 +11,7 @@ using NPOI.XSSF.UserModel;
 using log4net;
 namespace MESWebApi.Util
 {
-    public class ExcelHelper
+    public  class ExcelHelper
     {
         ILog log;
         IWorkbook workbook;
@@ -20,7 +20,7 @@ namespace MESWebApi.Util
             log = LogManager.GetLogger(this.GetType());
         }
 
-        public void ReadExcel(string filePath)
+        public IWorkbook ReadExcel(string filePath)
         {
             
             string fileExt = Path.GetExtension(filePath);
@@ -37,34 +37,7 @@ namespace MESWebApi.Util
                     {
                         workbook = new XSSFWorkbook(file);
                     }
-                    ISheet sheet = workbook.GetSheetAt(0);
-                    int rowno = sheet.LastRowNum;
-                    for (int i = sheet.FirstRowNum; i < sheet.LastRowNum; i++)
-                    {
-                       IRow row = sheet.GetRow(i);
-                        for (int j = row.FirstCellNum; j < row.LastCellNum; j++)
-                        {
-                            CellType celltype = row.GetCell(j).CellType;
-                            switch (celltype)
-                            {
-                                case CellType.Unknown:
-                                    break;
-                                case CellType.Numeric:
-                                    var nval = row.GetCell(j).NumericCellValue;
-                                    break;
-                                case CellType.String:
-                                   var sval = row.GetCell(j).StringCellValue;
-                                    break;
-                                case CellType.Blank:
-                                    break;
-                                case CellType.Boolean:
-                                    var bval = row.GetCell(j).BooleanCellValue;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
+                    return workbook;
                 }
 
             }

@@ -143,6 +143,11 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 机型状态
+        /// </summary>
+        /// <param name="jx"></param>
+        /// <returns></returns>
         public IEnumerable<ztbm_new> GetZtList(string jx)
         {
             try
@@ -150,8 +155,31 @@ namespace MESWebApi.Services.BaseInfo
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
                     StringBuilder sql = new StringBuilder();
-                    sql.Append("select distinct ztbm from ZTBM_NEW where lower(jx) like :key and rownum < 100 order by ztbm asc");
+                    sql.Append("select distinct ztbm from ZTBM_NEW where lower(jx) like :key and rownum < 10 order by ztbm asc");
                     return conn.Query<ztbm_new>(sql.ToString(), new { key = "%" + jx.ToLower() + "%" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        /// <summary>
+        /// 物料信息
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public IEnumerable<base_wlxx> GetWlList(string key) {
+            try
+            {
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.Append("select wlbm,wlmc,wljc,wlz,wlsx from base_wlxx where gc='9100' ");
+                    sql.Append(" and ( lower(wlbm) like :key or lower(wlmc) like :key or lower(wlz) like :key ) ");
+                    sql.Append(" and rownum < 10 order by wlbm asc");
+                    return conn.Query<base_wlxx>(sql.ToString(), new { key = "%" + key.ToLower() + "%" });
                 }
             }
             catch (Exception)

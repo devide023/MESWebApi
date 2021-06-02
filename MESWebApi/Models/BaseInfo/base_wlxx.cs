@@ -10,13 +10,31 @@ namespace MESWebApi.Models.BaseInfo
     /// </summary>
     public class base_wlxx
     {
+        /// <summary>
+        /// 物料编码
+        /// </summary>
         public string wlbm { get; set; }
+        /// <summary>
+        /// 物料名称
+        /// </summary>
         public string wlmc { get; set; }
+        /// <summary>
+        /// 物料简称
+        /// </summary>
         public string wljc { get; set; }
         public string ywms { get; set; }
         public string jldw { get; set; }
+        /// <summary>
+        /// 物料类型
+        /// </summary>
         public string wllx { get; set; }
+        /// <summary>
+        /// 物料属性
+        /// </summary>
         public string wlsx { get; set; }
+        /// <summary>
+        /// 物料组
+        /// </summary>
         public string wlz { get; set; }
         public string cpz { get; set; }
         public string wljbm { get; set; }
