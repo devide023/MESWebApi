@@ -17,7 +17,8 @@ using DapperExtensions;
 using DapperExtensions.Sql;
 using DapperExtensions.Mapper;
 using System.Reflection;
-
+using NPOI.SS.UserModel;
+using System.IO;
 namespace MESWebApi.Services.BaseInfo
 {
     /// <summary>
@@ -58,6 +59,47 @@ namespace MESWebApi.Services.BaseInfo
                     resultcount = q.TotalItemCount;
                     return q;
                 }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public IEnumerable<zxjc_t_jstc> FromExcel(string path)
+        {
+            try
+            {
+                List<zxjc_t_jstc> list = new List<zxjc_t_jstc>();
+                ExcelHelper xls = new ExcelHelper();
+                IWorkbook book = xls.ReadExcel(path);
+                ISheet sheet = book.GetSheetAt(0);
+                int rows = sheet.LastRowNum;
+                for (int i = 1; i < rows; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    string jtbh = string.Empty;
+                    int jtid = Conn.ExecuteScalar<int>("SELECT seq_telnotice_id.nextval FROM dual");
+                    jtbh = "JT-" + jtid.ToString().PadLeft(9, '0');
+                    DateTime rq1 = row.GetCell(3).DateCellValue;
+                    DateTime rq2 = row.GetCell(4).DateCellValue;
+                    zxjc_t_jstc entity = new zxjc_t_jstc()
+                    {
+                        gcdm = "9100",
+                        jtid = Guid.NewGuid().ToString(),
+                        jcbh = jtbh,
+                        scx = row.GetCell(8).StringCellValue,
+                        jcmc = row.GetCell(1).StringCellValue,
+                        jcms = row.GetCell(2).StringCellValue,
+                        yxqx1 = rq1,
+                        yxqx2 = rq2,
+                        wjfl="技术通知",
+                        fp_flg="N"
+                    };
+                    list.Add(entity);
+                }
+                return list;
             }
             catch (Exception e)
             {

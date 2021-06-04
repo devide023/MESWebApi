@@ -9,6 +9,9 @@ using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
 namespace MESWebApi.Controllers.BaseInfo
 {
+    /// <summary>
+    /// 人员技能控制器
+    /// </summary>
     [RoutePrefix("api/baseinfo/skill")]
     public class UserSkillController : ApiController
     {

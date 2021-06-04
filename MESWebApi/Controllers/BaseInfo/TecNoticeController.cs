@@ -8,6 +8,8 @@ using MESWebApi.Services.BaseInfo;
 using MESWebApi.Models;
 using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
+using System.Web;
+
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
@@ -70,6 +72,31 @@ namespace MESWebApi.Controllers.BaseInfo
                 else
                 {
                     return Json(new { code = 0, msg = "数据修改失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost,Route("readxls")]
+        public IHttpActionResult ReadNoticeXls(dynamic obj)
+        {
+            try
+            {
+                string path = HttpContext.Current.Server.MapPath("~/UpLoad/");
+                string filename = (obj.filename ?? "").ToString();
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    string fullpath = path + filename;
+                    JTService jts = new JTService();
+                    var list = jts.FromExcel(fullpath);
+                    return Json(new { code = 1, msg = "ok", list = list });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "error" });
                 }
             }
             catch (Exception)

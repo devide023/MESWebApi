@@ -101,5 +101,26 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        [HttpPost, Route("del")]
+        public IHttpActionResult Del(List<base_gwbj> entitys)
+        {
+            try
+            {
+                StationMatService sms = new StationMatService();
+                int ret = sms.Delete(entitys);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据删除成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据删除失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

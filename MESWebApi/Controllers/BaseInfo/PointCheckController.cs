@@ -10,6 +10,9 @@ using System.Web.Http;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
+    /// <summary>
+    /// 点检控制器
+    /// </summary>
     [RoutePrefix("api/baseinfo/pointcheck")]
     public class PointCheckController : ApiController
     {

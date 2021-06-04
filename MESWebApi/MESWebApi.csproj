@@ -187,6 +187,7 @@
     <Compile Include="Controllers\BaseInfo\PointCheckController.cs" />
     <Compile Include="Controllers\BaseInfo\StationMatController.cs" />
     <Compile Include="Controllers\BaseInfo\StationServiceController.cs" />
+    <Compile Include="Controllers\BaseInfo\TechProcessController.cs" />
     <Compile Include="Controllers\BaseInfo\TecNoticeController.cs" />
     <Compile Include="Controllers\BaseInfo\UserSkillController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Models\sys_user.cs" />
     <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\DZGYService.cs" />
     <Compile Include="Services\BaseInfo\FaultService.cs" />
     <Compile Include="Services\BaseInfo\JTService.cs" />
     <Compile Include="Services\BaseInfo\PointCheckInfoService.cs" />

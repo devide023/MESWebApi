@@ -64,6 +64,26 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
+        public int Delete(List<base_gwbj> entitys)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" delete from base_gwbj ");
+                sql.Append(" where  gcdm = '9100' ");
+                sql.Append(" and scx = :scx ");
+                sql.Append(" and    gwh = :gwh ");
+                sql.Append(" and    jx_no = :jx_no ");
+                sql.Append(" and    wlbm = :wlbm ");
+                return Conn.Execute(sql.ToString(), entitys.ToArray());
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public IEnumerable<base_gwbj> Search(sys_page parm, out int resultcount)
         {
             try
