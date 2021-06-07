@@ -42,5 +42,43 @@ namespace MESWebApi.Controllers
             }
         }
 
+        [Route("pdf")]
+        [HttpPost]
+        public IHttpActionResult extuploadfiles()
+        {
+            try
+            {
+                Dictionary<string, object> kv = new Dictionary<string, object>();
+                var extdata = HttpContext.Current.Request.Form;
+                if (extdata != null)
+                {
+                    foreach (var item in extdata.AllKeys)
+                    {
+                        kv.Add(item, extdata.Get(item));
+                    }
+                }
+                HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
+                string savepath = HttpContext.Current.Server.MapPath("~/UpLoad");
+                List<dynamic> list = new List<dynamic>();
+                for (int i = 0; i < files.Count; i++)
+                {
+                    HttpPostedFile file = HttpContext.Current.Request.Files[i];
+                    string client_filename = file.FileName;
+                    int fileszie = file.ContentLength;
+                    int pos = client_filename.LastIndexOf(".");
+                    string filetype = client_filename.Substring(pos, client_filename.Length - pos);
+                    string guid = Guid.NewGuid().ToString() + filetype;
+                    string fullfilename = savepath + "\\" + guid;
+                    file.SaveAs(fullfilename);
+                    list.Add(new { fileid = guid, filename = client_filename, filesize = fileszie });
+                }
+                return Json(new { code = 1, msg = "上传成功", files = list,extdata= kv });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

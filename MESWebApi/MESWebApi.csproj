@@ -295,6 +295,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\CacheManager.cs" />
     <Compile Include="Util\ExcelHelper.cs" />
+    <Compile Include="Util\FtpHelper.cs" />
     <Compile Include="Util\IPatternLayout.cs" />
     <Compile Include="Util\JWTHelper.cs" />
     <Compile Include="Util\LogActionFilter.cs" />

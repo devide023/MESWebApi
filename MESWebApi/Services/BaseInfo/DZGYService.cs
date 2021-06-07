@@ -81,8 +81,7 @@ namespace MESWebApi.Services.BaseInfo
                 for (int i = 1; i < rows; i++)
                 {
                     IRow row = sheet.GetRow(i);
-                    int gybhid = Conn.ExecuteScalar<int>("SELECT seq_dzgy_no.nextval FROM dual");
-                    string dzgy_number = "GY-" + gybhid.ToString().PadLeft(8, '0');
+                    string dzgy_number = this.GetDZGYNumber();
                     zxjc_t_dzgy entity = new zxjc_t_dzgy()
                     {
                         gyid = Guid.NewGuid().ToString(),
@@ -104,6 +103,26 @@ namespace MESWebApi.Services.BaseInfo
                 log.Error(e.Message);
                 throw;
             }
+        }
+
+        public string GetDZGYNumber()
+        {
+            try
+            {
+                int gybhid = Conn.ExecuteScalar<int>("SELECT seq_dzgy_no.nextval FROM dual");
+                string dzgy_number = "GY-" + gybhid.ToString().PadLeft(8, '0');
+                return dzgy_number;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public override int Modify(zxjc_t_dzgy entity)
+        {
+            return base.Modify(entity);
         }
     }
 }

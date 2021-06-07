@@ -80,5 +80,35 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+
+        [HttpGet, Route("dzgyno")]
+        public IHttpActionResult DZGYNumber()
+        {
+            try
+            {
+                DZGYService dzgys = new DZGYService();
+                var number = dzgys.GetDZGYNumber();
+                return Json(new { code = 1, msg = "ok", dzgyno = number });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost,Route("updatefiles")]
+        public IHttpActionResult ChangeFileName(dynamic obj)
+        {
+            try
+            {
+                DZGYService dzgys = new DZGYService();
+                var number = dzgys.GetDZGYNumber();
+                return Json(new { code = 1, msg = "ok", dzgyno = number });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
