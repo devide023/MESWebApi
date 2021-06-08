@@ -6,7 +6,7 @@ using System.Web;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
-    /// 技术通知关联生产线
+    /// 技术通知关联生产线,分发技术通知
     /// </summary>
     public class zxjc_t_jstcfp
     {

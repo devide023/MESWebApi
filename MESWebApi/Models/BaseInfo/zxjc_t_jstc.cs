@@ -33,7 +33,7 @@ namespace MESWebApi.Models.BaseInfo
         /// <summary>
         /// 文件大小
         /// </summary>
-        public Int64 jwdx { get; set; }
+        public long jwdx { get; set; }
         /// <summary>
         /// 上传用户名
         /// </summary>

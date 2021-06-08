@@ -105,6 +105,19 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
+        public string GetDzgyId()
+        {
+            try
+            {
+                return Guid.NewGuid().ToString();
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
         public string GetDZGYNumber()
         {
             try
@@ -120,9 +133,48 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
+        public int ModifyFileName(zxjc_t_dzgy entity)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" update ZXJC_T_DZGY");
+                sql.Append(" set ");
+                sql.Append("        wjlj = :wjlj,");
+                sql.Append("        jwdx = :jwdx,scry=:scry,scpc=:scpc,scsj=sysdate");
+                sql.Append(" where  gyid = :gyid");
+                return Conn.Execute(sql.ToString(), entity);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public override int Modify(zxjc_t_dzgy entity)
         {
-            return base.Modify(entity);
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" update ZXJC_T_DZGY");
+                sql.Append(" set gymc = :gymc,");
+                sql.Append("        gyms = :gyms,");
+                sql.Append("        gcdm = :gcdm,");
+                sql.Append("        scx = :scx,");
+                sql.Append("        gwh = :gwh,");
+                sql.Append("        jx_no = :jx_no,");
+                sql.Append("        status_no = :status_no,");
+                sql.Append("        wjlj = :wjlj,");
+                sql.Append("        jwdx = :jwdx,scry=:scry,scpc=:scpc,scsj=sysdate");
+                sql.Append(" where  gyid = :gyid");
+                return Conn.Execute(sql.ToString(), entity);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

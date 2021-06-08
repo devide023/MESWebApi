@@ -9,6 +9,8 @@ using MESWebApi.Models;
 using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
 using System.Web;
+using System.Text;
+using MESWebApi.Util;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
@@ -79,7 +81,59 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        [HttpPost, Route("changefiles")]
+        public IHttpActionResult ModifyFileName(dynamic obj)
+        {
+            try
+            {
+                string jtid = (obj.jtid ?? "").ToString();
+                List<sys_file> files = obj.files != null ? obj.files.ToObject<List<sys_file>>() : new List<sys_file>();
+                string filenames = string.Empty;
+                files.ForEach(t => filenames = filenames + t.filename + ",");
+                if (filenames.Length > 0)
+                {
+                    filenames = filenames.Remove(filenames.Length - 1, 1);
+                }
+                sys_user user = CacheManager.Instance().Current_User;
+                JTService jts = new JTService();
+                zxjc_t_jstc entity = new zxjc_t_jstc()
+                {
+                    gcdm="9100",
+                    jtid = jtid,
+                    wjlj = filenames,
+                    jwdx = files.Sum(t => t.filesize),
+                    scry = user.name,
+                    scsj = DateTime.Now
+                };
+                int ret = jts.ModifyFileNames(entity);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "文件保存成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "文件保存失败" });
+                }                
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet,Route("jtno")]
+        public IHttpActionResult GetJtNumber()
+        {
+            try
+            {
+                JTService jts = new JTService();
+                string jtno = jts.GetJTNumber();
+                return Json(new { code = 1, msg = "ok",jtno = jtno,jtid=Guid.NewGuid().ToString() });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost,Route("readxls")]
         public IHttpActionResult ReadNoticeXls(dynamic obj)
         {

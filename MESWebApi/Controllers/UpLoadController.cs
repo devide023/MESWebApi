@@ -68,7 +68,7 @@ namespace MESWebApi.Controllers
                     int pos = client_filename.LastIndexOf(".");
                     string filetype = client_filename.Substring(pos, client_filename.Length - pos);
                     string guid = Guid.NewGuid().ToString() + filetype;
-                    string fullfilename = savepath + "\\" + guid;
+                    string fullfilename = savepath + "\\" + client_filename;
                     file.SaveAs(fullfilename);
                     list.Add(new { fileid = guid, filename = client_filename, filesize = fileszie });
                 }

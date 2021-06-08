@@ -183,6 +183,7 @@
     <Compile Include="App_Start\JsonContentNegotiator.cs" />
     <Compile Include="Controllers\BaseInfoController.cs" />
     <Compile Include="Controllers\BaseInfo\DeviceController.cs" />
+    <Compile Include="Controllers\BaseInfo\DistributeController.cs" />
     <Compile Include="Controllers\BaseInfo\FaultController.cs" />
     <Compile Include="Controllers\BaseInfo\PointCheckController.cs" />
     <Compile Include="Controllers\BaseInfo\StationMatController.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Models\BaseInfo\zxjc_t_ydjl.cs" />
     <Compile Include="Models\QueryParm\CheckPointQueryParm.cs" />
     <Compile Include="Models\QueryParm\DeviceQueryParm.cs" />
+    <Compile Include="Models\QueryParm\DisJTParm.cs" />
     <Compile Include="Models\QueryParm\MenuQueryParm.cs" />
     <Compile Include="Models\QueryParm\sec_userparm.cs" />
     <Compile Include="Models\QueryParm\SkillQueryParm.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="Models\BaseInfo\base_sbxx.cs" />
     <Compile Include="Models\sys_comquery_express.cs" />
     <Compile Include="Models\sys_entity_sql.cs" />
+    <Compile Include="Models\sys_file.cs" />
     <Compile Include="Models\sys_log.cs" />
     <Compile Include="Models\sys_logcnf.cs" />
     <Compile Include="Models\sys_menu.cs" />
@@ -238,6 +241,7 @@
     <Compile Include="Models\sys_user.cs" />
     <Compile Include="Services\BaseInfo\BaseInfoService.cs" />
     <Compile Include="Services\BaseInfo\DeviceService.cs" />
+    <Compile Include="Services\BaseInfo\DistributeService.cs" />
     <Compile Include="Services\BaseInfo\DZGYService.cs" />
     <Compile Include="Services\BaseInfo\FaultService.cs" />
     <Compile Include="Services\BaseInfo\JTService.cs" />

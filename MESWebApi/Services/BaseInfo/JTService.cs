@@ -79,9 +79,7 @@ namespace MESWebApi.Services.BaseInfo
                 for (int i = 1; i < rows; i++)
                 {
                     IRow row = sheet.GetRow(i);
-                    string jtbh = string.Empty;
-                    int jtid = Conn.ExecuteScalar<int>("SELECT seq_telnotice_id.nextval FROM dual");
-                    jtbh = "JT-" + jtid.ToString().PadLeft(9, '0');
+                    string jtbh = GetJTNumber();
                     DateTime rq1 = row.GetCell(3).DateCellValue;
                     DateTime rq2 = row.GetCell(4).DateCellValue;
                     zxjc_t_jstc entity = new zxjc_t_jstc()
@@ -100,6 +98,70 @@ namespace MESWebApi.Services.BaseInfo
                     list.Add(entity);
                 }
                 return list;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+        public int ModifyFileNames(zxjc_t_jstc entity)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" update ZXJC_T_JSTC");
+                sql.Append("  set ");
+                sql.Append("         wjlj = :wjlj,");
+                sql.Append("         jwdx = :jwdx,");
+                sql.Append("         scry = :scry,");
+                sql.Append("         scpc = :scpc,");
+                sql.Append("         scsj = :scsj ");
+                sql.Append("  where  jtid = :jtid");
+                return Conn.Execute(sql.ToString(), entity);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public override int Modify(zxjc_t_jstc entity)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append(" update ZXJC_T_JSTC");
+                sql.Append("  set jcmc = :jcmc,");
+                sql.Append("         jcms = :jcms,");
+                sql.Append("         wjlj = :wjlj,");
+                sql.Append("         jwdx = :jwdx,");
+                sql.Append("         scry = :scry,");
+                sql.Append("         scpc = :scpc,");
+                sql.Append("         scsj = :scsj,");
+                sql.Append("         yxqx1 = :yxqx1,");
+                sql.Append("         yxqx2 = :yxqx2,");
+                sql.Append("         gcdm = :gcdm,");
+                sql.Append("         fp_flg = :fp_flg,");
+                sql.Append("         fp_sj = :fp_sj,");
+                sql.Append("         fpr = :fpr,");
+                sql.Append("         wjfl = :wjfl,");
+                sql.Append("         scx = :scx");
+                sql.Append("  where  jtid = :jtid");
+                return Conn.Execute(sql.ToString(), entity);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public string GetJTNumber()
+        {
+            try
+            {
+                int jtseq = Conn.ExecuteScalar<int>("SELECT seq_telnotice_id.nextval FROM dual");
+                return "JT-" + jtseq.ToString().PadLeft(9, '0');
             }
             catch (Exception e)
             {
