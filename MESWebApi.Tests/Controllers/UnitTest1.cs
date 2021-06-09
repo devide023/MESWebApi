@@ -239,7 +239,7 @@ namespace MESWebApi.Tests.Controllers
                 jcbh = "001",
                 jcmc = "关于×××的通知",
                 jcms = "描述",
-                jwdx = "100",
+                jwdx = 100,
                 fpr = "a",
                 fp_flg = "Y",
                 fp_sj = DateTime.Now,
@@ -258,7 +258,7 @@ namespace MESWebApi.Tests.Controllers
         public void InsertDevice()
         {
             string path = @"C:\Users\Administrator\Desktop\data.xls";
-            new ExcelHelper().ReadExcel(path);
+            //new ExcelHelper().ReadExcel(path);
         }
     }
         

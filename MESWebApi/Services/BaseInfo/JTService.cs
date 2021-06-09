@@ -24,7 +24,7 @@ namespace MESWebApi.Services.BaseInfo
     /// <summary>
     /// 技术通知
     /// </summary>
-    public class JTService:DBOperImp<zxjc_t_jstc>,IComposeQuery<zxjc_t_jstc,sys_page>
+    public class JTService : DBOperImp<zxjc_t_jstc>, IComposeQuery<zxjc_t_jstc, sys_page>
     {
         private ILog log;
         private string constr = string.Empty;
@@ -92,8 +92,8 @@ namespace MESWebApi.Services.BaseInfo
                         jcms = row.GetCell(2).StringCellValue,
                         yxqx1 = rq1,
                         yxqx2 = rq2,
-                        wjfl="技术通知",
-                        fp_flg="N"
+                        wjfl = "技术通知",
+                        fp_flg = "N"
                     };
                     list.Add(entity);
                 }
@@ -177,11 +177,26 @@ namespace MESWebApi.Services.BaseInfo
     public class TsJTService : DBOperImp<zxjc_t_tstc>, IComposeQuery<zxjc_t_tstc, sys_page>
     {
         private ILog log;
-        private string constr = string.Empty;
-        public TsJTService()
+        public TsJTService(string constr = "tjmes") : base(constr)
         {
             log = LogManager.GetLogger(this.GetType());
-            constr = "tjmes";
+        }
+        /// <summary>
+        /// 特殊技术通知编号
+        /// </summary>
+        /// <returns></returns>
+        public string SpecialNoticeNo()
+        {
+            try
+            {
+                int no = Conn.ExecuteScalar<int>("SELECT seq_special_noticno.nextval from dual");
+                return "Tstz" + no.ToString().PadLeft(5, '0');
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public IEnumerable<zxjc_t_tstc> Search(sys_page parm, out int resultcount)
         {
@@ -200,14 +215,13 @@ namespace MESWebApi.Services.BaseInfo
                     sql.Append(" and ");
                     sql.Append(Tool.ComQueryExp(parm.explist));
                 }
-                using (var conn = new OraDBHelper(constr).Conn)
-                {
-                    var q = conn.Query<zxjc_t_tstc>(sql.ToString(), p)
-                         .OrderByDescending(t => t.tcid)
-                         .ToPagedList(parm.pageindex, parm.pagesize);
-                    resultcount = q.TotalItemCount;
-                    return q;
-                }
+
+                var q = Conn.Query<zxjc_t_tstc>(sql.ToString(), p)
+                     .OrderByDescending(t => t.tcid)
+                     .ToPagedList(parm.pageindex, parm.pagesize);
+                resultcount = q.TotalItemCount;
+                return q;
+
             }
             catch (Exception e)
             {
@@ -219,15 +233,13 @@ namespace MESWebApi.Services.BaseInfo
     /// <summary>
     /// 技术通知查看记录
     /// </summary>
-    public class JTYDService : DBOperImp<zxjc_t_ydjl>,IComposeQuery<zxjc_t_ydjl,sys_page>
+    public class JTYDService : DBOperImp<zxjc_t_ydjl>, IComposeQuery<zxjc_t_ydjl, sys_page>
     {
         private ILog log;
-        private string constr = string.Empty;
-        public JTYDService()
+        public JTYDService(string constr = "tjmes") : base(constr)
         {
             log = LogManager.GetLogger(this.GetType());
-            constr = "tjmes";
-        }
+        }        
 
         public IEnumerable<zxjc_t_ydjl> Search(sys_page parm, out int resultcount)
         {
@@ -246,14 +258,11 @@ namespace MESWebApi.Services.BaseInfo
                     sql.Append(" and ");
                     sql.Append(Tool.ComQueryExp(parm.explist));
                 }
-                using (var conn = new OraDBHelper(constr).Conn)
-                {
-                    var q = conn.Query<zxjc_t_ydjl>(sql.ToString(), p)
-                         .OrderByDescending(t => t.ydid)
-                         .ToPagedList(parm.pageindex, parm.pagesize);
-                    resultcount = q.TotalItemCount;
-                    return q;
-                }
+                var q = Conn.Query<zxjc_t_ydjl>(sql.ToString(), p)
+                     .OrderByDescending(t => t.ydid)
+                     .ToPagedList(parm.pageindex, parm.pagesize);
+                resultcount = q.TotalItemCount;
+                return q;
             }
             catch (Exception e)
             {

@@ -174,7 +174,29 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        [HttpGet, Route("tsjt/tsjtno")]
+        public IHttpActionResult TsjtNo()
+        {
+            try
+            {
+                TsJTService tsjts = new TsJTService();
+                string no = tsjts.SpecialNoticeNo();
+                string tcid = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(no))
+                {
+                    return Json(new { code = 1, msg = "ok", no = no, tcid=tcid }) ;
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "编号获取失败", no = no,tcid = tcid });
+                }
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
         [HttpPost, Route("tsjt/add")]
         public IHttpActionResult TsjtAdd(List<zxjc_t_tstc> entitys)
         {

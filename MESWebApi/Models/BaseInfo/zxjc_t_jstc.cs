@@ -78,12 +78,17 @@ namespace MESWebApi.Models.BaseInfo
         /// 生产线
         /// </summary>
         public string scx { get; set; }
+        /// <summary>
+        /// 技通关联分配详情
+        /// </summary>
+        public List<zxjc_t_jstcfp> details { get; set; } = new List<zxjc_t_jstcfp>();
     }
 
     public class zxjc_t_jstc_mapper : ClassMapper<zxjc_t_jstc>
     {
         public zxjc_t_jstc_mapper()
         {
+            Map(t => t.details).Ignore();
             AutoMap();
         }
     }

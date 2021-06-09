@@ -68,7 +68,7 @@ namespace MESWebApi.Services
             }
         }
 
-        public bool Delete(int id)
+        public virtual bool Delete(int id)
         {
             throw new NotImplementedException();
         }
