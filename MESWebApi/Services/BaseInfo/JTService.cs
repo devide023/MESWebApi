@@ -54,7 +54,7 @@ namespace MESWebApi.Services.BaseInfo
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
                     var q = conn.Query<zxjc_t_jstc>(sql.ToString(), p)
-                         .OrderByDescending(t => t.scsj)
+                         .OrderByDescending(t => t.jcbh)
                          .ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
                     return q;

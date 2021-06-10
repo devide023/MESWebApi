@@ -58,7 +58,7 @@ namespace MESWebApi.Services.BaseInfo
                     sql.Append(Tool.ComQueryExp(parm.explist));
                 }
                 var q = Conn.Query<zxjc_t_dzgy>(sql.ToString(), p)
-                    .OrderBy(t => t.gyid)
+                    .OrderByDescending(t=>t.gybh)
                     .ToPagedList(parm.pageindex, parm.pagesize);
                 resultcount = q.TotalItemCount;
                 return q;
