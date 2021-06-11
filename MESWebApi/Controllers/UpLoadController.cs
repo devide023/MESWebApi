@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http;
 using System.Configuration;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace MESWebApi.Controllers
 {
@@ -66,9 +67,9 @@ namespace MESWebApi.Controllers
                     {
                         kv.Add(item, extdata.Get(item));
                     }
-                    if( kv.TryGetValue("filetype", out pdftype))
+                    if (kv.TryGetValue("filetype", out pdftype))
                     {
-                       var ft = pdftype.ToString();
+                        var ft = pdftype.ToString();
                         switch (ft)
                         {
                             case "jstz":
@@ -98,7 +99,7 @@ namespace MESWebApi.Controllers
                     string guid = Guid.NewGuid().ToString() + filetype;
                     list.Add(new { fileid = guid, filename = client_filename, filesize = fileszie });
                 }
-                return Json(new { code = 1, msg = "上传成功", files = list,extdata= kv });
+                return Json(new { code = 1, msg = "上传成功", files = list, extdata = kv });
             }
             catch (Exception)
             {
@@ -107,7 +108,7 @@ namespace MESWebApi.Controllers
             }
         }
 
-        [HttpGet,Route("ftpcnf")]
+        [HttpGet, Route("ftpcnf")]
         public IHttpActionResult GetFtpCnf()
         {
             try
@@ -123,7 +124,7 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-        [HttpPost,Route("ftpurl_encode")]
+        [HttpPost, Route("ftpurl_encode")]
         public IHttpActionResult Encode_FtpUrl(dynamic obj)
         {
             try
@@ -145,45 +146,86 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("downpdf")]
-        public HttpResponseMessage DownLoadPdf(string type,string filename)
+        [HttpGet, Route("downfromftp")]
+        public IHttpActionResult DownLoadFilefromFtp(string type, string filename)
         {
             try
             {
-                //var strPath = @"D:\workspace\MESWebApi\MESWebApi\UpLoad\f2d5bfc1-b014-4241-ac59-7403cf93a625.pdf";
-                //var stream = new FileStream(strPath, FileMode.Open);
-                //HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                //response.Content = new StreamContent(stream);
-                //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                //response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                //{
-                //    FileName = "test.pdf"
-                //};
-
-                //return response;
+                if(string.IsNullOrEmpty(type) || string.IsNullOrEmpty(filename))
+                {
+                    return Json(new { code = 0, msg = "文件类型或文件名为空" });
+                }
                 string ftppath = ConfigurationManager.AppSettings["ftp"].ToString();
-                string ftpusername = ConfigurationManager.AppSettings["ftpname"].ToString();
-                string ftpuserpwd = ConfigurationManager.AppSettings["ftppwd"].ToString();
                 string jstzfolder = ConfigurationManager.AppSettings["jtfolder"].ToString();
                 string dzgyfolder = ConfigurationManager.AppSettings["dzgyfolder"].ToString();
-                string folderpath = string.Empty;
+                string folder = string.Empty;
                 switch (type)
                 {
                     case "jstz":
-                        folderpath = jstzfolder;
+                        folder = jstzfolder;
                         break;
                     case "dzgy":
-                        folderpath = dzgyfolder;
+                        folder = dzgyfolder;
                         break;
                     default:
                         break;
                 }
-                Util.FtpHelper ftphelper = new Util.FtpHelper();
-                var resmsg = ftphelper.DownloadFile(folderpath, filename, ftppath, ftpusername, ftpuserpwd);
-                return resmsg;
-
+                string path = $"ftp://{ftppath}/{folder}/{filename}";
+                string downpath = HttpContext.Current.Server.MapPath("~/DownLoad/");
+                string localfile = downpath + filename;
+                FtpWebRequest reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri(path));
+                using (FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse())
+                {
+                    using (Stream responseStream = response.GetResponseStream())
+                    {
+                        using (FileStream fs = new FileStream(localfile, FileMode.OpenOrCreate))
+                        {
+                            try
+                            {
+                                byte[] buffer = new byte[20480];
+                                int read = 0;
+                                do
+                                {
+                                    read = responseStream.Read(buffer, 0, buffer.Length);
+                                    fs.Write(buffer, 0, read);
+                                } while (!(read == 0));
+                                responseStream.Close();
+                                fs.Flush();
+                                fs.Close();
+                            }
+                            catch (Exception)
+                            {
+                                fs.Close();
+                                File.Delete(localfile);
+                                throw;
+                            }
+                        }
+                        responseStream.Close();
+                    }
+                    response.Close();
+                }
+                return Json(new { code = 1, msg = "文件从ftp下载成功", downloadid = filename });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpGet, AllowAnonymous,Route("downpdf")]
+        public HttpResponseMessage DownLoadPdf(string filename)
+        {
+            try
+            {
+                var strPath = HttpContext.Current.Server.MapPath("~/DownLoad/" + filename);
+                var stream = new FileStream(strPath, FileMode.Open);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StreamContent(stream);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = filename
+                };
+                return response;
             }
             catch (Exception)
             {

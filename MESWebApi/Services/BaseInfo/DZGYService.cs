@@ -51,10 +51,11 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" from ZXJC_T_DZGY ta where 1=1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
-                    sql.Append(" and (gymc like :key or gyms like :key or jx_no like :key ) ");
+                    sql.Append(" and (ta.gybh like :key or ta.gymc like :key or ta.gyms like :key or ta.jx_no like :key ) ");
                     p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.NVarchar2, System.Data.ParameterDirection.Input);
                 }
                 if (parm.explist.Count > 0) {
+                    sql.Append(" and ");
                     sql.Append(Tool.ComQueryExp(parm.explist));
                 }
                 var q = Conn.Query<zxjc_t_dzgy>(sql.ToString(), p)
