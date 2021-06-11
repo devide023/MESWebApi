@@ -202,6 +202,8 @@ namespace MESWebApi.Controllers.BaseInfo
         {
             try
             {
+                sys_user user = CacheManager.Instance().Current_User;
+                entitys.ForEach(t => { t.lrr = user.name; t.lrsj = DateTime.Now; });
                 TsJTService tsjts = new TsJTService();
                 int ret = tsjts.Add(entitys);
                 if (ret > 0)

@@ -7,6 +7,9 @@ using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
 using MESWebApi.Services.BaseInfo;
 using System.Web.Http;
+using MESWebApi.Util;
+using MESWebApi.Models;
+using System.Web;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
@@ -37,6 +40,8 @@ namespace MESWebApi.Controllers.BaseInfo
         {
             try
             {
+                sys_user user = CacheManager.Instance().Current_User;
+                entitys.ForEach(t => { t.lrr = user.name; t.lrsj = DateTime.Now; });
                 PointCheckService pcs = new PointCheckService();
                 var ret = pcs.Add(entitys);
                 if (ret > 0)
@@ -83,6 +88,31 @@ namespace MESWebApi.Controllers.BaseInfo
                 PointCheckService pcs = new PointCheckService();
                 var no = pcs.GetDJNo();
                 return Json(new { code = 1, msg = "ok",djno = no });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost, Route("readxls")]
+        public IHttpActionResult ReadXls(dynamic obj)
+        {
+            try
+            {
+                string path = HttpContext.Current.Server.MapPath("~/UpLoad/");
+                string filename = (obj.filename ?? "").ToString();
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    string fullpath = path + filename;
+                    PointCheckService pcs = new PointCheckService();
+                    var list = pcs.FromExcel(fullpath);
+                    return Json(new { code = 1, msg = "ok", list = list });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "文件名为空或不存在" });
+                }
             }
             catch (Exception)
             {

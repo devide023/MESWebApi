@@ -10,6 +10,10 @@ namespace MESWebApi.Models.QueryParm
     /// </summary>
     public class DisJTParm:sys_page
     {
+        public string jcbh { get; set; }
+        public string jcmc { get; set; }
+        public string jcms { get; set; }
+        public string wjlj { get; set; }
         public string sffp { get; set; }
     }
 }

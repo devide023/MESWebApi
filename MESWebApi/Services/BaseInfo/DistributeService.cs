@@ -37,9 +37,24 @@ namespace MESWebApi.Services.BaseInfo
                 StringBuilder sql = new StringBuilder();
                 sql.Append(" SELECT jtid,jcbh,jcmc,jcms,wjlj,jwdx,scry,scpc,scsj,yxqx1,yxqx2,gcdm,fp_flg,fp_sj,fpr,wjfl,scx");
                 sql.Append(" FROM zxjc_t_jstc where 1=1 ");
-                if (!string.IsNullOrEmpty(parm.keyword)) {
-                    sql.Append(" and (jcbh like :key or jcmc like :key or jcms like :key )");
-                    p.Add("key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                if (!string.IsNullOrEmpty(parm.jcbh)) {
+                    sql.Append(" and jcbh like :jcbh");
+                    p.Add(":jcbh", "%" + parm.jcbh + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.jcmc))
+                {
+                    sql.Append(" and jcmc like :jcmc");
+                    p.Add(":jcmc", "%" + parm.jcmc + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.jcms))
+                {
+                    sql.Append(" and jcms like :jcms");
+                    p.Add(":jcms", "%" + parm.jcms + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
+                }
+                if (!string.IsNullOrEmpty(parm.wjlj))
+                {
+                    sql.Append(" and wjlj like :wjlj");
+                    p.Add(":wjlj", "%" + parm.wjlj + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
                 }
                 if (!string.IsNullOrEmpty(parm.sffp))
                 {

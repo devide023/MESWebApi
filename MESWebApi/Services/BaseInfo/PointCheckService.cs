@@ -11,6 +11,9 @@ using MESWebApi.DB;
 using MESWebApi.InterFaces;
 using log4net;
 using Webdiyer.WebControls.Mvc;
+using MESWebApi.Util;
+using NPOI.SS.UserModel;
+
 namespace MESWebApi.Services.BaseInfo
 {
     /// <summary>
@@ -125,11 +128,11 @@ namespace MESWebApi.Services.BaseInfo
             {
                 OracleDynamicParameters p = new OracleDynamicParameters();
                 StringBuilder sql = new StringBuilder();
-                sql.Append("select gcdm, scx, gwh, jx_no, status_no, djno, djxx, scbz, lrr, lrsj, djlx ");
-                sql.Append(" from zxjc_djgw where 1 = 1 ");
+                sql.Append("select ta.gcdm, ta.scx, ta.gwh,(select work_name from zxjc_gxzd where work_no = ta.gwh) as gwmc,ta.jx_no, ta.status_no, ta.djno, ta.djxx, ta.scbz, ta.lrr, ta.lrsj, ta.djlx ");
+                sql.Append(" from zxjc_djgw ta where 1 = 1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
-                    sql.Append(" and (djxx like :key or status_no like :key )");
+                    sql.Append(" and (ta.djxx like :key or ta.status_no like :key )");
                     p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
                 }
                 if (parm.explist.Count > 0)
@@ -140,7 +143,7 @@ namespace MESWebApi.Services.BaseInfo
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
                     var q = conn.Query<zxjc_djgw>(sql.ToString(), p)
-                         .OrderBy(t => t.djno)
+                         .OrderByDescending(t => t.djno)
                          .ToPagedList(parm.pageindex, parm.pagesize);
                     resultcount = q.TotalItemCount;
                     return q;
@@ -164,6 +167,44 @@ namespace MESWebApi.Services.BaseInfo
                    var no = conn.ExecuteScalar<int>("select seq_pointcheck_no.nextval from dual");
                     return "DJ" + no.ToString().PadLeft(4, '0');
                 }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+        /// <summary>
+        /// 读取点检岗位模板数据
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public IEnumerable<zxjc_djgw> FromExcel(string path)
+        {
+            try
+            {
+                List<zxjc_djgw> list = new List<zxjc_djgw>();
+                ExcelHelper xls = new ExcelHelper();
+                IWorkbook book = xls.ReadExcel(path);
+                ISheet sheet = book.GetSheetAt(0);
+                int rows = sheet.LastRowNum;
+                for (int i = 1; i < rows; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    zxjc_djgw entity = new zxjc_djgw()
+                    {
+                        gcdm = "9100",
+                        scx = row.GetCell(0).StringCellValue,
+                        gwh = row.GetCell(1).StringCellValue,
+                        jx_no= row.GetCell(2).StringCellValue,
+                        status_no = row.GetCell(3).StringCellValue,
+                        djno = GetDJNo(),
+                        scbz = "N",
+                        djxx = row.GetCell(5).StringCellValue,
+                    };
+                    list.Add(entity);
+                }
+                return list;
             }
             catch (Exception e)
             {

@@ -8,6 +8,7 @@ using System.Web.Http;
 using MESWebApi.Services.BaseInfo;
 using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models;
+using MESWebApi.Util;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
@@ -63,6 +64,8 @@ namespace MESWebApi.Controllers.BaseInfo
         {
             try
             {
+                sys_user user = CacheManager.Instance().Current_User;
+                entitys.ForEach(t => { t.lrr = user.name; t.lrsj = DateTime.Now; });
                 StationMatService sms = new StationMatService();
                 int cnt = sms.Add(entitys);
                 if (cnt > 0)
