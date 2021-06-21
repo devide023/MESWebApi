@@ -40,6 +40,7 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" ta.gcdm,");
                 sql.Append(" ta.scx,");
                 sql.Append(" ta.gwh,");
+                sql.Append(" (select work_name from zxjc_gxzd where work_no = ta.gwh ) as gwmc,");
                 sql.Append(" ta.jx_no,");
                 sql.Append(" ta.status_no,");
                 sql.Append(" ta.wjlj,");

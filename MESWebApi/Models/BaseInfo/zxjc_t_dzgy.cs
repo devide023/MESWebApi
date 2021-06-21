@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using DapperExtensions.Mapper;
 namespace MESWebApi.Models.BaseInfo
 {
     /// <summary>
@@ -39,6 +39,10 @@ namespace MESWebApi.Models.BaseInfo
         /// </summary>
         public string gwh { get; set; }
         /// <summary>
+        /// 岗位名称
+        /// </summary>
+        public string gwmc { get; set; }
+        /// <summary>
         /// 机型
         /// </summary>
         public string jx_no { get; set; }
@@ -70,5 +74,14 @@ namespace MESWebApi.Models.BaseInfo
         /// 版本号
         /// </summary>
         public string bbbh { get; set; }
+    }
+
+    public class zxjc_t_dzgy_mapper : ClassMapper<zxjc_t_dzgy>
+    {
+        public zxjc_t_dzgy_mapper()
+        {
+            Map(t => t.gwmc).Ignore();
+            AutoMap();
+        }
     }
 }
