@@ -88,7 +88,22 @@ namespace MESWebApi.Services.BaseInfo
         {
             throw new NotImplementedException();
         }
-
+        public int Delete(List<zxjc_djgw> entitys) {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("delete from zxjc_djgw where djno in :djno ");
+                using (var conn = new OraDBHelper(constr).Conn)
+                {
+                   return conn.Execute(sql.ToString(), entitys.ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public zxjc_djgw Find(int id)
         {
             throw new NotImplementedException();

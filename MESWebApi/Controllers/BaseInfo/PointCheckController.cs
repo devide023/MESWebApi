@@ -58,7 +58,26 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        [HttpPost, Route("del")]
+        public IHttpActionResult Delete(List<zxjc_djgw> entitys) {
+            try
+            {
+                PointCheckService pcs = new PointCheckService();
+                int cnt = pcs.Delete(entitys);
+                if (cnt > 0)
+                {
+                    return Json(new { code = 1, msg = "数据删除成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据删除失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost, Route("edit")]
         public IHttpActionResult Edit(zxjc_djgw entity)
         {

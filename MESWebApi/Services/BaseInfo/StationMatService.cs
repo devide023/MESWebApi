@@ -70,7 +70,7 @@ namespace MESWebApi.Services.BaseInfo
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append(" delete from base_gwbj ");
-                sql.Append(" where  gcdm = '9100' ");
+                sql.Append(" where  gcdm = :gcdm ");
                 sql.Append(" and scx = :scx ");
                 sql.Append(" and    gwh = :gwh ");
                 sql.Append(" and    jx_no = :jx_no ");
