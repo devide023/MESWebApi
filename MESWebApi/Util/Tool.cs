@@ -116,11 +116,11 @@ namespace MESWebApi.Util
                 sql.Append($"{item.left}");
                 if (item.oper == "like")
                 {
-                    sql.Append($" {item.colname} {item.oper} '%{item.value}%' {item.logic} ");
+                    sql.Append($" lower({item.colname}) {item.oper} lower('%{item.value}%') {item.logic} ");
                 }
                 else
                 {
-                    sql.Append($" {item.colname} {item.oper} '{item.value}' {item.logic} ");
+                    sql.Append($" lower({item.colname}) {item.oper} lower('{item.value}') {item.logic} ");
                 }
                 sql.Append($"{item.right}");
             }

@@ -95,6 +95,7 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" from base_gwbj ta where 1=1 ");
                 if (parm.explist.Count > 0)
                 {
+                    sql.Append(" and ");
                     sql.Append(Tool.ComQueryExp(parm.explist));
                 }
                 var q = this.Conn.Query<base_gwbj>(sql.ToString(), p)
@@ -123,24 +124,24 @@ namespace MESWebApi.Services.BaseInfo
                 {
                     IRow row = sheet.GetRow(i);
                     int dxsl = 0;
-                    int.TryParse(row.GetCell(13).StringCellValue, out dxsl);
+                    int.TryParse(row.GetCell(11).StringCellValue, out dxsl);
                     base_gwbj entity = new base_gwbj()
                     {
                         gcdm = "9100",
-                        scx = row.GetCell(1).StringCellValue,
-                        gwh = row.GetCell(3).StringCellValue,
-                        gwmc = row.GetCell(4).StringCellValue,
-                        jx_no = row.GetCell(5).StringCellValue,
-                        wlbm = row.GetCell(6).StringCellValue,
-                        wlmc = row.GetCell(7).StringCellValue,
-                        qwwbm = row.GetCell(8).StringCellValue,
-                        wlsx = row.GetCell(9).StringCellValue,
-                        lxpd = "N",
+                        scx = row.GetCell(0).StringCellValue,
+                        gwh = row.GetCell(1).StringCellValue,
+                        gwmc = row.GetCell(2).StringCellValue,
+                        jx_no = row.GetCell(3).StringCellValue,
+                        wlbm = row.GetCell(4).StringCellValue,
+                        wlmc = row.GetCell(5).StringCellValue,
+                        qwwbm = "",
+                        wlsx = row.GetCell(7).StringCellValue,
+                        lxpd = row.GetCell(8).StringCellValue,
                         sfdy = "Y",
-                        lxlx = row.GetCell(11).StringCellValue,
+                        lxlx = row.GetCell(9).StringCellValue,
                         dxsl = dxsl,
-                        bz  = row.GetCell(16).StringCellValue,
-                        gzzx= row.GetCell(1).StringCellValue
+                        bz  = row.GetCell(14).StringCellValue,
+                        gzzx= ""
                     };
                     list.Add(entity);
                 }
