@@ -200,6 +200,7 @@
     <Compile Include="DB\OracleBaseFixture.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
+    <Compile Include="InterFaces\IOperateData.cs" />
     <Compile Include="Models\BaseInfo\barcode_print.cs" />
     <Compile Include="Models\BaseInfo\base_gcxx.cs" />
     <Compile Include="Models\BaseInfo\base_gwbj.cs" />
