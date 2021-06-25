@@ -36,7 +36,6 @@ namespace MESWebApi.Services
             {
                 string token = new JWTHelper().CreateToken();
                 entity.token = token;
-                var md5pwd = Tool.Str2MD5(entity.pwd);
                 StringBuilder sql = new StringBuilder();
                 sql.Append("insert into sys_user(id, status, code, name, pwd, token, adduser,addtime) \r\n");
                 sql.Append("values \r\n");
@@ -45,7 +44,7 @@ namespace MESWebApi.Services
                 p.Add(":status", entity.status, OracleMappingType.Int32, ParameterDirection.Input);
                 p.Add(":code", entity.code, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":name", entity.name, OracleMappingType.NVarchar2, ParameterDirection.Input);
-                p.Add(":pwd", md5pwd, OracleMappingType.NVarchar2, ParameterDirection.Input);
+                p.Add(":pwd", entity.pwd, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":token", token, OracleMappingType.NVarchar2, ParameterDirection.Input);
                 p.Add(":adduser", entity.adduser, OracleMappingType.Int32, ParameterDirection.Input);
                 p.Add(":id", null, OracleMappingType.Int32, ParameterDirection.ReturnValue);
