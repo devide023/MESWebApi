@@ -10,8 +10,8 @@ namespace MESWebApi.InterFaces
     {
         int Add(T entity);
         int Add(List<T> entitys);
-        int Modify(T entity);
-        int Delete(T entity);
-        int Delete(List<T> entitys);
+        bool Modify(T entity);
+        bool Delete(T entity);
+        bool Delete(List<T> entitys);
     }
 }

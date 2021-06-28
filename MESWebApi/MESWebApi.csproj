@@ -198,6 +198,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DBAttr\DbFieldAttribute.cs" />
     <Compile Include="DB\OracleBaseFixture.cs" />
+    <Compile Include="Impl\OperateDataImpl.cs" />
     <Compile Include="InterFaces\IComposeQuery.cs" />
     <Compile Include="InterFaces\IDBOper.cs" />
     <Compile Include="InterFaces\IOperateData.cs" />
@@ -219,6 +220,8 @@
     <Compile Include="Models\BaseInfo\zxjc_t_jstcfp.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_tstc.cs" />
     <Compile Include="Models\BaseInfo\zxjc_t_ydjl.cs" />
+    <Compile Include="Models\mes_log.cs" />
+    <Compile Include="Models\PubEnum.cs" />
     <Compile Include="Models\QueryParm\CheckPointQueryParm.cs" />
     <Compile Include="Models\QueryParm\DeviceQueryParm.cs" />
     <Compile Include="Models\QueryParm\DisJTParm.cs" />

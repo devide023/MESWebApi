@@ -14,6 +14,7 @@ using System.Reflection;
 using MESWebApi.Models;
 using System.Web.Http;
 using System.IO;
+using MESWebApi.Impl;
 namespace MESWebApi.Services
 {
     public class LogService
@@ -151,24 +152,27 @@ namespace MESWebApi.Services
             {
                 return;
             }
-            sys_user user = CacheManager.Instance().Current_User;
-            Type type = entity.GetType();
-            string tablename = type.Name;
-            StringBuilder json = new StringBuilder();
-            json.Append($"用户：{user.name},编号：{user.code},更新表{tablename}记录,");
-            json.Append($"原数据：{JsonConvert.SerializeObject(orginalobj)},");
-            json.Append($"现数据：{JsonConvert.SerializeObject(entity)}");
-            log.Info(json.ToString());
+            mes_log meslog = new mes_log();
+            meslog.czlx = PubEnum.CZLX.修改;
+            meslog.rznr = "{\"oldobj\":"+JsonConvert.SerializeObject(orginalobj)+",\"newobj\":" + JsonConvert.SerializeObject(entity)+"}";
+            using (var db = new OracleBaseFixture().DB)
+            {
+                db.Insert<mes_log>(meslog);
+            }
         }
         public void InsertLog<T>(T entity) {
             if (!islog)
             {
                 return;
             }
-            sys_log slog = EntityFields<T>(entity);
-            log.Info(slog.insertsql);
+            mes_log meslog = new mes_log();
+            meslog.czlx = PubEnum.CZLX.新增;
+            meslog.rznr = JsonConvert.SerializeObject(entity);
+            using (var db = new OracleBaseFixture().DB)
+            {
+                db.Insert<mes_log>(meslog);
+            }
         }
-
         public void InsertLogJson<T>(T entity)
         {
             if (!islog)
@@ -189,13 +193,13 @@ namespace MESWebApi.Services
             {
                 return;
             }
-            sys_user user = CacheManager.Instance().Current_User;
-            Type type = entity.GetType();
-            string tablename = type.Name;
-            StringBuilder json = new StringBuilder();
-            json.Append($"用户：{user.name},编号：{user.code},删除表{tablename}记录,");
-            json.Append($"{JsonConvert.SerializeObject(entity)}");
-            log.Info(json.ToString());
+            mes_log meslog = new mes_log();
+            meslog.czlx = PubEnum.CZLX.删除;
+            meslog.rznr = JsonConvert.SerializeObject(entity);
+            using (var db = new OracleBaseFixture().DB)
+            {
+                db.Insert<mes_log>(meslog);
+            }
         }
     }
 }
