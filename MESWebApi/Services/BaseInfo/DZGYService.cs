@@ -14,6 +14,7 @@ using log4net;
 using Webdiyer.WebControls.Mvc;
 using MESWebApi.Util;
 using NPOI.SS.UserModel;
+using System.IO;
 
 namespace MESWebApi.Services.BaseInfo
 {
@@ -52,7 +53,7 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" from ZXJC_T_DZGY ta where 1=1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
-                    sql.Append(" and (ta.gybh like :key or ta.gymc like :key or ta.gyms like :key or ta.jx_no like :key ) ");
+                    sql.Append(" and (ta.gybh like :key or ta.gymc like :key or ta.gyms like :key or lower(ta.jx_no) like :key ) ");
                     p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.NVarchar2, System.Data.ParameterDirection.Input);
                 }
                 if (parm.explist.Count > 0) {
@@ -80,7 +81,7 @@ namespace MESWebApi.Services.BaseInfo
                 IWorkbook book = xls.ReadExcel(path);
                 ISheet sheet = book.GetSheetAt(0);
                 int rows = sheet.LastRowNum;
-                for (int i = 1; i < rows; i++)
+                for (int i = 1; i <= rows; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     string dzgy_number = this.GetDZGYNumber();
@@ -88,8 +89,8 @@ namespace MESWebApi.Services.BaseInfo
                     {
                         gyid = Guid.NewGuid().ToString(),
                         gcdm = "9100",
-                        scx = row.GetCell(3).StringCellValue,
-                        gwh = row.GetCell(4).StringCellValue,
+                        scx = row.GetCell(3).NumericCellValue.ToString(),
+                        gwh = row.GetCell(4).NumericCellValue.ToString(),
                         gymc = row.GetCell(1).StringCellValue,
                         gyms = row.GetCell(2).StringCellValue,
                         gybh = dzgy_number,
@@ -98,6 +99,8 @@ namespace MESWebApi.Services.BaseInfo
                     };
                     list.Add(entity);
                 }
+                FileInfo fi = new FileInfo(path);
+                fi.Delete();
                 return list;
             }
             catch (Exception e)
@@ -175,6 +178,21 @@ namespace MESWebApi.Services.BaseInfo
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+        public int Delete(List<zxjc_t_dzgy> entitys)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("delete from zxjc_t_dzgy where gyid in :gyid ");
+                return Conn.Execute(sql.ToString(), entitys.ToArray());
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
                 throw;
             }
         }

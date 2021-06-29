@@ -60,7 +60,7 @@ namespace MESWebApi.Controllers.BaseInfo
         }
 
         [HttpPost, Route("add")]
-        public IHttpActionResult Add(List<base_gwbj> entitys)
+        public IHttpActionResult Add(List<base_gwbj1> entitys)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace MESWebApi.Controllers.BaseInfo
         }
 
         [HttpPost, Route("edit")]
-        public IHttpActionResult Edit(base_gwbj entity)
+        public IHttpActionResult Edit(base_gwbj1 entity)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace MESWebApi.Controllers.BaseInfo
             }
         }
         [HttpPost, Route("del")]
-        public IHttpActionResult Del(List<base_gwbj> entitys)
+        public IHttpActionResult Del(List<base_gwbj1> entitys)
         {
             try
             {

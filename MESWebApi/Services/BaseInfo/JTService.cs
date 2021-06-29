@@ -76,20 +76,20 @@ namespace MESWebApi.Services.BaseInfo
                 IWorkbook book = xls.ReadExcel(path);
                 ISheet sheet = book.GetSheetAt(0);
                 int rows = sheet.LastRowNum;
-                for (int i = 1; i < rows; i++)
+                for (int i = 1; i <= rows; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     string jtbh = GetJTNumber();
-                    DateTime rq1 = row.GetCell(3).DateCellValue;
-                    DateTime rq2 = row.GetCell(4).DateCellValue;
+                    DateTime rq1 = row.GetCell(2).DateCellValue;
+                    DateTime rq2 = row.GetCell(3).DateCellValue;
                     zxjc_t_jstc entity = new zxjc_t_jstc()
                     {
                         gcdm = "9100",
                         jtid = Guid.NewGuid().ToString(),
                         jcbh = jtbh,
-                        scx = row.GetCell(8).StringCellValue,
-                        jcmc = row.GetCell(1).StringCellValue,
-                        jcms = row.GetCell(2).StringCellValue,
+                        scx = row.GetCell(4).NumericCellValue.ToString(),
+                        jcmc = row.GetCell(0).StringCellValue,
+                        jcms = row.GetCell(1).StringCellValue,
                         yxqx1 = rq1,
                         yxqx2 = rq2,
                         wjfl = "技术通知",
@@ -97,6 +97,8 @@ namespace MESWebApi.Services.BaseInfo
                     };
                     list.Add(entity);
                 }
+                FileInfo fi = new FileInfo(path);
+                fi.Delete();
                 return list;
             }
             catch (Exception e)

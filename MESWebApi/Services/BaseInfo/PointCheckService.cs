@@ -147,7 +147,7 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" from zxjc_djgw ta where 1 = 1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
-                    sql.Append(" and (ta.djxx like :key or ta.status_no like :key )");
+                    sql.Append(" and (ta.gwh like :key or lower(ta.jx_no) like :key or lower(ta.djxx) like :key )");
                     p.Add(":key", "%" + parm.keyword + "%", OracleMappingType.Varchar2, System.Data.ParameterDirection.Input);
                 }
                 if (parm.explist.Count > 0)
@@ -203,7 +203,7 @@ namespace MESWebApi.Services.BaseInfo
                 IWorkbook book = xls.ReadExcel(path);
                 ISheet sheet = book.GetSheetAt(0);
                 int rows = sheet.LastRowNum;
-                for (int i = 1; i < rows; i++)
+                for (int i = 1; i <= rows; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     zxjc_djgw entity = new zxjc_djgw()

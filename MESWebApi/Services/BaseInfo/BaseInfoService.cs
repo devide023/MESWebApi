@@ -155,7 +155,7 @@ namespace MESWebApi.Services.BaseInfo
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
                     StringBuilder sql = new StringBuilder();
-                    sql.Append("select distinct ztbm from ZTBM_NEW where lower(jx) like :key and rownum < 10 order by ztbm asc");
+                    sql.Append("select distinct cpbm from ZTBM_NEW where lower(jx) like :key and rownum < 10 order by ztbm asc");
                     return conn.Query<ztbm_new>(sql.ToString(), new { key = "%" + jx.ToLower() + "%" });
                 }
             }

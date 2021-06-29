@@ -8,7 +8,7 @@ namespace MESWebApi.Models.BaseInfo
     /// <summary>
     /// 岗位物料
     /// </summary>
-    public class base_gwbj
+    public class base_gwbj1
     {
         /// <summary>
         /// 工厂代码
@@ -104,7 +104,7 @@ namespace MESWebApi.Models.BaseInfo
         public string gzzx { get; set; } = "";
     }
 
-    public class base_gwbj_mapper : ClassMapper<base_gwbj>
+    public class base_gwbj_mapper : ClassMapper<base_gwbj1>
     {
         public base_gwbj_mapper()
         {

@@ -77,6 +77,27 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        [HttpPost, Route("del")]
+        public IHttpActionResult del(List<zxjc_t_dzgy> entitys)
+        {
+            try
+            {
+                DZGYService dzgys = new DZGYService();
+                int ret = dzgys.Delete(entitys);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "删除成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "删除失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost, Route("readxls")]
         public IHttpActionResult ReadXls(dynamic obj)
         {

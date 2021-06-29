@@ -204,7 +204,7 @@
     <Compile Include="InterFaces\IOperateData.cs" />
     <Compile Include="Models\BaseInfo\barcode_print.cs" />
     <Compile Include="Models\BaseInfo\base_gcxx.cs" />
-    <Compile Include="Models\BaseInfo\base_gwbj.cs" />
+    <Compile Include="Models\BaseInfo\base_gwbj1.cs" />
     <Compile Include="Models\BaseInfo\base_wlxx.cs" />
     <Compile Include="Models\BaseInfo\sec_users.cs" />
     <Compile Include="Models\BaseInfo\tj_base_scxxx.cs" />
@@ -373,6 +373,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Template\岗位物料.xlsx" />
+    <Content Include="Template\点检岗位.xlsx" />
+    <Content Include="Template\电子工艺.xlsx" />
+    <Content Include="Template\技术通知.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

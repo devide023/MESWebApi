@@ -20,7 +20,7 @@ namespace MESWebApi.Services.BaseInfo
     /// <summary>
     /// 岗位物料
     /// </summary>
-    public class StationMatService : DBOperImp<base_gwbj>, IComposeQuery<base_gwbj, sys_page>
+    public class StationMatService : DBOperImp<base_gwbj1>, IComposeQuery<base_gwbj1, sys_page>
     {
         ILog log;
         public StationMatService(string constr = "tjmes") : base(constr)
@@ -28,7 +28,7 @@ namespace MESWebApi.Services.BaseInfo
             log = LogManager.GetLogger(this.GetType());
         }
 
-        public override int Modify(base_gwbj entity)
+        public override int Modify(base_gwbj1 entity)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
-        public int Delete(List<base_gwbj> entitys)
+        public int Delete(List<base_gwbj1> entitys)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
-        public IEnumerable<base_gwbj> Search(sys_page parm, out int resultcount)
+        public IEnumerable<base_gwbj1> Search(sys_page parm, out int resultcount)
         {
             try
             {
@@ -92,13 +92,18 @@ namespace MESWebApi.Services.BaseInfo
                 StringBuilder sql = new StringBuilder();
                 sql.Append("select ta.gcdm, ta.scx, ta.gwh,(select work_name from zxjc_gxzd where work_no = ta.gwh) as gwmc, ta.wlbm,(SELECT wljc FROM base_wlxx where wlbm = ta.wlbm) as wlmc,ta.lxpd, ta.lxlx, ta.dxsl, ta.gwpb, ta.qwwbm, ta.wlsx, ta.zcqld,");
                 sql.Append(" ta.psfs, ta.gdbh, ta.gdc, ta.zgkc, ta.sfdy, ta.bz, ta.lrr, ta.lrsj, ta.jx_no, ta.gzzx");
-                sql.Append(" from base_gwbj ta where 1=1 ");
+                sql.Append(" from base_gwbj1 ta where 1=1 ");
+                if (!string.IsNullOrEmpty(parm.keyword))
+                {
+                    sql.Append(" and (gwh like :key or wlbm like :key or lower(jx_no) like :key) ");
+                    p.Add(":key", "%" + parm.keyword.ToLower() + "%", OracleMappingType.NVarchar2, System.Data.ParameterDirection.Input);
+                }
                 if (parm.explist.Count > 0)
                 {
                     sql.Append(" and ");
                     sql.Append(Tool.ComQueryExp(parm.explist));
                 }
-                var q = this.Conn.Query<base_gwbj>(sql.ToString(), p)
+                var q = this.Conn.Query<base_gwbj1>(sql.ToString(), p)
                     .OrderBy(t => t.wlbm)
                     .ToPagedList(parm.pageindex, parm.pagesize);
                 resultcount = q.TotalItemCount;
@@ -111,21 +116,21 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
 
-        public IEnumerable<base_gwbj> FromExcel(string path)
+        public IEnumerable<base_gwbj1> FromExcel(string path)
         {
             try
             {
-                List<base_gwbj> list = new List<base_gwbj>();
+                List<base_gwbj1> list = new List<base_gwbj1>();
                 ExcelHelper xls = new ExcelHelper();
                 IWorkbook book = xls.ReadExcel(path);
                 ISheet sheet = book.GetSheetAt(0);
                 int rows = sheet.LastRowNum;
-                for (int i = 1; i < rows; i++)
+                for (int i = 1; i <= rows; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     int dxsl = 0;
                     int.TryParse(row.GetCell(11).StringCellValue, out dxsl);
-                    base_gwbj entity = new base_gwbj()
+                    base_gwbj1 entity = new base_gwbj1()
                     {
                         gcdm = "9100",
                         scx = row.GetCell(0).StringCellValue,
