@@ -14,6 +14,7 @@ using MESWebApi.Util;
 using System.Text;
 using Webdiyer.WebControls.Mvc;
 using NPOI.SS.UserModel;
+using System.IO;
 
 namespace MESWebApi.Services.BaseInfo
 {
@@ -118,6 +119,7 @@ namespace MESWebApi.Services.BaseInfo
 
         public IEnumerable<base_gwbj1> FromExcel(string path)
         {
+            FileInfo fileInfo = new FileInfo(path);
             try
             {
                 List<base_gwbj1> list = new List<base_gwbj1>();
@@ -150,10 +152,12 @@ namespace MESWebApi.Services.BaseInfo
                     };
                     list.Add(entity);
                 }
+                fileInfo.Delete();
                 return list;
             }
             catch (Exception e)
             {
+                fileInfo.Delete();
                 log.Error(e.Message);
                 throw;
             }

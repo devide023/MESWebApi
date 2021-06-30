@@ -13,6 +13,7 @@ using log4net;
 using Webdiyer.WebControls.Mvc;
 using MESWebApi.Util;
 using NPOI.SS.UserModel;
+using System.IO;
 
 namespace MESWebApi.Services.BaseInfo
 {
@@ -136,7 +137,28 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
-
+        public int Modify(List<zxjc_djgw> entitys)
+        {
+            try
+            {
+                List<int> li = new List<int>();
+                foreach (var item in entitys)
+                {
+                    int ret = this.Modify(item);
+                    if (ret > 0)
+                    {
+                        li.Add(ret);
+                    }
+                }
+                return li.Count == entitys.Count ? 1 : 0;
+                
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public IEnumerable<zxjc_djgw> Search(CheckPointQueryParm parm, out int resultcount)
         {
             try
@@ -196,6 +218,7 @@ namespace MESWebApi.Services.BaseInfo
         /// <returns></returns>
         public IEnumerable<zxjc_djgw> FromExcel(string path)
         {
+            FileInfo finfo = new FileInfo(path);
             try
             {
                 List<zxjc_djgw> list = new List<zxjc_djgw>();
@@ -219,10 +242,12 @@ namespace MESWebApi.Services.BaseInfo
                     };
                     list.Add(entity);
                 }
+                finfo.Delete();
                 return list;
             }
             catch (Exception e)
             {
+                finfo.Delete();
                 log.Error(e.Message);
                 throw;
             }

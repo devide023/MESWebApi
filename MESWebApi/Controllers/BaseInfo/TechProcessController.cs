@@ -77,6 +77,28 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        [HttpPost, Route("batedit")]
+        public IHttpActionResult BatEdit(List<zxjc_t_dzgy> entitys)
+        {
+            try
+            {
+                DZGYService dzgys = new DZGYService();
+                int ret = dzgys.Modify(entitys);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据修改成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据修改失败" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         [HttpPost, Route("del")]
         public IHttpActionResult del(List<zxjc_t_dzgy> entitys)
         {

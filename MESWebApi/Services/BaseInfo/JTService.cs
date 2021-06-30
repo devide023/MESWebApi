@@ -69,6 +69,7 @@ namespace MESWebApi.Services.BaseInfo
 
         public IEnumerable<zxjc_t_jstc> FromExcel(string path)
         {
+            FileInfo fi = new FileInfo(path);
             try
             {
                 List<zxjc_t_jstc> list = new List<zxjc_t_jstc>();
@@ -92,17 +93,18 @@ namespace MESWebApi.Services.BaseInfo
                         jcms = row.GetCell(1).StringCellValue,
                         yxqx1 = rq1,
                         yxqx2 = rq2,
+                        wjlj = row.GetCell(0).StringCellValue,
                         wjfl = "技术通知",
                         fp_flg = "N"
                     };
                     list.Add(entity);
                 }
-                FileInfo fi = new FileInfo(path);
                 fi.Delete();
                 return list;
             }
             catch (Exception e)
             {
+                fi.Delete();
                 log.Error(e.Message);
                 throw;
             }
@@ -157,7 +159,38 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
-
+        public int Modify(List<zxjc_t_jstc> entitys)
+        {
+            try
+            {
+                List<int> li = new List<int>();
+                foreach (var item in entitys)
+                {
+                   int ret = Modify(item);
+                    li.Add(ret);
+                }
+                return li.Count == entitys.Count ? 1 : 0;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+        public int Delete(List<zxjc_t_jstc> entitys)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("delete from ZXJC_T_JSTC where jcbh in :jcbh ");
+                return Conn.Execute(sql.ToString(), entitys.ToArray());
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public string GetJTNumber()
         {
             try

@@ -74,6 +74,7 @@ namespace MESWebApi.Services.BaseInfo
         }
 
         public IEnumerable<zxjc_t_dzgy> FromExcel(string path) {
+            FileInfo fi = new FileInfo(path);
             try
             {
                 List<zxjc_t_dzgy> list = new List<zxjc_t_dzgy>();
@@ -94,17 +95,18 @@ namespace MESWebApi.Services.BaseInfo
                         gymc = row.GetCell(1).StringCellValue,
                         gyms = row.GetCell(2).StringCellValue,
                         gybh = dzgy_number,
+                        wjlj = row.GetCell(1).StringCellValue,
                         jx_no = row.GetCell(5).StringCellValue,
                         status_no = row.GetCell(6).StringCellValue,
                     };
                     list.Add(entity);
                 }
-                FileInfo fi = new FileInfo(path);
                 fi.Delete();
                 return list;
             }
             catch (Exception e)
             {
+                fi.Delete();
                 log.Error(e.Message);
                 throw;
             }
@@ -181,7 +183,24 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
-
+        public int Modify(List<zxjc_t_dzgy> entitys)
+        {
+            try
+            {
+                List<int> li = new List<int>();
+                foreach (var item in entitys)
+                {
+                   int ret = Modify(item);
+                    li.Add(ret);
+                }
+                return li.Count == entitys.Count ? 1 : 0;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public int Delete(List<zxjc_t_dzgy> entitys)
         {
             try

@@ -59,7 +59,47 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        [HttpPost, Route("del")]
+        public IHttpActionResult JTDel(List<zxjc_t_jstc> entitys) {
+            try
+            {
+                JTService jts = new JTService();
+                int ret = jts.Delete(entitys);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据删除成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据删除失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        [HttpPost, Route("batedit")]
+        public IHttpActionResult JTBatEdit(List<zxjc_t_jstc> entitys)
+        {
+            try
+            {
+                JTService jts = new JTService();
+                int ret = jts.Modify(entitys);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据修改成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据修改失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost, Route("edit")]
         public IHttpActionResult JTEdit(zxjc_t_jstc entity)
         {
