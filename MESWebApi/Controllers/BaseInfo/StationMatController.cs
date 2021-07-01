@@ -82,7 +82,27 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        [HttpPost, Route("batedit")]
+        public IHttpActionResult BatEdit(List<base_gwbj1> entitys)
+        {
+            try
+            {
+                StationMatService sms = new StationMatService();
+                int ret = sms.Modify(entitys);
+                if (ret > 0)
+                {
+                    return Json(new { code = 1, msg = "数据修改成功" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "数据修改失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         [HttpPost, Route("edit")]
         public IHttpActionResult Edit(base_gwbj1 entity)
         {

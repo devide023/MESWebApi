@@ -225,11 +225,63 @@ namespace MESWebApi.Services.BaseInfo
             try
             {
                 int no = Conn.ExecuteScalar<int>("SELECT seq_special_noticno.nextval from dual");
-                return "Tstz" + no.ToString().PadLeft(5, '0');
+                return "TSTZ" + no.ToString().PadLeft(5, '0');
             }
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+        public override int Modify(zxjc_t_tstc entity)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update zxjc_t_tstc ");
+                sql.Append(" set tcms=:tcms,");
+                sql.Append(" scx=:scx,");
+                sql.Append(" gwh=:gwh,");
+                sql.Append(" jx_no=:jx_no,");
+                sql.Append(" status_no=:status_no,");
+                sql.Append(" yxbz=:yxbz");
+                sql.Append(" where tcbh=:tcbh");
+                return Conn.Execute(sql.ToString(), entity);
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+        public int Modify(List<zxjc_t_tstc> entitys)
+        {
+            try
+            {
+                List<int> li = new List<int>();
+                foreach (var item in entitys)
+                {
+                    li.Add(Modify(item));
+                }
+                return li.Count == entitys.Count ? 1 : 0;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+        public int Delete(List<zxjc_t_tstc> entitys)
+        {
+            try
+            {
+                StringBuilder sql = new StringBuilder();
+                sql.Append("delete FROM zxjc_t_tstc where tcbh in :tcbh");
+                return Conn.Execute(sql.ToString(), entitys.ToArray());
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
                 throw;
             }
         }
@@ -239,7 +291,7 @@ namespace MESWebApi.Services.BaseInfo
             {
                 OracleDynamicParameters p = new OracleDynamicParameters();
                 StringBuilder sql = new StringBuilder();
-                sql.Append("select tcid,tcbh,tcms,gcdm,scx,gwh,jx_no,status_no,yxbz,lrr,lrsj from zxjc_t_tstc where 1=1 ");
+                sql.Append("select tcid,tcbh,tcms,gcdm,scx,gwh,(select work_name from zxjc_gxzd where work_no = gwh) as gwmc,jx_no,status_no,yxbz,lrr,lrsj from zxjc_t_tstc where 1=1 ");
                 if (!string.IsNullOrEmpty(parm.keyword))
                 {
                     sql.Append(" and (tcbh like :key or jx_no like :key or status_no like :key) ");

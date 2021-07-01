@@ -141,15 +141,16 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        [Route("chpwd")]
+        [HttpPost]
         public IHttpActionResult ChangePwd(dynamic obj)
         {
             try
             {
-                int userid = 0;
-                int.TryParse(obj.userid, out userid);
-                string pwd = obj.userpwd.ToString();
+                string pwd = (obj.pwd ?? "").ToString();
                 UserService us = new UserService();
-                int cnt = us.ChangePwd(userid, pwd);
+                sys_user user = CacheManager.Instance().Current_User;
+                int cnt = us.ChangePwd(user.id, pwd);
                 if (cnt > 0)
                 {
                     return Json(new { code = 1, msg = "修改成功" });

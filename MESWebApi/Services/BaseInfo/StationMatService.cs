@@ -64,7 +64,23 @@ namespace MESWebApi.Services.BaseInfo
                 throw;
             }
         }
-
+        public int Modify(List<base_gwbj1> entitys)
+        {
+            try
+            {
+                List<int> li = new List<int>();
+                foreach (var item in entitys)
+                {
+                  li.Add(Modify(item));
+                }
+                return li.Count == entitys.Count ? 1 : 0;
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
         public int Delete(List<base_gwbj1> entitys)
         {
             try

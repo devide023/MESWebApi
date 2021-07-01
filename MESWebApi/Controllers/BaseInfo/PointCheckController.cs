@@ -105,7 +105,7 @@ namespace MESWebApi.Controllers.BaseInfo
             try
             {
                 PointCheckService pcs = new PointCheckService();
-                int ret = pcs.Modify(entitys)
+                int ret = pcs.Modify(entitys);
                 if (ret > 0)
                 {
                     return Json(new { code = 1, msg = "数据修改成功" });
