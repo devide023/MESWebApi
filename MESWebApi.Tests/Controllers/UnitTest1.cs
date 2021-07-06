@@ -17,7 +17,6 @@ namespace MESWebApi.Tests.Controllers
         [TestMethod]
         public void getmd5()
         {
-            var pwd = Tool.Str2MD5("123456");
             var token = new JWTHelper().CreateToken();
             System.Console.WriteLine(token);
         }

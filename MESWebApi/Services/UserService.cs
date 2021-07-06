@@ -76,7 +76,18 @@ namespace MESWebApi.Services
                     var isok = db.Conn.ExecuteScalar<int>(sql.ToString(), p);
                     if (isok > 0)
                     {
-                        return db.Conn.ExecuteScalar<string>("select token from sys_user where code=:code and pwd=:pwd", p);
+                        string newtoken = new JWTHelper().CreateToken();
+                        var cnt = db.Conn.Execute("update sys_user set token=:token where status=1 and code=:code and pwd=:pwd",
+                            new { token=newtoken,code= username ,pwd = md5pwd }
+                            );
+                        if (cnt > 0)
+                        {
+                            return newtoken;
+                        }
+                        else
+                        {
+                            return string.Empty;
+                        }
                     }
                     else
                     {
@@ -192,8 +203,15 @@ namespace MESWebApi.Services
                 using (var db = new OraDBHelper())
                 {
                     var query = db.Conn.Query<sys_user>(sql.ToString(), new { token = token }).FirstOrDefault();
-                    query.headimg = imgurl + (string.IsNullOrEmpty(query.headimg) ? "default.jpg" : query.headimg);
-                    return query;
+                    if (query != null)
+                    {
+                        query.headimg = imgurl + (string.IsNullOrEmpty(query.headimg) ? "default.jpg" : query.headimg);
+                        return query;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
 
             }

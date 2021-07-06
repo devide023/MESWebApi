@@ -29,7 +29,7 @@ namespace MESWebApi.Util
 				audience: "zsmeswebuser",//接收的一方
 				claims: claims,
                 notBefore: utcNow,
-                expires: utcNow.AddYears(1),
+                expires: utcNow.AddMinutes(1),
                 signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
                 );
             string token1 = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -48,8 +48,6 @@ namespace MESWebApi.Util
 			//生成token方式2
 			SecurityToken securityToken = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
 			var token2 = new JwtSecurityTokenHandler().WriteToken(securityToken);
-
-
 			return token1;
         }
 

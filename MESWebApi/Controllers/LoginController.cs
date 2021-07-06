@@ -8,7 +8,7 @@ using MESWebApi.Models;
 using MESWebApi.Services;
 using System.Web.Http.Results;
 using System.Net.Http;
-
+using MESWebApi.Util;
 namespace MESWebApi.Controllers
 {
     [RoutePrefix("api/login")]
@@ -39,12 +39,12 @@ namespace MESWebApi.Controllers
             }
         }
         [Route("logout")]
+        [AllowAnonymous]
         [HttpPost]
         public IHttpActionResult Logout()
         {
-            var authorization = HttpContext.Current.Request.Headers["Authorization"];
-
-            return Json(new { code = 1, msg = "ok",auth = authorization });
+            sys_user cur_user = CacheManager.Instance().Current_User;
+            return Json(new { code = 1, msg = "ok",user = cur_user });
         }
     }
 }
