@@ -23,9 +23,11 @@ namespace MESWebApi.Services.BaseInfo
     /// </summary>
     public class StationMatService : DBOperImp<base_gwbj1>, IComposeQuery<base_gwbj1, sys_page>
     {
+        LogService logservice;
         ILog log;
         public StationMatService(string constr = "tjmes") : base(constr)
         {
+            logservice = new LogService();
             log = LogManager.GetLogger(this.GetType());
         }
 
@@ -34,7 +36,7 @@ namespace MESWebApi.Services.BaseInfo
             try
             {
                 StringBuilder sql = new StringBuilder();
-                sql.Append(" update base_gwbj ");
+                sql.Append(" update base_gwbj1 ");
                 sql.Append(" set gzzx = :gzzx, ");
                 sql.Append("        gwh = :gwh, ");
                 sql.Append("        wlbm = :wlbm, ");
@@ -56,7 +58,35 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" and    gwh = :gwh ");
                 sql.Append(" and    jx_no = :jx_no ");
                 sql.Append(" and    wlbm = :wlbm ");
-                return this.Conn.Execute(sql.ToString(),entity);
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append(" select gzzx , ");
+                sql1.Append("        gwh , ");
+                sql1.Append("        wlbm , ");
+                sql1.Append("        lxpd , ");
+                sql1.Append("        sfdy , ");
+                sql1.Append("        lxlx , ");
+                sql1.Append("        dxsl , ");
+                sql1.Append("        wlsx , ");
+                sql1.Append("        bz , ");
+                sql1.Append("        scx , ");
+                sql1.Append("        gwpb , ");
+                sql1.Append("        qwwbm , ");
+                sql1.Append("        zcqld , ");
+                sql1.Append("        psfs , ");
+                sql1.Append("        zgkc , ");
+                sql1.Append("        jx_no from  base_gwbj ");
+                sql1.Append(" where  gcdm = '9100' ");
+                sql1.Append(" and scx = :scx ");
+                sql1.Append(" and    gwh = :gwh ");
+                sql1.Append(" and    jx_no = :jx_no ");
+                sql1.Append(" and    wlbm = :wlbm ");
+                int cnt = this.Conn.Execute(sql.ToString(),entity);
+                base_gwbj1 old = Conn.Query<base_gwbj1>(sql1.ToString(), entity).FirstOrDefault();
+                if (cnt > 0)
+                {
+                    logservice.UpdateLogJson<base_gwbj1>(entity, old);
+                }
+                return cnt;
             }
             catch (Exception e)
             {
@@ -92,7 +122,12 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" and    gwh = :gwh ");
                 sql.Append(" and    jx_no = :jx_no ");
                 sql.Append(" and    wlbm = :wlbm ");
-                return Conn.Execute(sql.ToString(), entitys.ToArray());
+                int ret = Conn.Execute(sql.ToString(), entitys.ToArray());
+                if (ret > 0)
+                {
+                    logservice.DeleteLog<base_gwbj1>(entitys);
+                }
+                return ret;
             }
             catch (Exception)
             {

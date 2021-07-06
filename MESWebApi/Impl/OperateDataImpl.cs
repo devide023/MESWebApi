@@ -24,6 +24,10 @@ namespace MESWebApi.Impl
             try
             {
                 var ret = Db.Insert<T>(entity);
+                if (ret > 0)
+                {
+                    logservice.InsertLog<T>(entity);
+                }
                 return ret;
             }
             catch (Exception e)
@@ -43,7 +47,15 @@ namespace MESWebApi.Impl
                     var ret = Db.Insert<T>(item);
                     list.Add(ret);
                 }
-                return list.Count == entitys.Count ? 1 : 0;
+                if (list.Count == entitys.Count)
+                {
+                    logservice.InsertLog<T>(entitys);
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
             catch (Exception e)
             {
@@ -56,7 +68,12 @@ namespace MESWebApi.Impl
         {
             try
             {
-               return Db.Delete<T>(entity);
+                var ok = Db.Delete<T>(entity);
+                if (ok)
+                {
+                    logservice.DeleteLog<T>(entity);
+                }
+                return ok;
             }
             catch (Exception e)
             {
@@ -72,11 +89,19 @@ namespace MESWebApi.Impl
                 List<bool> list = new List<bool>();
                 foreach (T item in entitys)
                 {
-                   var isok = Db.Delete<T>(item);
+                    var isok = Db.Delete<T>(item);
                     list.Add(isok);
                 }
-                return list.Count == entitys.Count() ? true : false;
-                
+                if (list.Count == entitys.Count())
+                {
+                    logservice.DeleteLog<T>(entitys);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
             catch (Exception e)
             {
@@ -89,7 +114,7 @@ namespace MESWebApi.Impl
         {
             try
             {
-               return Db.Update<T>(entity);
+                return Db.Update<T>(entity);
             }
             catch (Exception e)
             {

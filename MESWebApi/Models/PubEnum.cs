@@ -11,10 +11,13 @@ namespace MESWebApi.Models
         /// 操作类型
         /// </summary>
         public enum CZLX { 
-            登录=1,
-            新增=2,
-            修改=3,
-            删除=4
+            登录,
+            新增,
+            修改,
+            删除,
+            批量插入,
+            批量修改,
+            批量删除
         }
     }
 }

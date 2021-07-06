@@ -153,7 +153,7 @@ namespace MESWebApi.Services
                 return;
             }
             mes_log meslog = new mes_log();
-            meslog.czlx = PubEnum.CZLX.修改;
+            meslog.czlx = Enum.GetName(typeof(PubEnum.CZLX), PubEnum.CZLX.修改);
             meslog.rznr = "{\"oldobj\":"+JsonConvert.SerializeObject(orginalobj)+",\"newobj\":" + JsonConvert.SerializeObject(entity)+"}";
             using (var db = new OracleBaseFixture().DB)
             {
@@ -166,8 +166,21 @@ namespace MESWebApi.Services
                 return;
             }
             mes_log meslog = new mes_log();
-            meslog.czlx = PubEnum.CZLX.新增;
+            meslog.czlx = Enum.GetName(typeof(PubEnum.CZLX), PubEnum.CZLX.新增);
             meslog.rznr = JsonConvert.SerializeObject(entity);
+            using (var db = new OracleBaseFixture().DB)
+            {
+                db.Insert<mes_log>(meslog);
+            }
+        }
+        public void InsertLog<T>(List<T> entitys) {
+            if (!islog)
+            {
+                return;
+            }
+            mes_log meslog = new mes_log();
+            meslog.czlx = Enum.GetName(typeof(PubEnum.CZLX), PubEnum.CZLX.批量插入);
+            meslog.rznr = JsonConvert.SerializeObject(entitys);
             using (var db = new OracleBaseFixture().DB)
             {
                 db.Insert<mes_log>(meslog);
@@ -194,8 +207,22 @@ namespace MESWebApi.Services
                 return;
             }
             mes_log meslog = new mes_log();
-            meslog.czlx = PubEnum.CZLX.删除;
+            meslog.czlx = Enum.GetName(typeof(PubEnum.CZLX), PubEnum.CZLX.删除);
             meslog.rznr = JsonConvert.SerializeObject(entity);
+            using (var db = new OracleBaseFixture().DB)
+            {
+                db.Insert<mes_log>(meslog);
+            }
+        }
+        public void DeleteLog<T>(List<T> entitys)
+        {
+            if (!islog)
+            {
+                return;
+            }
+            mes_log meslog = new mes_log();
+            meslog.czlx = Enum.GetName(typeof(PubEnum.CZLX),PubEnum.CZLX.批量删除);
+            meslog.rznr = JsonConvert.SerializeObject(entitys);
             using (var db = new OracleBaseFixture().DB)
             {
                 db.Insert<mes_log>(meslog);

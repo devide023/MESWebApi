@@ -16,9 +16,11 @@ namespace MESWebApi.Services
     public class DBOperImp<T> :OracleBaseFixture,IDBOper<T> where T : class, new()
     {
         private ILog log;
+        private LogService logservice;
         private string constr = string.Empty;
         public DBOperImp(string constr="tjmes"):base(constr)
         {
+            logservice = new LogService();
             log = LogManager.GetLogger(this.GetType());
             this.constr = constr;
         }
@@ -29,6 +31,7 @@ namespace MESWebApi.Services
                var ret = this.Db.Insert<T>(entity);
                 if (ret != null)
                 {
+                    logservice.InsertLog<T>(entity);
                     return new T();
                 }
                 else
@@ -54,6 +57,7 @@ namespace MESWebApi.Services
                 }
                 if(list.Count == entitys.Count)
                 {
+                    logservice.InsertLog<T>(entitys);
                     return 1;
                 }
                 else

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MESWebApi.Util;
+using DapperExtensions.Mapper;
 namespace MESWebApi.Models
 {
     public class mes_log
     {
+        public int id { get; set; }
         /// <summary>
         /// 用户编码
         /// </summary>
@@ -26,7 +28,7 @@ namespace MESWebApi.Models
         /// <summary>
         /// 操作类型
         /// </summary>
-        public PubEnum.CZLX czlx { get; set; }
+        public string czlx { get; set; }
         /// <summary>
         /// ip
         /// </summary>
@@ -35,5 +37,14 @@ namespace MESWebApi.Models
         /// 日志内容
         /// </summary>
         public string rznr { get; set; }
+    }
+
+    public class mes_log_mapper : ClassMapper<mes_log>
+    {
+        public mes_log_mapper()
+        {
+            Map(t => t.id).Key(KeyType.TriggerIdentity);
+            AutoMap();
+        }
     }
 }

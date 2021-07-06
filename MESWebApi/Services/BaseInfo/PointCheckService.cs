@@ -22,11 +22,13 @@ namespace MESWebApi.Services.BaseInfo
     /// </summary>
     public class PointCheckService : IDBOper<zxjc_djgw>, IComposeQuery<zxjc_djgw, CheckPointQueryParm>
     {
+        LogService logservice;
         ILog log;
         string constr = String.Empty;
         public PointCheckService()
         {
             log = LogManager.GetLogger(this.GetType());
+            logservice = new LogService();
             constr = "tjmes";
         }
 
@@ -44,6 +46,7 @@ namespace MESWebApi.Services.BaseInfo
                     int ret = conn.Execute(sql.ToString(), entity);
                     if (ret > 0)
                     {
+                        logservice.InsertLog<zxjc_djgw>(entity);
                         return new zxjc_djgw();
                     }
                     else
@@ -70,6 +73,10 @@ namespace MESWebApi.Services.BaseInfo
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
                     int ret = conn.Execute(sql.ToString(), entitys.ToArray());
+                    if (ret > 0)
+                    {
+                        logservice.InsertLog<zxjc_djgw>(entitys);
+                    }
                     return ret;
                 }
             }
@@ -89,14 +96,20 @@ namespace MESWebApi.Services.BaseInfo
         {
             throw new NotImplementedException();
         }
-        public int Delete(List<zxjc_djgw> entitys) {
+        public int Delete(List<zxjc_djgw> entitys)
+        {
             try
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete from zxjc_djgw where djno in :djno ");
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
-                   return conn.Execute(sql.ToString(), entitys.ToArray());
+                    int ret = conn.Execute(sql.ToString(), entitys.ToArray());
+                    if (ret > 0)
+                    {
+                        logservice.DeleteLog<zxjc_djgw>(entitys);
+                    }
+                    return ret;
                 }
             }
             catch (Exception e)
@@ -126,9 +139,26 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append("      scbz = :scbz, ");
                 sql.Append("      djlx = :djlx ");
                 sql.Append(" where djno = :djno ");
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append("select gcdm, ");
+                sql1.Append("      scx, ");
+                sql1.Append("      gwh, ");
+                sql1.Append("      jx_no, ");
+                sql1.Append("      status_no, ");
+                sql1.Append("      djno, ");
+                sql1.Append("      djxx, ");
+                sql1.Append("      scbz, ");
+                sql1.Append("      djlx from zxjc_djgw ");
+                sql1.Append(" where djno = :djno ");
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
-                    return conn.Execute(sql.ToString(), entity);
+                    zxjc_djgw old = conn.Query<zxjc_djgw>(sql1.ToString(), new { djno = entity.djno }).FirstOrDefault();
+                    int ret = conn.Execute(sql.ToString(), entity);
+                    if (ret > 0)
+                    {
+                        logservice.UpdateLogJson<zxjc_djgw>(entity, old);
+                    }
+                    return ret;
                 }
             }
             catch (Exception e)
@@ -151,7 +181,7 @@ namespace MESWebApi.Services.BaseInfo
                     }
                 }
                 return li.Count == entitys.Count ? 1 : 0;
-                
+
             }
             catch (Exception e)
             {
@@ -201,7 +231,7 @@ namespace MESWebApi.Services.BaseInfo
             {
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
-                   var no = conn.ExecuteScalar<int>("select seq_pointcheck_no.nextval from dual");
+                    var no = conn.ExecuteScalar<int>("select seq_pointcheck_no.nextval from dual");
                     return "DJ" + no.ToString().PadLeft(4, '0');
                 }
             }
@@ -234,7 +264,7 @@ namespace MESWebApi.Services.BaseInfo
                         gcdm = "9100",
                         scx = row.GetCell(0).StringCellValue,
                         gwh = row.GetCell(1).StringCellValue,
-                        jx_no= row.GetCell(2).StringCellValue,
+                        jx_no = row.GetCell(2).StringCellValue,
                         status_no = row.GetCell(3).StringCellValue,
                         djno = GetDJNo(),
                         scbz = "N",

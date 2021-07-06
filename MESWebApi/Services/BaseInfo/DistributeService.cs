@@ -18,10 +18,12 @@ namespace MESWebApi.Services.BaseInfo
 {
     public class DistributeService : DBOperImp<zxjc_t_jstcfp>, IComposeQuery<zxjc_t_jstcfp, sys_page>
     {
+        LogService logservice;
         ILog log;
         public DistributeService(string connstr = "tjmes") : base(connstr)
         {
             log = LogManager.GetLogger(this.GetType());
+            logservice = new LogService();
         }
         /// <summary>
         /// 查询未分配的技通
@@ -135,7 +137,14 @@ namespace MESWebApi.Services.BaseInfo
                     StringBuilder sql = new StringBuilder();
                     sys_user user = CacheManager.Instance().Current_User;
                     sql.Append("update zxjc_t_jstc set fp_flg='Y',fp_sj=sysdate,fpr=:name where jtid =:jtid");
-                    Conn.Execute(sql.ToString(), new { name = user.name, jtid = jtid });
+                    var oldobj = Conn.Query<zxjc_t_jstc>("select jtid, jcbh, jcmc, jcms, wjlj, jwdx, scry, scpc, scsj, yxqx1, yxqx2, gcdm, fp_flg, fp_sj, fpr, wjfl, scx from zxjc_t_jstc where jtid =:jtid", new { jtid = jtid }).FirstOrDefault();
+                    var cnt = Conn.Execute(sql.ToString(), new { name = user.name, jtid = jtid });
+                    var newobj = Conn.Query<zxjc_t_jstc>("select jtid, jcbh, jcmc, jcms, wjlj, jwdx, scry, scpc, scsj, yxqx1, yxqx2, gcdm, fp_flg, fp_sj, fpr, wjfl, scx from zxjc_t_jstc where jtid =:jtid", new { jtid = jtid }).FirstOrDefault();
+                    if (cnt > 0)
+                    {
+                        logservice.UpdateLogJson<zxjc_t_jstc>(newobj, oldobj);
+                    }
+                    logservice.InsertLog<zxjc_t_jstcfp>(entitys);
                 }
                 return ret;
             }
@@ -162,7 +171,20 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" and    scx = :scx");
                 sql.Append(" and    jx_no = :jx_no");
                 sql.Append(" and    status_no = :status_no");
-                return Conn.Execute(sql.ToString(), entity);
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append(" select bz , lrr1 , lrsj1 , lrr2 , lrsj2 from zxjc_t_jstcfp ");
+                sql1.Append(" where  jtid = :jtid");
+                sql1.Append(" and    gcdm = :gcdm");
+                sql1.Append(" and    scx = :scx");
+                sql1.Append(" and    jx_no = :jx_no");
+                sql1.Append(" and    status_no = :status_no");
+                var old = Conn.Query<zxjc_t_jstcfp>(sql1.ToString(),entity).FirstOrDefault();
+                int cnt = Conn.Execute(sql.ToString(), entity);
+                if (cnt > 0)
+                {
+                    logservice.UpdateLogJson<zxjc_t_jstcfp>(entity, old);
+                }
+                return cnt;
             }
             catch (Exception e)
             {
@@ -177,7 +199,12 @@ namespace MESWebApi.Services.BaseInfo
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete from ZXJC_T_JSTCFP ");
                 sql.Append(" where jtid =:jtid and gcdm = :gcdm and scx =:scx and gwh=:gwh and jx_no =:jx_no and status_no = :status_no ");
-                return Conn.Execute(sql.ToString(), entitys.ToArray());
+                int cnt = Conn.Execute(sql.ToString(), entitys.ToArray());
+                if (cnt > 0)
+                {
+                    logservice.DeleteLog<zxjc_t_jstcfp>(entitys);
+                }
+                return cnt;
             }
             catch (Exception)
             {

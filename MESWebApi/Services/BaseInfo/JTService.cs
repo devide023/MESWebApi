@@ -26,11 +26,13 @@ namespace MESWebApi.Services.BaseInfo
     /// </summary>
     public class JTService : DBOperImp<zxjc_t_jstc>, IComposeQuery<zxjc_t_jstc, sys_page>
     {
+        private LogService logservice;
         private ILog log;
         private string constr = string.Empty;
         public JTService()
         {
             log = LogManager.GetLogger(this.GetType());
+            logservice = new LogService();
             constr = "tjmes";
         }
 
@@ -151,7 +153,30 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append("         wjfl = :wjfl,");
                 sql.Append("         scx = :scx");
                 sql.Append("  where  jtid = :jtid");
-                return Conn.Execute(sql.ToString(), entity);
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append("  select jcmc ,");
+                sql1.Append("         jcms ,");
+                sql1.Append("         wjlj ,");
+                sql1.Append("         jwdx ,");
+                sql1.Append("         scry ,");
+                sql1.Append("         scpc ,");
+                sql1.Append("         scsj ,");
+                sql1.Append("         yxqx1 ,");
+                sql1.Append("         yxqx2 ,");
+                sql1.Append("         gcdm ,");
+                sql1.Append("         fp_flg ,");
+                sql1.Append("         fp_sj ,");
+                sql1.Append("         fpr ,");
+                sql1.Append("         wjfl ,");
+                sql1.Append("         scx  from ZXJC_T_JSTC ");
+                sql1.Append("  where  jtid = :jtid");
+                zxjc_t_jstc old = Conn.Query<zxjc_t_jstc>(sql1.ToString(), entity).FirstOrDefault();
+                int cnt = Conn.Execute(sql.ToString(), entity);
+                if (cnt > 0)
+                {
+                    logservice.UpdateLogJson<zxjc_t_jstc>(entity, old);
+                }
+                return cnt;
             }
             catch (Exception)
             {
@@ -183,7 +208,12 @@ namespace MESWebApi.Services.BaseInfo
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete from ZXJC_T_JSTC where jcbh in :jcbh ");
-                return Conn.Execute(sql.ToString(), entitys.ToArray());
+                int cnt = Conn.Execute(sql.ToString(), entitys.ToArray());
+                if (cnt > 0)
+                {
+                    logservice.DeleteLog<zxjc_t_jstc>(entitys);
+                }
+                return cnt;
             }
             catch (Exception e)
             {
@@ -211,9 +241,11 @@ namespace MESWebApi.Services.BaseInfo
     /// </summary>
     public class TsJTService : DBOperImp<zxjc_t_tstc>, IComposeQuery<zxjc_t_tstc, sys_page>
     {
+        private LogService logservice;
         private ILog log;
         public TsJTService(string constr = "tjmes") : base(constr)
         {
+            logservice = new LogService();
             log = LogManager.GetLogger(this.GetType());
         }
         /// <summary>
@@ -246,7 +278,21 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" status_no=:status_no,");
                 sql.Append(" yxbz=:yxbz");
                 sql.Append(" where tcbh=:tcbh");
-                return Conn.Execute(sql.ToString(), entity);
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append(" select tcms,");
+                sql1.Append(" scx,");
+                sql1.Append(" gwh,");
+                sql1.Append(" jx_no,");
+                sql1.Append(" status_no,");
+                sql1.Append(" yxbz from zxjc_t_tstc ");
+                sql1.Append(" where tcbh=:tcbh");
+                var old = Conn.Query<zxjc_t_tstc>(sql1.ToString(), entity).FirstOrDefault();
+                var cnt = Conn.Execute(sql.ToString(), entity);
+                if (cnt > 0)
+                {
+                    logservice.UpdateLogJson<zxjc_t_tstc>(entity, old);
+                }
+                return cnt;
             }
             catch (Exception e)
             {
@@ -277,7 +323,12 @@ namespace MESWebApi.Services.BaseInfo
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete FROM zxjc_t_tstc where tcbh in :tcbh");
-                return Conn.Execute(sql.ToString(), entitys.ToArray());
+                var cnt = Conn.Execute(sql.ToString(), entitys.ToArray());
+                if (cnt > 0)
+                {
+                    logservice.DeleteLog<zxjc_t_tstc>(entitys);
+                }
+                return cnt;
             }
             catch (Exception e)
             {

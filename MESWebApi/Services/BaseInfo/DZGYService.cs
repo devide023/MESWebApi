@@ -23,10 +23,12 @@ namespace MESWebApi.Services.BaseInfo
     /// </summary>
     public class DZGYService : DBOperImp<zxjc_t_dzgy>, IComposeQuery<zxjc_t_dzgy, sys_page>
     {
+        private LogService logservice;
         private ILog log;
         public DZGYService(string constr="tjmes"):base(constr)
         {
             log = LogManager.GetLogger(this.GetType());
+            logservice = new LogService();
         }
         public IEnumerable<zxjc_t_dzgy> Search(sys_page parm, out int resultcount)
         {
@@ -175,7 +177,24 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append("        wjlj = :wjlj,");
                 sql.Append("        jwdx = :jwdx,scry=:scry,scpc=:scpc,scsj=sysdate");
                 sql.Append(" where  gyid = :gyid");
-                return Conn.Execute(sql.ToString(), entity);
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append(" select gymc ,");
+                sql1.Append("        gyms ,");
+                sql1.Append("        gcdm ,");
+                sql1.Append("        scx ,");
+                sql1.Append("        gwh ,");
+                sql1.Append("        jx_no ,");
+                sql1.Append("        status_no ,");
+                sql1.Append("        wjlj ,");
+                sql1.Append("        jwdx ,scry,scpc,scsj from ZXJC_T_DZGY ");
+                sql1.Append(" where  gyid = :gyid");
+                var old = Conn.Query<zxjc_t_dzgy>(sql1.ToString(), entity).FirstOrDefault();
+                int cnt = Conn.Execute(sql.ToString(), entity);
+                if (cnt > 0)
+                {
+                    logservice.UpdateLogJson<zxjc_t_dzgy>(entity, old);
+                }
+                return cnt;
             }
             catch (Exception)
             {
@@ -207,7 +226,12 @@ namespace MESWebApi.Services.BaseInfo
             {
                 StringBuilder sql = new StringBuilder();
                 sql.Append("delete from zxjc_t_dzgy where gyid in :gyid ");
-                return Conn.Execute(sql.ToString(), entitys.ToArray());
+                var cnt = Conn.Execute(sql.ToString(), entitys.ToArray());
+                if (cnt > 0)
+                {
+                    logservice.DeleteLog<zxjc_t_dzgy>(entitys);
+                }
+                return cnt;
             }
             catch (Exception e)
             {

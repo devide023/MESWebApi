@@ -1,6 +1,9 @@
 {
   "include": [
-
+    "api/baseinfo/pointcheck/add",
+    "api/baseinfo/pointcheck/del",
+    "api/baseinfo/pointcheck/edit",
+    "api/baseinfo/pointcheck/batedit"
   ],
   "except": [
 
