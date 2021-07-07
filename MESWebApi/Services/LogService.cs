@@ -228,5 +228,45 @@ namespace MESWebApi.Services
                 db.Insert<mes_log>(meslog);
             }
         }
+        public void LoginLog(sys_user entity)
+        {
+            try
+            {
+                mes_log meslog = new mes_log();
+                meslog.user_code = entity.code;
+                meslog.user_name = entity.name;
+                meslog.czlx = "登录";
+                meslog.rznr = JsonConvert.SerializeObject(entity);
+                using (var db = new OracleBaseFixture().DB)
+                {
+                    db.Insert<mes_log>(meslog);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+        public void LogoutLog(sys_user entity)
+        {
+            try
+            {
+                mes_log meslog = new mes_log();
+                meslog.user_code = entity.code;
+                meslog.user_name = entity.name;
+                meslog.czlx = "退出";
+                meslog.rznr = JsonConvert.SerializeObject(entity);
+                using (var db = new OracleBaseFixture().DB)
+                {
+                    db.Insert<mes_log>(meslog);
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
     }
 }

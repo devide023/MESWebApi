@@ -69,12 +69,12 @@ namespace MESWebApi.Services
             {
                 string md5pwd = Tool.Str2MD5(userpwd);
                 StringBuilder sql = new StringBuilder();
-                sql.Append("select count(*) as cnt from sys_user where status=1 and code=:code and pwd=:pwd");
+                sql.Append("select id,code,name from sys_user where status=1 and code=:code and pwd=:pwd");
                 var p = new { code = username, pwd = md5pwd };
                 using (var db = new OraDBHelper())
                 {
-                    var isok = db.Conn.ExecuteScalar<int>(sql.ToString(), p);
-                    if (isok > 0)
+                    var user = db.Conn.Query<sys_user>(sql.ToString(), p).FirstOrDefault();
+                    if (user!=null)
                     {
                         string newtoken = new JWTHelper().CreateToken();
                         var cnt = db.Conn.Execute("update sys_user set token=:token where status=1 and code=:code and pwd=:pwd",
@@ -82,6 +82,8 @@ namespace MESWebApi.Services
                             );
                         if (cnt > 0)
                         {
+                            LogService logservice = new LogService();
+                            logservice.LoginLog(user);
                             return newtoken;
                         }
                         else
@@ -424,6 +426,34 @@ namespace MESWebApi.Services
                 using (var conn = new OraDBHelper().Conn)
                 {
                    return conn.Query<sys_user>("select id,status,code,name from sys_user where status = 1 and (name like :key or code like :key)", new { key = "%" + key + "%" });
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                throw;
+            }
+        }
+
+        public int LogOut(string token)
+        {
+            try
+            {
+                var newtoken = new JWTHelper().CreateToken();
+                StringBuilder sql = new StringBuilder();
+                sql.Append("update sys_user set token=:newtoken where token=:token");
+                using (var conn = new OraDBHelper().Conn)
+                {
+                    int cnt = conn.Execute(sql.ToString(), new { token = token, newtoken = newtoken });
+                    if (cnt > 0)
+                    {
+                        sql.Clear();
+                        sql.Append("SELECT id,code,name,token FROM sys_user where token=:token");
+                        var user = conn.Query<sys_user>(sql.ToString(), new { token = token }).FirstOrDefault();
+                        LogService logservice = new LogService();
+                        logservice.LogoutLog(user);
+                    }
+                    return cnt;
                 }
             }
             catch (Exception e)

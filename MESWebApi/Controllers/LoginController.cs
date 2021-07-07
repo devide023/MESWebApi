@@ -26,7 +26,6 @@ namespace MESWebApi.Controllers
                 if (!string.IsNullOrEmpty(token))
                 {
                     return Json(new { code = 1, msg = "ok", token = token });
-
                 }
                 else
                 {
@@ -41,10 +40,26 @@ namespace MESWebApi.Controllers
         [Route("logout")]
         [AllowAnonymous]
         [HttpPost]
-        public IHttpActionResult Logout()
+        public IHttpActionResult Logout(dynamic obj)
         {
-            sys_user cur_user = CacheManager.Instance().Current_User;
-            return Json(new { code = 1, msg = "ok",user = cur_user });
+            try
+            {
+                string token = (obj.token ?? "").ToString();
+                UserService us = new UserService();
+                var cnt = us.LogOut(token);
+                if (cnt > 0)
+                {
+                    return Json(new { code = 1, msg = "成功退出" });
+                }
+                else
+                {
+                    return Json(new { code = 0, msg = "退出失败" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
