@@ -70,7 +70,7 @@ namespace MESWebApi.Services.BaseInfo
                 sql.Append(" FROM sec_users where 1=1 ");
                 if (!string.IsNullOrEmpty(key))
                 {
-                    sql.Append(" and (user_code like :key or user_name like :key or scx like :key or class_no like :key or class_no like :key )");
+                    sql.Append(" and (user_code like :key or user_name like :key or scx like :key or class_no like :key )");
                 }
                 using (var conn = new OraDBHelper(constr).Conn)
                 {
@@ -122,10 +122,10 @@ namespace MESWebApi.Services.BaseInfo
             }
         }
         /// <summary>
-        /// 机型列表
+        /// 机型列表()
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">查找字段（jx）</param>
+        /// <returns>返回字段jx</returns>
         public IEnumerable<ztbm_new> GetJxList(string key)
         {
             try
@@ -177,7 +177,7 @@ namespace MESWebApi.Services.BaseInfo
                 {
                     StringBuilder sql = new StringBuilder();
                     sql.Append("select wlbm,wlmc,wljc,wlz,wlsx from base_wlxx where gc='9100' ");
-                    sql.Append(" and ( lower(wlbm) like :key or lower(wlmc) like :key or lower(wlz) like :key ) ");
+                    sql.Append(" and ( lower(wlbm) like :key or lower(wlmc) like :key ) ");
                     sql.Append(" and rownum < 10 order by wlbm asc");
                     return conn.Query<base_wlxx>(sql.ToString(), new { key = "%" + key.ToLower() + "%" });
                 }

@@ -13,12 +13,17 @@ using MESWebApi.Util;
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
-    /// 电子工艺控制器
+    /// 电子工艺接口(zxjc_t_dzgy)
     /// </summary>
     /// 
     [RoutePrefix("api/baseinfo/dzgy")]
     public class TechProcessController : ApiController
     {
+        /// <summary>
+        /// 电子工艺列表
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost,Route("list")]
         public IHttpActionResult List(sys_page parm)
         {
@@ -34,7 +39,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 电子工艺录入
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult Add(List<zxjc_t_dzgy> entitys)
         {
@@ -56,6 +65,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult edit(zxjc_t_dzgy entity)
         {
@@ -77,6 +91,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 批量编辑
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("batedit")]
         public IHttpActionResult BatEdit(List<zxjc_t_dzgy> entitys)
         {
@@ -99,6 +118,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("del")]
         public IHttpActionResult del(List<zxjc_t_dzgy> entitys)
         {
@@ -120,6 +144,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 读取电子工艺模板数据
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [HttpPost, Route("readxls")]
         public IHttpActionResult ReadXls(dynamic obj)
         {
@@ -144,7 +173,10 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 获取电子工艺编号
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Route("dzgyno")]
         public IHttpActionResult DZGYNumber()
         {
@@ -159,7 +191,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 更新文件名称及文件大小
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [HttpPost,Route("updatefiles")]
         public IHttpActionResult ChangeFileName(dynamic obj)
         {

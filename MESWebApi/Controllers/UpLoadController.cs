@@ -12,9 +12,16 @@ using System.Text;
 
 namespace MESWebApi.Controllers
 {
+    /// <summary>
+    /// 文档上传接口
+    /// </summary>
     [RoutePrefix("api/upload")]
     public class UpLoadController : ApiController
     {
+        /// <summary>
+        /// 模板上传,主要是excel模板
+        /// </summary>
+        /// <returns></returns>
         [Route("files")]
         [HttpPost]
         public IHttpActionResult uploadfiles()
@@ -44,7 +51,11 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-
+        /// <summary>
+        /// pdf文件上传，主要是电子工艺，技术通知
+        /// 上传到ftp服务器
+        /// </summary>
+        /// <returns></returns>
         [Route("pdf")]
         [HttpPost]
         public IHttpActionResult extuploadfiles()
@@ -107,7 +118,10 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-
+        /// <summary>
+        /// ftp配置
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Route("ftpcnf")]
         public IHttpActionResult GetFtpCnf()
         {
@@ -124,6 +138,11 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
+        /// <summary>
+        /// 获取ftp,url地址编码
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [HttpPost, Route("ftpurl_encode")]
         public IHttpActionResult Encode_FtpUrl(dynamic obj)
         {
@@ -146,7 +165,13 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
-        [HttpGet, Route("downfromftp")]
+        /// <summary>
+        /// 从ftp下载文件暂存到web服务器
+        /// </summary>
+        /// <param name="type">技术通知：jstz,电子工艺：dzgy</param>
+        /// <param name="filename">文件名</param>
+        /// <returns></returns>
+        [HttpGet, AllowAnonymous,Route("downfromftp")]
         public IHttpActionResult DownLoadFilefromFtp(string type, string filename)
         {
             try
@@ -211,6 +236,11 @@ namespace MESWebApi.Controllers
                 throw;
             }
         }
+        /// <summary>
+        /// 从web服务器下载文件到浏览器
+        /// </summary>
+        /// <param name="filename">文件名</param>
+        /// <returns></returns>
         [HttpGet, AllowAnonymous,Route("downpdf")]
         public HttpResponseMessage DownLoadPdf(string filename)
         {

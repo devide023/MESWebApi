@@ -9,9 +9,17 @@ using MESWebApi.Models.QueryParm;
 using MESWebApi.Services;
 namespace MESWebApi.Controllers
 {
+    /// <summary>
+    /// 系统菜单接口（sys_menu）
+    /// </summary>
     [RoutePrefix("api/menu")]
     public class MenuController : ApiController
     {
+        /// <summary>
+        /// 菜单列表
+        /// </summary>
+        /// <param name="parm">MenuQueryParm</param>
+        /// <returns></returns>
         [Route("list")]
         [HttpPost]
         public IHttpActionResult List(MenuQueryParm parm)
@@ -28,6 +36,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 菜单树形结构
+        /// </summary>
+        /// <param name="parm">MenuQueryParm</param>
+        /// <returns></returns>
         [Route("tree")]
         [HttpPost]
         public IHttpActionResult MenuTree(MenuQueryParm parm)
@@ -44,6 +57,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 获取指定菜单节点的子菜单
+        /// </summary>
+        /// <param name="parm">MenuQueryParm</param>
+        /// <returns></returns>
         [Route("submenu")]
         [HttpPost]
         public IHttpActionResult SubMenu(MenuQueryParm parm)
@@ -60,6 +78,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 新增菜单节点
+        /// </summary>
+        /// <param name="obj">sys_menu</param>
+        /// <returns></returns>
         [Route("add")]
         [HttpPost]
         public IHttpActionResult Add(dynamic obj)
@@ -102,9 +125,9 @@ namespace MESWebApi.Controllers
             }
         }
         /// <summary>
-        /// 添加功能，字段
+        /// 添加页面功能及字段
         /// </summary>
-        /// <param name="menu"></param>
+        /// <param name="menu">sys_menu</param>
         /// <returns></returns>
         [Route("add_funs_field")]
         [HttpPost]
@@ -172,6 +195,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 编辑菜单
+        /// </summary>
+        /// <param name="obj">sys_menu</param>
+        /// <returns></returns>
         [Route("edit")]
         [HttpPost]
         public IHttpActionResult Edit(dynamic obj)
@@ -212,7 +240,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="id">菜单id</param>
+        /// <returns></returns>
         [Route("del")]
         [HttpGet]
         public IHttpActionResult Delete(int id)
@@ -235,7 +267,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 菜单编码
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Route("menucode")]
         [HttpGet]
         public IHttpActionResult MenuCode(int id)
@@ -251,6 +287,10 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 权限树
+        /// </summary>
+        /// <returns></returns>
         [Route("permission_tree")]
         [HttpGet]
         public IHttpActionResult PermissionTree()

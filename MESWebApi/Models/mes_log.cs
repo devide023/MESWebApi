@@ -12,11 +12,11 @@ namespace MESWebApi.Models
         /// <summary>
         /// 用户编码
         /// </summary>
-        public string user_code { get; set; } = CacheManager.Instance().Current_User.code;
+        public string user_code { get; set; } = CacheManager.Instance().Current_User?.code;
         /// <summary>
         /// 用户姓名
         /// </summary>
-        public string user_name { get; set; }= CacheManager.Instance().Current_User.name;
+        public string user_name { get; set; }= CacheManager.Instance().Current_User?.name;
         /// <summary>
         /// 操作日期
         /// </summary>

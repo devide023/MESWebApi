@@ -69,7 +69,7 @@ namespace MESWebApi.Services
             {
                 string md5pwd = Tool.Str2MD5(userpwd);
                 StringBuilder sql = new StringBuilder();
-                sql.Append("select id,code,name from sys_user where status=1 and code=:code and pwd=:pwd");
+                sql.Append("select id,code,name,token,adduser,addtime,status,headimg from sys_user where status=1 and code=:code and pwd=:pwd");
                 var p = new { code = username, pwd = md5pwd };
                 using (var db = new OraDBHelper())
                 {
@@ -442,14 +442,14 @@ namespace MESWebApi.Services
                 var newtoken = new JWTHelper().CreateToken();
                 StringBuilder sql = new StringBuilder();
                 sql.Append("update sys_user set token=:newtoken where token=:token");
+                StringBuilder sql1 = new StringBuilder();
+                sql1.Append("SELECT id,code,name,token,adduser,addtime,status,headimg FROM sys_user where token=:token");
                 using (var conn = new OraDBHelper().Conn)
                 {
+                    var user = conn.Query<sys_user>(sql1.ToString(), new { token = token }).FirstOrDefault();
                     int cnt = conn.Execute(sql.ToString(), new { token = token, newtoken = newtoken });
                     if (cnt > 0)
                     {
-                        sql.Clear();
-                        sql.Append("SELECT id,code,name,token FROM sys_user where token=:token");
-                        var user = conn.Query<sys_user>(sql.ToString(), new { token = token }).FirstOrDefault();
                         LogService logservice = new LogService();
                         logservice.LogoutLog(user);
                     }

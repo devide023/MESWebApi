@@ -10,15 +10,12 @@ namespace MESWebApi.Controllers
     {
         public ContentResult Index()
         {
-            string token = new JWTHelper().CreateToken();
-
-            return Content(token);
+            return Content("欢迎使用");
         }
 
         public ContentResult Pwd(string pwd= "")
         {
-           var ret = new JWTHelper().CheckToken(pwd);
-            return Content(ret.ToString());
+            return Content("");
         }
         public ContentResult Pwd1(string pwd = "")
         {

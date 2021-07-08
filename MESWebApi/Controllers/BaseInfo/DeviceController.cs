@@ -9,9 +9,17 @@ using MESWebApi.Models.BaseInfo;
 using MESWebApi.Models.QueryParm;
 namespace MESWebApi.Controllers.BaseInfo
 {
+    /// <summary>
+    /// 设备信息接口（base_sbxx）
+    /// </summary>
     [RoutePrefix("api/baseinfo/device")]
     public class DeviceController : ApiController
     {
+        /// <summary>
+        /// 设备列表
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost, Route("list")]
         public IHttpActionResult List(DeviceQueryParm parm)
         {
@@ -27,7 +35,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 增加
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult AddDevice(List<base_sbxx> entitys)
         {
@@ -49,6 +61,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult EditDevice(base_sbxx entity) {
             try

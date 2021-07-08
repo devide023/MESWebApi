@@ -15,12 +15,17 @@ using MESWebApi.Util;
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
-    /// 技术通知，控制器
+    /// 技术通知,特殊技术通知接口
     /// </summary>
     /// 
     [RoutePrefix("api/baseinfo/notice")]
     public class TecNoticeController : ApiController
     {
+        /// <summary>
+        /// 技术通知列表（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost, Route("list")]
         public IHttpActionResult JTList(sys_page parm)
         {
@@ -37,7 +42,11 @@ namespace MESWebApi.Controllers.BaseInfo
             }
 
         }
-
+        /// <summary>
+        /// 新增技通（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult JTAdd(List<zxjc_t_jstc> entitys)
         {
@@ -59,6 +68,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 删除（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("del")]
         public IHttpActionResult JTDel(List<zxjc_t_jstc> entitys) {
             try
@@ -79,6 +93,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 批量编辑（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("batedit")]
         public IHttpActionResult JTBatEdit(List<zxjc_t_jstc> entitys)
         {
@@ -100,6 +119,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 编辑（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult JTEdit(zxjc_t_jstc entity)
         {
@@ -121,6 +145,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 更新文件名称及大小（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [HttpPost, Route("changefiles")]
         public IHttpActionResult ModifyFileName(dynamic obj)
         {
@@ -160,6 +189,10 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 获取技通编号（zxjc_t_jstc）
+        /// </summary>
+        /// <returns></returns>
         [HttpGet,Route("jtno")]
         public IHttpActionResult GetJtNumber()
         {
@@ -174,6 +207,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 读取技通文件模板数据（zxjc_t_jstc）
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [HttpPost,Route("readxls")]
         public IHttpActionResult ReadNoticeXls(dynamic obj)
         {
@@ -198,7 +236,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 特殊技术通知列表（zxjc_t_tstc）
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost, Route("tsjt/list")]
         public IHttpActionResult TsjtList(sys_page parm)
         {
@@ -214,6 +256,10 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 获取特殊技通编号（zxjc_t_tstc）
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Route("tsjt/tsjtno")]
         public IHttpActionResult TsjtNo()
         {
@@ -237,6 +283,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 新增特殊技通（zxjc_t_tstc）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("tsjt/add")]
         public IHttpActionResult TsjtAdd(List<zxjc_t_tstc> entitys)
         {
@@ -260,6 +311,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 特殊技通删除（zxjc_t_tstc）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("tsjt/del")]
         public IHttpActionResult TsjtDel(List<zxjc_t_tstc> entitys)
         {
@@ -281,6 +337,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 特殊技通编辑（zxjc_t_tstc）
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("tsjt/edit")]
         public IHttpActionResult TsjtEdit(zxjc_t_tstc entity)
         {
@@ -302,6 +363,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 特殊技通批量编辑（zxjc_t_tstc）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("tsjt/batedit")]
         public IHttpActionResult TsjtBatEdit(List<zxjc_t_tstc> entitys)
         {
@@ -324,6 +390,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 技通阅读记录（zxjc_t_ydjl）
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost, Route("jtyd/list")]
         public IHttpActionResult JtydList(sys_page parm)
         {
@@ -339,7 +410,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 新增技通阅读记录（zxjc_t_ydjl）
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("jtyd/add")]
         public IHttpActionResult JtydAdd(List<zxjc_t_ydjl> entitys)
         {

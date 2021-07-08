@@ -12,9 +12,17 @@ using MESWebApi.Util;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
+    /// <summary>
+    /// 技术通知分配接口(zxjc_t_jstcfp)
+    /// </summary>
     [RoutePrefix("api/baseinfo/distribute")]
     public class DistributeController : ApiController
     {
+        /// <summary>
+        /// 未分配技术通知列表
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost,Route("list")]
         public IHttpActionResult List(DisJTParm parm)
         {
@@ -30,6 +38,13 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 分配记录,根据技通id
+        /// </summary>
+        /// <param name="obj">
+        /// 例：{jtid:''}
+        /// </param>
+        /// <returns></returns>
         [HttpPost, Route("dislist")]
         public IHttpActionResult DisList(dynamic obj)
         {
@@ -46,7 +61,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-        
+        /// <summary>
+        /// 分配
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult Add(List<zxjc_t_jstcfp> entitys) 
         {
@@ -70,6 +89,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 编辑分配
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult Edit(zxjc_t_jstcfp entity)
         {
@@ -92,7 +116,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 删除分配信息
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("del")]
         public IHttpActionResult DelDistribute(List<zxjc_t_jstcfp> entitys)
         {

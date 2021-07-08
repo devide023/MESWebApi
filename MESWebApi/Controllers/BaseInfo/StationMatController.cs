@@ -13,12 +13,17 @@ using MESWebApi.Util;
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
-    /// 岗位站点物料
+    /// 岗位站点物料接口(base_gwbj1)
     /// </summary>
     /// 
     [RoutePrefix("api/baseinfo/stationmat")]
     public class StationMatController : ApiController
     {
+        /// <summary>
+        /// 岗位站点物料列表
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [HttpPost, Route("list")]
         public IHttpActionResult List(sys_page parm)
         {
@@ -34,6 +39,13 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 读取岗位站点模板数据
+        /// </summary>
+        /// <param name="obj">
+        /// {filename:''}
+        /// </param>
+        /// <returns></returns>
         [HttpPost,Route("readxls")]
         public IHttpActionResult ImpExcel(dynamic obj)
         {
@@ -58,7 +70,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 增加岗位站点物料
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult Add(List<base_gwbj1> entitys)
         {
@@ -82,6 +98,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 批量编辑
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("batedit")]
         public IHttpActionResult BatEdit(List<base_gwbj1> entitys)
         {
@@ -103,6 +124,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult Edit(base_gwbj1 entity)
         {
@@ -124,6 +150,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("del")]
         public IHttpActionResult Del(List<base_gwbj1> entitys)
         {

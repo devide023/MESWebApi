@@ -13,9 +13,17 @@ using Newtonsoft.Json.Linq;
 
 namespace MESWebApi.Controllers
 {
+    /// <summary>
+    /// 用户接口（sys_user）
+    /// </summary>
     [RoutePrefix("api/user")]
     public class UserController : ApiController
     {
+        /// <summary>
+        /// 获取用户列表
+        /// </summary>
+        /// <param name="q">UserQueryParm</param>
+        /// <returns></returns>
         [Route("list")]
         [HttpPost]
         public IHttpActionResult List(UserQueryParm q)
@@ -32,6 +40,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message, resultcount=0 });
             }
         }
+        /// <summary>
+        /// 根据token查询用户信息
+        /// </summary>
+        /// <param name="token">token</param>
+        /// <returns></returns>
         [Route("info")]
         [HttpGet]
         public IHttpActionResult Info(string token)
@@ -47,7 +60,7 @@ namespace MESWebApi.Controllers
         /// <summary>
         /// 获取用户菜单
         /// </summary>
-        /// <param name="userid"></param>
+        /// <param name="userid">用户id</param>
         /// <returns></returns>
         [Route("menus")]
         [HttpGet]
@@ -59,6 +72,13 @@ namespace MESWebApi.Controllers
             result=new sys_menu()
             });
         }
+        /// <summary>
+        /// 新增用户
+        /// </summary>
+        /// <param name="obj">
+        /// 例：{sys_user实体}
+        /// </param>
+        /// <returns></returns>
         [Route("add")]
         [HttpPost]
         public IHttpActionResult Add_User(dynamic obj)
@@ -101,6 +121,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 编辑用户
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [Route("edit")]
         [HttpPost]
         public IHttpActionResult Edit_User(dynamic obj) {
@@ -141,6 +166,13 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 修改当前登录人的密码
+        /// </summary>
+        /// <param name="obj">
+        /// {pwd:'',}
+        /// </param>
+        /// <returns></returns>
         [Route("chpwd")]
         [HttpPost]
         public IHttpActionResult ChangePwd(dynamic obj)
@@ -166,6 +198,11 @@ namespace MESWebApi.Controllers
             }
             
         }
+        /// <summary>
+        /// 查找用户
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <returns></returns>
         [Route("find")]
         [HttpGet]
         public IHttpActionResult UserEntity(int id)
@@ -181,7 +218,13 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 重置用户密码
+        /// </summary>
+        /// <param name="obj">
+        /// {id:1,pwd:''}
+        /// </param>
+        /// <returns></returns>
         [Route("resetpwd")]
         [HttpPost]
         public IHttpActionResult ResetPwd(dynamic obj)
@@ -206,7 +249,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 启用
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [Route("enable")]
         [HttpPost]
         public IHttpActionResult UserEnable(dynamic obj)
@@ -229,7 +276,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 禁用
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [Route("disable")]
         [HttpPost]
         public IHttpActionResult UserDisable(dynamic obj)
@@ -253,7 +304,13 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 关键字查找用户
+        /// </summary>
+        /// <param name="obj">
+        /// 查找列：用户名，用户编码，列：{key:''}
+        /// </param>
+        /// <returns></returns>
         [Route("keyfind")]
         [HttpPost]
         public IHttpActionResult FindUserByName(dynamic obj)

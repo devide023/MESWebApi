@@ -66,7 +66,7 @@ namespace MESWebApi.Util
             }
         }
 
-
+        ///<summary>
         /// 在ftp服务器上创建目录
         /// </summary>
         /// <param name="dirName">创建的目录名称</param>

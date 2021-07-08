@@ -9,9 +9,16 @@ using MESWebApi.Services;
 using Newtonsoft.Json;
 namespace MESWebApi.Controllers
 {
+    /// <summary>
+    /// 角色接口（sys_role）
+    /// </summary>
     [RoutePrefix("api/role")]
     public class RoleController : ApiController
     {
+        /// <summary>
+        /// 角色列表
+        /// </summary>
+        /// <returns></returns>
         [Route("list")]
         [HttpPost]
         public IHttpActionResult Get()
@@ -31,7 +38,10 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 所有角色列表
+        /// </summary>
+        /// <returns></returns>
         [Route("alllist")]
         [HttpGet]
         public IHttpActionResult All_List()
@@ -51,6 +61,13 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        /// <param name="objs">
+        /// 例：{menu_nodes:[{sys_menu对象}]}
+        /// </param>
+        /// <returns></returns>
         [Route("add")]
         [HttpPost]
         public IHttpActionResult Add(dynamic objs)
@@ -117,7 +134,13 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 编辑角色
+        /// </summary>
+        /// <param name="obj">
+        /// sys_menu_permission
+        /// </param>
+        /// <returns></returns>
         [Route("edit")]
         [HttpPost]
         public IHttpActionResult Edit(dynamic obj)
@@ -182,7 +205,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="id">角色id</param>
+        /// <returns></returns>
         [Route("del")]
         [HttpGet]
         public IHttpActionResult Delete(int id)
@@ -205,7 +232,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 查找单个角色
+        /// </summary>
+        /// <param name="id">角色id</param>
+        /// <returns></returns>
         [Route("find")]
         [HttpPost]
         public IHttpActionResult Find(int id)
@@ -221,7 +252,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 角色关联的菜单
+        /// </summary>
+        /// <param name="id">角色id</param>
+        /// <returns></returns>
         [Route("menulist")]
         [HttpGet]
         public IHttpActionResult RoleMenus(int id)
@@ -237,7 +272,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 禁用
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         [Route("disable")]
         [HttpPost]
         public IHttpActionResult Disable(dynamic obj)
@@ -265,7 +304,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 角色关联的用户
+        /// </summary>
+        /// <param name="id">角色id</param>
+        /// <returns></returns>
         [Route("userlist")]
         [HttpGet]
         public IHttpActionResult RoleUsers(int id)
@@ -281,7 +324,13 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message });
             }
         }
-
+        /// <summary>
+        /// 保存角色和用户关联
+        /// </summary>
+        /// <param name="obj">
+        /// 例：{roleid:1,userids:[1,2,3]}
+        /// </param>
+        /// <returns></returns>
         [Route("add_roleusers")]
         [HttpPost]
         public IHttpActionResult Add_Role_Users(dynamic obj)

@@ -14,11 +14,16 @@ using System.Web;
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
-    /// 点检控制器
+    /// 点检接口(zxjc_djgw)
     /// </summary>
     [RoutePrefix("api/baseinfo/pointcheck")]
     public class PointCheckController : ApiController
     {
+        /// <summary>
+        /// 点检列表
+        /// </summary>
+        /// <param name="parm">CheckPointQueryParm</param>
+        /// <returns>{code:1,msg:'ok',list:[],resultcount:20}</returns>
         [HttpPost, Route("list")]
         public IHttpActionResult List(CheckPointQueryParm parm)
         {
@@ -34,7 +39,14 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 新增点检信息
+        /// </summary>
+        /// <param name="entitys">
+        /// zxjc_djgw
+        /// 例：[{zxjc_djgw实体}]
+        /// </param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult Add(List<zxjc_djgw> entitys)
         {
@@ -58,6 +70,14 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 删除点检信息
+        /// </summary>
+        /// <param name="entitys">
+        /// zxjc_djgw
+        /// 例：[{zxjc_djgw实体}]
+        /// </param>
+        /// <returns></returns>
         [HttpPost, Route("del")]
         public IHttpActionResult Delete(List<zxjc_djgw> entitys) {
             try
@@ -78,6 +98,13 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 编辑点检信息
+        /// </summary>
+        /// <param name="entity">
+        /// 例：{zxjc_djgw实体}
+        /// </param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult Edit(zxjc_djgw entity)
         {
@@ -99,6 +126,13 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 批量编辑
+        /// </summary>
+        /// <param name="entitys">
+        /// 例：[{zxjc_djgw实体}]
+        /// </param>
+        /// <returns></returns>
         [HttpPost, Route("batedit")]
         public IHttpActionResult BatEdit(List<zxjc_djgw> entitys)
         {
@@ -120,6 +154,10 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 生产点检编号
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Route("djno")]
         public IHttpActionResult DjNo()
         {
@@ -134,7 +172,13 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 读取点检模板数据
+        /// </summary>
+        /// <param name="obj">
+        /// {filename:''}
+        /// </param>
+        /// <returns></returns>
         [HttpPost, Route("readxls")]
         public IHttpActionResult ReadXls(dynamic obj)
         {

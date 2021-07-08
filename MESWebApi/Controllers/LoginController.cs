@@ -11,9 +11,17 @@ using System.Net.Http;
 using MESWebApi.Util;
 namespace MESWebApi.Controllers
 {
+    /// <summary>
+    /// 系统登录退出接口
+    /// </summary>
     [RoutePrefix("api/login")]
     public class LoginController : ApiController
     {
+        /// <summary>
+        /// 登录，接收用户编码，用户密码两个参数
+        /// </summary>
+        /// <param name="obj">sys_user实体对象</param>
+        /// <returns>成功返回Token值</returns>
         [Route("checklogin")]
         [HttpPost]
         [AllowAnonymous]
@@ -37,6 +45,11 @@ namespace MESWebApi.Controllers
                 return Json(new { code = 0, msg = e.Message, token = "" });
             }
         }
+        /// <summary>
+        /// 退出，传Token值
+        /// </summary>
+        /// <param name="obj">Token</param>
+        /// <returns>退出成功后会刷新Token对应用户的Token</returns>
         [Route("logout")]
         [AllowAnonymous]
         [HttpPost]

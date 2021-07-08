@@ -10,11 +10,16 @@ using MESWebApi.Models.QueryParm;
 namespace MESWebApi.Controllers.BaseInfo
 {
     /// <summary>
-    /// 人员技能控制器
+    /// 人员技能接口（zxjc_ryxx_jn）
     /// </summary>
     [RoutePrefix("api/baseinfo/skill")]
     public class UserSkillController : ApiController
     {
+        /// <summary>
+        /// 技能列表
+        /// </summary>
+        /// <param name="parm"></param>
+        /// <returns></returns>
         [Route("list")]
         [HttpPost]
         public IHttpActionResult UserSkillList(SkillQueryParm parm)
@@ -31,6 +36,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 增加技能
+        /// </summary>
+        /// <param name="entitys"></param>
+        /// <returns></returns>
         [HttpPost, Route("add")]
         public IHttpActionResult AddSkill(List<zxjc_ryxx_jn> entitys)
         {
@@ -52,7 +62,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
-
+        /// <summary>
+        /// 编辑技能
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost, Route("edit")]
         public IHttpActionResult EditSkill(zxjc_ryxx_jn entity)
         {
@@ -74,6 +88,10 @@ namespace MESWebApi.Controllers.BaseInfo
                 throw;
             }
         }
+        /// <summary>
+        /// 技能编号
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, Route("getskillno")]
         public IHttpActionResult SkillNo()
         {
