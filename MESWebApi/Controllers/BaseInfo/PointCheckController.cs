@@ -18,6 +18,8 @@ namespace MESWebApi.Controllers.BaseInfo
     /// 点检接口(zxjc_djgw)
     /// </summary>
     [RoutePrefix("api/baseinfo/pointcheck")]
+
+    [SwaggerResponse(HttpStatusCode.OK, "成功", typeof(sys_response))]
     public class PointCheckController : ApiController
     {
         /// <summary>
@@ -50,7 +52,6 @@ namespace MESWebApi.Controllers.BaseInfo
         /// </param>
         /// <returns></returns>
         [HttpPost, Route("add")]
-        [SwaggerResponse(HttpStatusCode.OK,"成功",typeof(sys_response))]
         public IHttpActionResult Add(List<zxjc_djgw> entitys)
         {
             try

@@ -15,7 +15,7 @@ namespace MESWebApi
             var thisAssembly = typeof(SwaggerConfig).Assembly;
             var xmlFile = string.Format("{0}\\bin\\MESWebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory);
             GlobalConfiguration.Configuration
-                .EnableSwagger(c =>
+                .EnableSwagger("docs/{apiVersion}/swagger",c =>
                     {
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
@@ -33,8 +33,8 @@ namespace MESWebApi
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "MESWebApi");
-
+                        c.SingleApiVersion("v1", "MESWebApi")
+                            .Description("通机MesWebApi接口文档");
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
                         c.PrettyPrint();
@@ -178,12 +178,12 @@ namespace MESWebApi
                         //
                         c.CustomProvider((defaultProvider) => new SwaggerControllerDescProvider(defaultProvider,xmlFile));
                     })
-                .EnableSwaggerUi(c =>
+                .EnableSwaggerUi("doc/{*assetPath}", c =>
                     {
                         // Use the "DocumentTitle" option to change the Document title.
                         // Very helpful when you have multiple Swagger pages open, to tell them apart.
                         //
-                        c.DocumentTitle("MES WebApi");
+                        c.DocumentTitle("通机MESWebApi接口文档");
 
                         // Use the "InjectStylesheet" option to enrich the UI with one or more additional CSS stylesheets.
                         // The file must be included in your project as an "Embedded Resource", and then the resource's
@@ -249,7 +249,7 @@ namespace MESWebApi
                         // If your API supports ApiKey, you can override the default values.
                         // "apiKeyIn" can either be "query" or "header"
                         //
-                        //c.EnableApiKeySupport("apiKey", "header");
+                        c.EnableApiKeySupport("Authorization", "header");
                     });
         }
     }

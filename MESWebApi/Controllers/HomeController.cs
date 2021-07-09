@@ -12,14 +12,18 @@ namespace MESWebApi.Controllers
         {
             return Content("欢迎使用");
         }
+        public JsonResult Token()
+        {
+            try
+            {
+                var newtoken = new JWTHelper().CreateToken();
+                return Json(new { code = 1, msg = "ok", token = newtoken }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
 
-        public ContentResult Pwd(string pwd= "")
-        {
-            return Content("");
-        }
-        public ContentResult Pwd1(string pwd = "")
-        {
-            return Content("");
+                throw;
+            }
         }
     }
 }
