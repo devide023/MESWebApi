@@ -152,7 +152,6 @@ namespace MESWebApi.Util
                 ftp.GetResponse();
                 throw ex;
             }
-            ftp = null;
         }
 
         public void UploadFile(Stream fs, string hostname, string filename, string username, string password)
@@ -190,7 +189,6 @@ namespace MESWebApi.Util
             {
                 fs.Close();
             }
-            ftp = null;
         }
 
         /// <summary>
