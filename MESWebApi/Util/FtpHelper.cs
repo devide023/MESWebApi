@@ -61,7 +61,7 @@ namespace MESWebApi.Util
                 FtpWebResponse response = (FtpWebResponse)ftp.GetResponse();
                 response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -84,7 +84,7 @@ namespace MESWebApi.Util
                 FtpWebResponse response = (FtpWebResponse)ftp.GetResponse();
                 response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -196,7 +196,6 @@ namespace MESWebApi.Util
         /// <summary>
         /// 下载文件
         /// </summary>
-        /// <param name="localDir">下载至本地路径</param>
         /// <param name="FtpDir">ftp目标文件路径</param>
         /// <param name="FtpFile">从ftp要下载的文件名</param>
         /// <param name="hostname">ftp地址即IP</param>
@@ -260,7 +259,7 @@ namespace MESWebApi.Util
                 FtpWebResponse response = (FtpWebResponse)ftp.GetResponse();
                 response.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
