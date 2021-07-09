@@ -248,6 +248,7 @@
     <Compile Include="Models\sys_menu_permission.cs" />
     <Compile Include="Models\sys_page.cs" />
     <Compile Include="Models\sys_permission.cs" />
+    <Compile Include="Models\sys_response.cs" />
     <Compile Include="Models\sys_role.cs" />
     <Compile Include="Models\sys_role_menu.cs" />
     <Compile Include="Models\sys_user.cs" />

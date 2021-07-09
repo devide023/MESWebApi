@@ -10,6 +10,7 @@ using System.Web.Http;
 using MESWebApi.Util;
 using MESWebApi.Models;
 using System.Web;
+using Swashbuckle.Swagger.Annotations;
 
 namespace MESWebApi.Controllers.BaseInfo
 {
@@ -25,6 +26,7 @@ namespace MESWebApi.Controllers.BaseInfo
         /// <param name="parm">CheckPointQueryParm</param>
         /// <returns>{code:1,msg:'ok',list:[],resultcount:20}</returns>
         [HttpPost, Route("list")]
+        [SwaggerResponse(HttpStatusCode.OK, Description = "点检信息列表", Type = typeof(sys_response_list<zxjc_djgw>))]
         public IHttpActionResult List(CheckPointQueryParm parm)
         {
             try
@@ -32,7 +34,7 @@ namespace MESWebApi.Controllers.BaseInfo
                 int resultcount = 0;
                 PointCheckService pcs = new PointCheckService();
                 var list = pcs.Search(parm, out resultcount);
-                return Json(new { code = 1, msg = "ok", list = list, resultcount = resultcount });
+                return Json(new sys_response_list<zxjc_djgw>{ code = 1, msg = "ok", list = list, resultcount = resultcount });
             }
             catch (Exception)
             {
@@ -48,6 +50,7 @@ namespace MESWebApi.Controllers.BaseInfo
         /// </param>
         /// <returns></returns>
         [HttpPost, Route("add")]
+        [SwaggerResponse(HttpStatusCode.OK,"成功",typeof(sys_response))]
         public IHttpActionResult Add(List<zxjc_djgw> entitys)
         {
             try
@@ -58,11 +61,11 @@ namespace MESWebApi.Controllers.BaseInfo
                 var ret = pcs.Add(entitys);
                 if (ret > 0)
                 {
-                    return Json(new { code = 1, msg = "数据保存成功" });
+                    return Json(new sys_response { code = 1, msg = "数据保存成功" });
                 }
                 else
                 {
-                    return Json(new { code = 0, msg = "数据保存失败" });
+                    return Json(new sys_response { code = 0, msg = "数据保存失败" });
                 }
             }
             catch (Exception)
